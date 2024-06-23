@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">QIoT Asthma App</string>
+    <string name="ad_application_id">ca-app-pub-8268826145455622~8671642334</string>
+    <string name="maps_api_key">AIzaSyAQVTLTQ27gisjnT1_7KaYpZAJoreM4pTo</string>
+</resources>

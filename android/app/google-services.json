@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "969307232289",
+    "project_id": "qiot-330510",
+    "storage_bucket": "qiot-330510.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969307232289:android:483aa65ff44be5707eeb60",
+        "android_client_info": {
+          "package_name": "com.qiot.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969307232289-3prmseln0rdfqqerafl7qumq35kk09u1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qiot.app",
+            "certificate_hash": "07c119eb4bb398e5025a1d57a0b98fed6872ad02"
+          }
+        },
+        {
+          "client_id": "969307232289-9ks58o1aqv2s5p9kd74qrkgkuqjvhmsn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt7B9uGctHT-TPiXqyxeAZWpZSQeJjw8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969307232289-9ks58o1aqv2s5p9kd74qrkgkuqjvhmsn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969307232289-ghuvv1di9hjcm410c5eofip5ei1ng2rd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qiot.app",
+                "app_store_id": "1592291663"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969307232289:android:942c5cf5329e25207eeb60",
+        "android_client_info": {
+          "package_name": "com.qiot.asthmaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969307232289-9ks58o1aqv2s5p9kd74qrkgkuqjvhmsn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt7B9uGctHT-TPiXqyxeAZWpZSQeJjw8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969307232289-9ks58o1aqv2s5p9kd74qrkgkuqjvhmsn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "969307232289-ghuvv1di9hjcm410c5eofip5ei1ng2rd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qiot.app",
+                "app_store_id": "1592291663"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
