@@ -1,4 +1,5 @@
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,6 +30,22 @@ class _CustomActionsState extends State<CustomActions> {
           offset: const Offset(0, 42),
           onSelected: (Menu item) {
             print('Selected item: ${item.toString()}');
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomAlertDialog(
+                  type: 'child',
+                  title: 'Add a child',
+                  content: 'Do you have a child with asthma?',
+                  optionOne: () {
+                    Navigator.of(context).pop();
+                  },
+                  optionTwo: () {
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            );
             setState(() {
               menuOpened = false; // Close the menu after selection
             });
@@ -45,7 +62,15 @@ class _CustomActionsState extends State<CustomActions> {
             const PopupMenuItem<Menu>(
               height: 32,
               value: Menu.child,
-              child: Text('Add a child'),
+              child: Text(
+                'Add a child',
+                style: TextStyle(
+                  color: AppColors.primaryBlueText,
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'Roboto',
+                ),
+              ),
             ),
             const PopupMenuItem<Menu>(
               height: 2,

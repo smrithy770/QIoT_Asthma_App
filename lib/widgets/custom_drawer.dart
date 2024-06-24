@@ -1,5 +1,7 @@
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/screens/home_screen/home_screen.dart';
+import 'package:asthmaapp/screens/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/widgets/custom_drawer_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -70,8 +72,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     child: IconButton(
                       icon: SvgPicture.asset(
                         'assets/svgs/cross.svg',
-                        width: 24,
-                        height: 24,
+                        width: 32,
+                        height: 32,
                       ),
                       onPressed: widget.onClose,
                     ),
@@ -88,14 +90,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Home",
                     onTap: () {
                       widget.onItemSelected(0);
-                      Navigator.popAndPushNamed(
+                      Navigator.pushAndRemoveUntil(
                         context,
-                        '/home',
-                        arguments: {
-                          'realm': widget.realm,
-                          'deviceToken': widget.deviceToken,
-                          'deviceType': widget.deviceType,
-                        },
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
                       );
                     },
                   ),
@@ -109,6 +113,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Peakflow",
                     onTap: () {
                       widget.onItemSelected(1);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PeakflowScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(

@@ -12,5 +12,6 @@ class AppColors {
   static const Color primaryWhiteText = Color(0xFFF5F5F5);
   static const Color primaryGreyText = Color(0xFFA6A6A6);
 
+  static const Color okGreen = Color(0xFF27AE60);
   static const Color errorRed = Color(0xFFFD4646);
 }
