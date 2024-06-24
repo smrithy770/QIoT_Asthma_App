@@ -4,14 +4,15 @@ import 'package:asthmaapp/api/utils/api_constants.dart';
 class UserApi {
   final ApiService _apiService = ApiService(baseUrl: ApiConstants.baseURL);
 
-  Future<Map<String, dynamic>> getUserById(String id,
+  Future<Map<String, dynamic>> getHomepageData(String id,
       [String? accessToken]) async {
-    final signoutUrl = ApiConstants.getUserByIdUrl(id);
-    return _apiService.get(signoutUrl, accessToken);
+    final homepageDataUrl = ApiConstants.getHomepageDataUrl(id);
+    return _apiService.get(homepageDataUrl, accessToken);
   }
 
-  Future<Map<String, dynamic>> getAllAsthmaMessages(
+  Future<Map<String, dynamic>> getUserById(String id,
       [String? accessToken]) async {
-    return _apiService.get(ApiConstants.getAllAsthmaMessages, accessToken);
+    final userByIdtUrl = ApiConstants.getUserByIdUrl(id);
+    return _apiService.get(userByIdtUrl, accessToken);
   }
 }

@@ -9,6 +9,10 @@ class ApiConstants {
     return '/auth/signout/$id';
   }
 
+  static String getHomepageDataUrl(String id) {
+    return '/user/homepagedata/$id';
+  }
+
   static String getUserByIdUrl(String id) {
     return '/user/$id';
   }
