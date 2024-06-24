@@ -4,7 +4,7 @@ import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/routes/router_provider.dart';
 import 'package:asthmaapp/routes/routes.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
-import 'package:asthmaapp/screens/home_screen/home_screen.dart';
+import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/services/analytics_service.dart';
 import 'package:asthmaapp/services/push_notification_service.dart';
