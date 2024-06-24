@@ -1,7 +1,9 @@
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/models/user_model.dart';
-import 'package:asthmaapp/screens/home_screen/home_screen.dart';
-import 'package:asthmaapp/screens/peakflow_screen/peakflow_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
+import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
+import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
+import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/widgets/custom_drawer_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -244,6 +246,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Profile",
                     onTap: () {
                       widget.onItemSelected(11);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(
@@ -267,14 +280,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       });
 
                       if (status == 200) {
-                        Navigator.popAndPushNamed(
+                        Navigator.pushAndRemoveUntil(
                           context,
-                          '/signin',
-                          arguments: {
-                            'realm': widget.realm,
-                            'deviceToken': widget.deviceToken,
-                            'deviceType': widget.deviceType,
-                          },
+                          MaterialPageRoute(
+                            builder: (context) => SigninScreen(
+                              realm: widget.realm,
+                              deviceToken: widget.deviceToken,
+                              deviceType: widget.deviceType,
+                            ),
+                          ),
+                          (Route<dynamic> route) => false,
                         );
                       } else {
                         // Handle sign-in failure
