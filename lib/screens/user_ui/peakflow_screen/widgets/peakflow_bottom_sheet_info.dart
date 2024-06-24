@@ -31,8 +31,8 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
 
     return Container(
       width: screenSize.width,
-      height: screenSize.height * 0.32,
-      padding: EdgeInsets.all(screenSize.width * 0.02),
+      height: 320,
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +44,6 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
                 icon: SvgPicture.asset(
                   'assets/svgs/cross.svg',
                   width: 32,
-                  height: 32,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -62,12 +61,9 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               color: Color(0xFFFD4646),
             ),
           ),
-          SizedBox(height: screenSize.height * 0.016),
+          const SizedBox(height: 16),
           Padding(
-            padding: EdgeInsets.only(
-              left: screenSize.width * 0.01,
-              right: screenSize.width * 0.01,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
             child: const Text(
               'Take 10 puffs of your reliever inhaler every 5 minutes untill you improve or help arrives.',
               textAlign: TextAlign.center,
@@ -79,7 +75,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               ),
             ),
           ),
-          SizedBox(height: screenSize.height * 0.016),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
               makePhoneCall('07463435160');
@@ -108,7 +104,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               ),
             ),
           ),
-          SizedBox(height: screenSize.height * 0.016),
+          const SizedBox(height: 16),
           ClickableText(
               textBeforeClickable: '',
               clickableText: 'Call In Case of Emergency (ICE) contact',

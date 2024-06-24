@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await UserApi()
           .getHomepageData(userModel!.id, userModel!.accessToken);
       final jsonResponse = response;
+      print(jsonResponse);
       final status = jsonResponse['status'];
       if (status == 200) {
         int randomNumber =

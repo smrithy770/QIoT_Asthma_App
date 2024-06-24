@@ -148,267 +148,275 @@ class _SigninScreenState extends State<SigninScreen> {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            width: screenSize.width,
-            height: screenSize.height,
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: screenSize.height * 0.08),
-                SvgPicture.asset(
-                  'assets/svgs/logo.svg',
-                  width: screenSize.width * 0.4,
-                ),
-                SizedBox(height: screenSize.height * 0.02),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Sign in to your account',
-                            style: TextStyle(
-                              color: AppColors.primaryBlueText,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto',
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              width: screenSize.width,
+              height: screenSize.height,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenSize.height * 0.08),
+                  SvgPicture.asset(
+                    'assets/svgs/logo.svg',
+                    width: screenSize.width * 0.4,
+                  ),
+                  SizedBox(height: screenSize.height * 0.02),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Sign in to your account',
+                              style: TextStyle(
+                                color: AppColors.primaryBlueText,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Roboto',
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: screenSize.height * 0.02),
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            labelText: 'Email ID',
-                            labelStyle: TextStyle(
-                              color: _isEmailValid == true
-                                  ? AppColors.primaryBlue
-                                  : AppColors.errorRed,
-                            ),
-                            hintText: 'Email ID',
-                            hintStyle: TextStyle(
-                              color: _isEmailValid
-                                  ? AppColors.primaryBlue
-                                  : AppColors.errorRed,
-                            ),
-                            errorStyle: const TextStyle(
-                              color: AppColors.errorRed,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.primaryBlue,
-                                width: 2.0,
+                          SizedBox(height: screenSize.height * 0.02),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: 'Email ID',
+                              labelStyle: TextStyle(
+                                color: _isEmailValid == true
+                                    ? AppColors.primaryBlue
+                                    : AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.primaryBlue,
-                                width: 2.0,
+                              hintText: 'Email ID',
+                              hintStyle: TextStyle(
+                                color: _isEmailValid
+                                    ? AppColors.primaryBlue
+                                    : AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
+                              errorStyle: const TextStyle(
                                 color: AppColors.errorRed,
-                                width: 2.0,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.errorRed,
-                                width: 2.0,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.primaryBlue,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.primaryBlue,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.errorRed,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.errorRed,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: _validateEmail,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Email ID is required';
+                              } else if (!_isEmailValid) {
+                                return 'Enter valid Email ID';
+                              }
+                              return null;
+                            },
                           ),
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: _validateEmail,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email ID is required';
-                            } else if (!_isEmailValid) {
-                              return 'Enter valid Email ID';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: screenSize.height * 0.02),
-                        TextFormField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                              color: _isPasswordValid == true
-                                  ? AppColors.primaryBlue
-                                  : AppColors.errorRed,
-                            ),
-                            hintText: 'Password',
-                            hintStyle: TextStyle(
-                              color: _isPasswordValid
-                                  ? AppColors.primaryBlue
-                                  : AppColors.errorRed,
-                            ),
-                            errorStyle: const TextStyle(
-                              color: AppColors.errorRed,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.primaryBlue,
-                                width: 2.0,
+                          SizedBox(height: screenSize.height * 0.02),
+                          TextFormField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(
+                                color: _isPasswordValid == true
+                                    ? AppColors.primaryBlue
+                                    : AppColors.errorRed,
                               ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.primaryBlue,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.errorRed,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: AppColors.errorRed,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _pobscureText = !_pobscureText;
-                                });
-                              },
-                              child: Icon(
+                              hintText: 'Password',
+                              hintStyle: TextStyle(
                                 color: _isPasswordValid
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
-                                _pobscureText
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
                               ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.visiblePassword,
-                          onChanged: _validatePassword,
-                          obscureText: _pobscureText,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Password is required';
-                            } else if (!_isPasswordValid) {
-                              return 'Minimum 8 characters, \nMinimum 1 special character, \nMinimum 1 numerical character, \nMinimum 1 uppercase & lowercase character';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: screenSize.height * 0.04),
-                        ElevatedButton(
-                          onPressed: (_emailController.text.isNotEmpty &&
-                                  _passwordController.text.isNotEmpty)
-                              ? onSignIn
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(screenSize.width * 1.0,
-                                screenSize.height * 0.06),
-                            foregroundColor:
-                                (_emailController.text.isNotEmpty &&
-                                        _passwordController.text.isNotEmpty)
-                                    ? AppColors.primaryBlueText
-                                    : AppColors.primaryGreyText,
-                            backgroundColor:
-                                (_emailController.text.isNotEmpty &&
-                                        _passwordController.text.isNotEmpty)
-                                    ? AppColors.primaryBlue
-                                    : AppColors.primaryGrey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 15),
-                          ),
-                          child: Text('Sign In',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: (_emailController.text.isNotEmpty &&
-                                        _passwordController.text.isNotEmpty)
-                                    ? AppColors.primaryWhiteText
-                                    : AppColors.primaryGreyText,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                        SizedBox(height: screenSize.height * 0.02),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/forgotpassword');
-                          },
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: AppColors.primaryBlue,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: screenSize.height * 0.02),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Don\'t have an account?',
-                              style: TextStyle(
-                                color: AppColors.primaryBlueText,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              errorStyle: const TextStyle(
+                                color: AppColors.errorRed,
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/signup',
-                                  arguments: {
-                                    'realm': widget.realm,
-                                    'deviceToken': widget.deviceToken ?? '',
-                                    'deviceType': widget.deviceType ?? '',
-                                  },
-                                );
-                              },
-                              child: const Text(
-                                'Sign Up',
-                                style: TextStyle(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
                                   color: AppColors.primaryBlue,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.primaryBlue,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.errorRed,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: AppColors.errorRed,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _pobscureText = !_pobscureText;
+                                  });
+                                },
+                                child: Icon(
+                                  color: _isPasswordValid
+                                      ? AppColors.primaryBlue
+                                      : AppColors.errorRed,
+                                  _pobscureText
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                            onChanged: _validatePassword,
+                            obscureText: _pobscureText,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password is required';
+                              } else if (!_isPasswordValid) {
+                                return 'Minimum 8 characters, \nMinimum 1 special character, \nMinimum 1 numerical character, \nMinimum 1 uppercase & lowercase character';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: screenSize.height * 0.04),
+                          ElevatedButton(
+                            onPressed: (_emailController.text.isNotEmpty &&
+                                    _passwordController.text.isNotEmpty)
+                                ? onSignIn
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              fixedSize: Size(screenSize.width * 1.0,
+                                  screenSize.height * 0.06),
+                              foregroundColor:
+                                  (_emailController.text.isNotEmpty &&
+                                          _passwordController.text.isNotEmpty)
+                                      ? AppColors.primaryBlueText
+                                      : AppColors.primaryGreyText,
+                              backgroundColor:
+                                  (_emailController.text.isNotEmpty &&
+                                          _passwordController.text.isNotEmpty)
+                                      ? AppColors.primaryBlue
+                                      : AppColors.primaryGrey,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 15),
+                            ),
+                            child: Text('Sign In',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: (_emailController.text.isNotEmpty &&
+                                          _passwordController.text.isNotEmpty)
+                                      ? AppColors.primaryWhiteText
+                                      : AppColors.primaryGreyText,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          SizedBox(height: screenSize.height * 0.02),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/forgotpassword');
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: AppColors.primaryBlue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenSize.height * 0.02),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Don\'t have an account?',
+                                style: TextStyle(
+                                  color: AppColors.primaryBlueText,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/signup',
+                                    arguments: {
+                                      'realm': widget.realm,
+                                      'deviceToken': widget.deviceToken ?? '',
+                                      'deviceType': widget.deviceType ?? '',
+                                    },
+                                  );
+                                },
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: AppColors.primaryBlue,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
