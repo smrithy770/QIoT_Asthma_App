@@ -1,8 +1,10 @@
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signup_screen/signup_screen.dart';
-import 'package:asthmaapp/screens/home_screen/home_screen.dart';
-import 'package:asthmaapp/screens/notification_screen/notification_screen.dart';
+import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
+import 'package:asthmaapp/screens/user_ui/notification_screen/notification_screen.dart';
 import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
+import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
+import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:fluro/fluro.dart';
 import 'package:realm/realm.dart';
 
@@ -68,6 +70,38 @@ void defineRoutes(FluroRouter router) {
     handler: Handler(
       handlerFunc: (context, params) {
         return const NotificationScreen();
+      },
+    ),
+  );
+  router.define(
+    '/peakflow',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return PeakflowScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/profile',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return ProfileScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
       },
     ),
   );
