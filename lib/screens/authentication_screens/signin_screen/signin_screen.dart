@@ -62,7 +62,7 @@ class _SigninScreenState extends State<SigninScreen> {
             widget.realm.add(userModel);
           });
           if (mounted) {
-            CustomSnackBarUtil.showCustomSnackBar("Login successful",
+            CustomSnackBarUtil.showCustomSnackBar("Sign in successful",
                 success: true);
             Navigator.popAndPushNamed(
               context,

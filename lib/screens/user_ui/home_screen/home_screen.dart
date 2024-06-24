@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _steroidDosage = '-';
   String? _salbutomalDosage = '-';
   String? _asthmamessages = '-';
+  String? _nextTaskTime = '-';
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _asthmamessages = jsonResponse['payload']['asthmaMessages']
                   [randomNumber]['message']
               .toString();
+          _nextTaskTime = jsonResponse['payload']['nextTaskTime'];
         });
       }
     } on SocketException catch (e) {
@@ -315,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ),
-                                const Expanded(
+                                Expanded(
                                   flex: 9,
                                   child: Column(
                                     mainAxisAlignment:
@@ -323,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Align(
+                                      const Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           'Your Peakflow test is due in next 1 hour',
@@ -339,9 +341,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          'Due at 8:00 am today',
+                                          _nextTaskTime!,
                                           textAlign: TextAlign.left,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color:
                                                 AppColors.primaryLightBlueText,
                                             fontSize: 18,

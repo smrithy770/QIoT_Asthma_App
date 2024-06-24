@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:asthmaapp/api/auth_api.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,32 +62,54 @@ class _SignupScreenState extends State<SignupScreen> {
         final jsonResponse = response;
         final status = jsonResponse['status'] as int;
         if (status == 200) {
-          Navigator.popAndPushNamed(
-            context,
-            '/signin',
-            arguments: {
-              'realm': widget.realm,
-              'deviceToken': widget.deviceToken,
-              'deviceType': widget.deviceType,
-            },
-          );
+          if (mounted) {
+            CustomSnackBarUtil.showCustomSnackBar("Sign up successful",
+                success: true);
+            Navigator.popAndPushNamed(
+              context,
+              '/signin',
+              arguments: {
+                'realm': widget.realm,
+                'deviceToken': widget.deviceToken,
+                'deviceType': widget.deviceType,
+              },
+            );
+          }
         } else {
-          final message = jsonResponse['message'] as String;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message),
-              duration: const Duration(seconds: 4),
-            ),
-          );
+          // Handle different statuses
+          String errorMessage;
+          switch (status) {
+            case 400:
+              errorMessage = 'Bad request: Please check your input';
+              break;
+            case 401:
+              errorMessage = 'Unauthorized: Invalid email or password';
+              break;
+            case 500:
+              errorMessage = 'Server error: Please try again later';
+              break;
+            default:
+              errorMessage = 'Unexpected error: Please try again';
+          }
+
+          // Show error message
+          CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
         }
-      } catch (e) {
-        print('Signin failed: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sign Up failed. Please try again.'),
-            duration: Duration(seconds: 4),
-          ),
-        );
+      } on RealmException catch (e) {
+        // Handle Realm-specific exceptions
+        print('RealmException: $e');
+        CustomSnackBarUtil.showCustomSnackBar('Database error: ${e.message}',
+            success: false);
+      } on SocketException catch (e) {
+        // Handle network-specific exceptions
+        print('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Network error: Please check your internet connection',
+            success: false);
+      } on Exception catch (e) {
+        print('Signup failed: $e');
+        CustomSnackBarUtil.showCustomSnackBar('Signup failed: ${e.toString()}',
+            success: false);
       }
     }
   }
