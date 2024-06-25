@@ -7,6 +7,11 @@ class AppColors {
   static const Color primaryWhite = Color(0xFFFFFFFF);
   static const Color primaryGrey = Color(0xFFEDEDED);
 
+  static const Color childPrimaryLightBlue = Color(0xFF3CE2FC);
+  static const Color childPrimaryPink = Color(0xFFE87DA1);
+  static const Color childPrimaryPurple = Color(0xFF9C7DF5);
+  static const Color childPrimaryOrange = Color(0xFFFF8500);
+
   static const Color primaryBlueText = Color(0xFF004283);
   static const Color primaryLightBlueText = Color(0xFF0D8EF8);
   static const Color primaryWhiteText = Color(0xFFF5F5F5);
