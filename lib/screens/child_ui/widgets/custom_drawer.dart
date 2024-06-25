@@ -1,11 +1,7 @@
-import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/models/user_model.dart';
-import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/child_ui/widgets/custom_drawer_list_item.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
-import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
-import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:realm/realm.dart';
