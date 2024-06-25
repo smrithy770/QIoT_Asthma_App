@@ -41,7 +41,9 @@ class CustomAlertDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset(
-            type == 'alert' ? 'assets/svgs/alert.svg' : 'assets/svgs/child.svg',
+            type == 'alert'
+                ? 'assets/svgs/user_assets/alert.svg'
+                : 'assets/svgs/user_assets/child.svg',
             width: 64, // Adjust width as needed
             height: 64, // Adjust height as needed
           ),
