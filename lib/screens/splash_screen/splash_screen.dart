@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/svgs/logo.svg',
+                'assets/svgs/user_assets/logo.svg',
                 width: screenSize.width * 0.5,
               ),
               const CircularProgressIndicator(
