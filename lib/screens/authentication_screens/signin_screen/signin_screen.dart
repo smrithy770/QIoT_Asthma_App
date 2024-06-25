@@ -169,7 +169,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 children: [
                   SizedBox(height: screenSize.height * 0.08),
                   SvgPicture.asset(
-                    'assets/svgs/logo.svg',
+                    'assets/svgs/user_assets/logo.svg',
                     width: screenSize.width * 0.4,
                   ),
                   SizedBox(height: screenSize.height * 0.02),
