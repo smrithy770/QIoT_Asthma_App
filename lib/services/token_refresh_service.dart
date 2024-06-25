@@ -6,7 +6,7 @@ import 'package:realm/realm.dart';
 
 class TokenRefreshService {
   static final TokenRefreshService _instance = TokenRefreshService._internal();
-  Timer? _timer;
+  Timer? timer;
   UserModel? userModel;
   Realm? realm;
   String? deviceToken;
@@ -28,13 +28,18 @@ class TokenRefreshService {
   }
 
   void _startTokenRefreshTimer() {
-    _timer = Timer.periodic(const Duration(minutes: 10), (timer) async {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(minutes: 10), (timer) async {
       print('Token refresh timer triggered at ${DateTime.now()}');
       await refreshToken();
     });
   }
 
   Future<void> refreshToken() async {
+    if (userModel == null || deviceToken == null || deviceType == null) {
+      print('Token refresh skipped: insufficient data.');
+      return;
+    }
     try {
       final response = await AuthApi().refreshToken(userModel!.accessToken,
           userModel!.refreshToken, deviceToken, deviceType);
@@ -43,10 +48,7 @@ class TokenRefreshService {
       if (status == 200) {
         final newAccessToken = jsonResponse['accessToken'];
         final newRefreshToken = jsonResponse['refreshToken'];
-        realm?.write(() {
-          userModel!.accessToken = newAccessToken;
-          userModel!.refreshToken = newRefreshToken;
-        });
+        _updateTokens(newAccessToken, newRefreshToken);
       }
     } on SocketException catch (e) {
       print('NetworkException: $e');
@@ -55,7 +57,15 @@ class TokenRefreshService {
     }
   }
 
+  void _updateTokens(String newAccessToken, String newRefreshToken) {
+    realm?.write(() {
+      userModel!.accessToken = newAccessToken;
+      userModel!.refreshToken = newRefreshToken;
+    });
+  }
+
   void dispose() {
-    _timer?.cancel();
+    timer?.cancel();
+    timer = null;
   }
 }
