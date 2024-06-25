@@ -42,7 +42,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
             children: <Widget>[
               IconButton(
                 icon: SvgPicture.asset(
-                  'assets/svgs/cross.svg',
+                  'assets/svgs/user_assets/cross.svg',
                   width: 32,
                 ),
                 onPressed: () {

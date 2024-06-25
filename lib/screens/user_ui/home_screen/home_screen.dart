@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:asthmaapp/api/user_api.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/widgets/custom_actions.dart';
-import 'package:asthmaapp/widgets/custom_drawer.dart';
+import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _salbutomalDosage = '-';
   String? _asthmamessages = '-';
   String? _nextTaskTime = '-';
+  List? _children;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final response = await UserApi()
           .getHomepageData(userModel!.id, userModel!.accessToken);
       final jsonResponse = response;
-      print(jsonResponse);
+      // print(jsonResponse);
       final status = jsonResponse['status'];
       if (status == 200) {
         int randomNumber =
@@ -69,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   [randomNumber]['message']
               .toString();
           _nextTaskTime = jsonResponse['payload']['nextTaskTime'];
+          _children = jsonResponse['payload']['children'];
         });
       }
     } on SocketException catch (e) {
@@ -85,8 +87,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: SvgPicture.asset(
+                'assets/svgs/user_assets/user_drawer_icon.svg', // Replace with your custom icon asset path
+                width: 24,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
         title: const Align(
           alignment: Alignment.bottomLeft,
           child: Text(
@@ -104,14 +119,19 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, '/notification');
             },
             child: SvgPicture.asset(
-              'assets/svgs/notification.svg',
+              'assets/svgs/user_assets/notification.svg',
               color: AppColors.primaryWhite,
               width: 32,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: CustomActions(),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: CustomActions(
+              children: _children,
+              realm: widget.realm,
+              deviceToken: widget.deviceToken,
+              deviceType: widget.deviceType,
+            ),
           )
         ],
       ),
@@ -133,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Center(
             child: Container(
-              color: AppColors.primaryWhite,
               width: screenSize.width,
               padding: EdgeInsets.all(screenSize.width * 0.016),
               child: Column(
@@ -312,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                        "assets/svgs/peakflow.svg",
+                                        "assets/svgs/user_assets/peakflow.svg",
                                         width: 64,
                                       ),
                                     ],
@@ -389,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                        "assets/svgs/act.svg",
+                                        "assets/svgs/user_assets/act.svg",
                                         width: 64,
                                       ),
                                     ],

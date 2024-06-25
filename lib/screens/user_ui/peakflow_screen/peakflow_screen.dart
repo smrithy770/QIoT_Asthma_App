@@ -2,7 +2,7 @@ import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_measure.dart';
-import 'package:asthmaapp/widgets/custom_drawer.dart';
+import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';

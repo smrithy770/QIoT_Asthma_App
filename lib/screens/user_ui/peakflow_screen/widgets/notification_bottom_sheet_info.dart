@@ -143,7 +143,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
             children: <Widget>[
               IconButton(
                 icon: SvgPicture.asset(
-                  'assets/svgs/cross.svg',
+                  'assets/svgs/user_assets/cross.svg',
                   width: 32,
                 ),
                 onPressed: () {
