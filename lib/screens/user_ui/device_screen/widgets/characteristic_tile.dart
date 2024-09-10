@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
@@ -100,38 +101,41 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
   }
 
   Widget buildValue(BuildContext context) {
-  if (_value.isEmpty) {
-    return const Text("No data", style: TextStyle(fontSize: 13, color: Colors.grey));
-  }
-
-  try {
-    int intValue;
-
-    switch (_value.length) {
-      case 1:
-        // 1 byte unsigned integer
-        intValue = _value[0];
-        break;
-      case 2:
-        // 2 byte unsigned integer (Little-endian format)
-        intValue = _value[0] | (_value[1] << 8);
-        break;
-      case 4:
-        // 4 byte unsigned integer (Little-endian format)
-        intValue = _value[0] |
-                   (_value[1] << 8) |
-                   (_value[2] << 16) |
-                   (_value[3] << 24);
-        break;
-      default:
-        return Text("Unsupported data length", style: const TextStyle(fontSize: 13, color: Colors.red));
+    if (_value.isEmpty) {
+      return const Text("No data",
+          style: TextStyle(fontSize: 13, color: Colors.grey));
     }
 
-    return Text("Integer Value: $intValue", style: const TextStyle(fontSize: 13, color: Colors.grey));
-  } catch (e) {
-    return Text("Error processing data: $e", style: const TextStyle(fontSize: 13, color: Colors.red));
+    try {
+      // Debugging: Print the length of _value and its content
+      print("Data length: ${_value.length}, Data content: $_value");
+
+      if (_value.length == 2) {
+        // Handle 2-byte unsigned integer
+        int intValue = _value[0] | (_value[1] << 8);
+        return Text("2-byte Integer Value: $intValue",
+            style: const TextStyle(fontSize: 13, color: Colors.grey));
+      } else if (_value.length == 4) {
+        // Handle 4-byte data as two 2-byte unsigned integers
+        int firstIntValue =
+            _value[0] | (_value[1] << 8); // First 2-byte integer
+        int secondIntValue =
+            _value[2] | (_value[3] << 8); // Second 2-byte integer
+
+        return Text(
+          "First 2-byte Integer Value: $firstIntValue, Second 2-byte Integer Value: $secondIntValue",
+          style: const TextStyle(fontSize: 13, color: Colors.grey),
+        );
+      }
+
+      // Default case for unsupported data types
+      return Text("Unknown data format",
+          style: const TextStyle(fontSize: 13, color: Colors.red));
+    } catch (e) {
+      return Text("Error processing data: $e",
+          style: const TextStyle(fontSize: 13, color: Colors.red));
+    }
   }
-}
 
   Widget buildReadButton(BuildContext context) {
     return TextButton(

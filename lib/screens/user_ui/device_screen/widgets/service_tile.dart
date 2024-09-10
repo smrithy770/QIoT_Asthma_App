@@ -1,36 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import "characteristic_tile.dart";
+import 'characteristic_tile.dart';
 
-class ServiceTile extends StatelessWidget {
+class ServiceTile extends StatefulWidget {
   final BluetoothService service;
   final List<CharacteristicTile> characteristicTiles;
 
-  const ServiceTile({Key? key, required this.service, required this.characteristicTiles}) : super(key: key);
+  const ServiceTile({
+    Key? key,
+    required this.service,
+    required this.characteristicTiles,
+  }) : super(key: key);
 
-  Widget buildUuid(BuildContext context) {
-    String uuid = '0x${service.uuid.str.toUpperCase()}';
-    return Text(uuid, style: TextStyle(fontSize: 13));
-  }
+  @override
+  _ServiceTileState createState() => _ServiceTileState();
+}
+
+class _ServiceTileState extends State<ServiceTile> {
+  bool _isExpanded = true; // Start with the tile expanded
 
   @override
   Widget build(BuildContext context) {
-    return characteristicTiles.isNotEmpty
-        ? ExpansionTile(
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text('Service', style: TextStyle(color: Colors.blue)),
-                buildUuid(context),
-              ],
-            ),
-            children: characteristicTiles,
-          )
-        : ListTile(
-            title: const Text('Service'),
-            subtitle: buildUuid(context),
-          );
+    return ExpansionTile(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text('Service', style: TextStyle(color: Colors.blue)),
+          Text(
+            'UUID: ${widget.service.uuid.toString().toUpperCase()}',
+            style: TextStyle(fontSize: 13),
+          ),
+        ],
+      ),
+      children: widget.characteristicTiles,
+      initiallyExpanded: _isExpanded, // Automatically expand
+      onExpansionChanged: (bool expanding) {
+        setState(() {
+          _isExpanded = expanding;
+        });
+      },
+    );
   }
 }
