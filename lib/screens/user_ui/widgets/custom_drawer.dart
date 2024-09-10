@@ -1,6 +1,7 @@
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
+import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
@@ -174,6 +175,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Device",
                     onTap: () {
                       widget.onItemSelected(5);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DeviceScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(

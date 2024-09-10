@@ -37,17 +37,23 @@ class PushNotificationService {
       iOS: initializationSettingsDarwin,
     );
 
-    // request notification permissions for android 13 or above
-    _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!
-        .requestNotificationsPermission();
+    // Check if _flutterLocalNotificationsPlugin is not null
+    if (_flutterLocalNotificationsPlugin != null) {
+      // request notification permissions for android 13 or above
+      _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
 
-    _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: onNotificationTap,
-      onDidReceiveBackgroundNotificationResponse: onNotificationTap,
-    );
+      await _flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: onNotificationTap,
+        onDidReceiveBackgroundNotificationResponse: onNotificationTap,
+      );
+    } else {
+      // Handle the case where _flutterLocalNotificationsPlugin is null
+      print('Error: _flutterLocalNotificationsPlugin is null');
+    }
   }
 
   // on tap local notification in foreground
@@ -86,18 +92,18 @@ class PushNotificationService {
     });
   }
 
-  static void onNotificationTerminatedState() async{
+  static void onNotificationTerminatedState() async {
     final RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    print('Message received in terminated state!');
-    Future.delayed(const Duration(seconds: 1), () {
-      navigatorKey.currentState!.pushNamed(
-        "/notification",
-        arguments: initialMessage,
-      );
-    });
-  }
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      print('Message received in terminated state!');
+      Future.delayed(const Duration(seconds: 1), () {
+        navigatorKey.currentState!.pushNamed(
+          "/notification",
+          arguments: initialMessage,
+        );
+      });
+    }
   }
 
   // show a simple notification
