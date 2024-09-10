@@ -83,7 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
+    print('${_nextTaskTime}');
 
+    print('Screen Size: ${screenSize} and Screen ratio: ${screenRatio}');
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
@@ -94,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return IconButton(
               icon: SvgPicture.asset(
                 'assets/svgs/user_assets/user_drawer_icon.svg', // Replace with your custom icon asset path
-                width: 24,
+                width: screenRatio * 10,
               ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
@@ -102,38 +105,38 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
-        title: const Align(
+        title: Align(
           alignment: Alignment.bottomLeft,
           child: Text(
             'Home',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: screenRatio * 10,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
             ),
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/notification');
-            },
-            child: SvgPicture.asset(
-              'assets/svgs/user_assets/notification.svg',
-              color: AppColors.primaryWhite,
-              width: 32,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CustomActions(
-              children: _children,
-              realm: widget.realm,
-              deviceToken: widget.deviceToken,
-              deviceType: widget.deviceType,
-            ),
-          )
-        ],
+        // actions: [
+        //   GestureDetector(
+        //     onTap: () {
+        //       Navigator.pushNamed(context, '/notification');
+        //     },
+        //     child: SvgPicture.asset(
+        //       'assets/svgs/user_assets/notification.svg',
+        //       color: AppColors.primaryWhite,
+        //       width: 32,
+        //     ),
+        //   ),
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 16.0),
+        //     child: CustomActions(
+        //       children: _children,
+        //       realm: widget.realm,
+        //       deviceToken: widget.deviceToken,
+        //       deviceType: widget.deviceType,
+        //     ),
+        //   )
+        // ],
       ),
       drawer: CustomDrawer(
         realm: widget.realm,
@@ -181,13 +184,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const Center(
+                                  Center(
                                     child: Text(
                                       'Peakflow Baseline',
                                       style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenRatio * 8,
+                                        fontWeight: FontWeight.normal,
                                         fontFamily: 'Roboto',
                                       ),
                                     ),
@@ -195,9 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Center(
                                     child: Text(
                                       _baseLineScore!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 48,
+                                        fontSize: screenRatio * 20,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Roboto',
                                       ),
@@ -208,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: screenSize.height * 0.016),
+                        SizedBox(height: screenRatio * 4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -225,13 +228,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const Center(
+                                  Center(
                                     child: Text(
                                       'Steroid Dosage',
                                       style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenRatio * 8,
+                                        fontWeight: FontWeight.normal,
                                         fontFamily: 'Roboto',
                                       ),
                                     ),
@@ -239,9 +242,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Center(
                                     child: Text(
                                       _steroidDosage!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 48,
+                                        fontSize: screenRatio * 20,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Roboto',
                                       ),
@@ -263,13 +266,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const Center(
+                                  Center(
                                     child: Text(
                                       'Salbutamol Dosage',
                                       style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenRatio * 8,
+                                        fontWeight: FontWeight.normal,
                                         fontFamily: 'Roboto',
                                       ),
                                     ),
@@ -277,9 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Center(
                                     child: Text(
                                       _salbutomalDosage!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.primaryWhite,
-                                        fontSize: 48,
+                                        fontSize: screenRatio * 20,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Roboto',
                                       ),
@@ -332,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       SvgPicture.asset(
                                         "assets/svgs/user_assets/peakflow.svg",
-                                        width: 64,
+                                        width: screenRatio * 28,
                                       ),
                                     ],
                                   ),
@@ -345,15 +348,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      const Align(
+                                      Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          'Your Peakflow test is due in next 1 hour',
+                                          'Your Peakflow Test',
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: AppColors.primaryBlue,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                                            fontSize: screenRatio * 8,
+                                            fontWeight: FontWeight.normal,
                                             fontFamily: 'Roboto',
                                           ),
                                         ),
@@ -363,10 +366,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           _nextTaskTime!,
                                           textAlign: TextAlign.left,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color:
                                                 AppColors.primaryLightBlueText,
-                                            fontSize: 18,
+                                            fontSize: screenRatio * 10,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Roboto',
                                           ),
@@ -409,12 +412,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: [
                                       SvgPicture.asset(
                                         "assets/svgs/user_assets/act.svg",
-                                        width: 64,
+                                        width: screenRatio * 28,
                                       ),
                                     ],
                                   ),
                                 ),
-                                const Expanded(
+                                Expanded(
                                   flex: 9,
                                   child: Column(
                                     mainAxisAlignment:
@@ -429,7 +432,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: AppColors.primaryBlue,
-                                            fontSize: 20,
+                                            fontSize: screenRatio * 8,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Roboto',
                                           ),
@@ -443,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(
                                             color:
                                                 AppColors.primaryLightBlueText,
-                                            fontSize: 18,
+                                            fontSize: screenRatio * 10,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Roboto',
                                           ),
@@ -466,9 +469,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         _asthmamessages!,
                         textAlign: TextAlign.justify,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           color: AppColors.primaryBlueText,
-                          fontSize: 18,
+                          fontSize: screenRatio * 8,
                           fontWeight: FontWeight.normal,
                           fontFamily: 'Roboto',
                         ),
