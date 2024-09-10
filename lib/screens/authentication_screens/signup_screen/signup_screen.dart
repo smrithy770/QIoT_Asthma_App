@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:realm/realm.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -38,6 +41,34 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _isEmailValid = true;
   bool _isPasswordValid = true;
   bool _isConfirmPasswordValid = true;
+  bool _isChecked = false;
+  String pathPDF = "assets/pdfs/TermsCondition.pdf";
+
+  @override
+  void initState() {
+    super.initState();
+    fromAsset(pathPDF, 'TermsCondition.pdf').then((f) {
+      setState(() {
+        pathPDF = f.path;
+      });
+    });
+  }
+
+  // For Pdf file.
+  Future<File> fromAsset(String asset, String filename) async {
+    Completer<File> completer = Completer();
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+    return completer.future;
+  }
 
   void onSignUp() async {
     DateTime dateTime = DateTime.now();
@@ -192,6 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       body: GestureDetector(
@@ -204,53 +236,62 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Center(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            physics: const BouncingScrollPhysics(),
+            // physics: const BouncingScrollPhysics(),
             child: Container(
               width: screenSize.width,
               height: screenSize.height,
               padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: screenSize.height * 0.08),
-                  SvgPicture.asset(
-                    'assets/svgs/user_assets/logo.svg',
-                    width: screenSize.width * 0.4,
-                  ),
-                  SizedBox(height: screenSize.height * 0.02),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    child: Form(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenRatio,
+                  vertical: screenRatio,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: screenRatio * 20),
+                    SvgPicture.asset(
+                      'assets/svgs/user_assets/logo.svg',
+                      width: screenRatio * 52,
+                    ),
+                    SizedBox(height: screenRatio * 10),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Sign up to your account',
+                        style: TextStyle(
+                          color: AppColors.primaryBlueText,
+                          fontSize: screenRatio * 9,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenRatio * 4),
+                    Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Sign up to your account',
-                              style: TextStyle(
-                                color: AppColors.primaryBlueText,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto',
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: screenSize.height * 0.02),
                           TextFormField(
                             controller: _firstNameController,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: screenRatio * 8,
+                                vertical: screenRatio * 2,
+                              ),
                               labelText: 'First Name',
                               // labelStyle: TextStyle(
                               //   color: !_lastNameEmpty
                               //       ? AppColors.primaryBlue
                               //       : AppColors.errorRed,
+                              //   fontSize: screenRatio * 6,
                               // ),
-                              labelStyle: const TextStyle(
+                              labelStyle: TextStyle(
                                 color: AppColors.primaryBlue,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
                               hintText: 'First Name',
                               // hintStyle: TextStyle(
@@ -258,40 +299,44 @@ class _SignupScreenState extends State<SignupScreen> {
                               //       ? AppColors.primaryBlue
                               //       : AppColors.errorRed,
                               // ),
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                 color: AppColors.primaryBlue,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              errorStyle: const TextStyle(
+                              errorStyle: TextStyle(
                                 color: AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // errorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedErrorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
                             ),
                             keyboardType: TextInputType.name,
                             // onChanged: (value) {
@@ -304,18 +349,24 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenSize.height * 0.02),
+                          SizedBox(height: screenRatio * 3),
                           TextFormField(
                             controller: _lastNameController,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: screenRatio * 8,
+                                vertical: screenRatio * 4,
+                              ),
                               labelText: 'Last Name',
                               // labelStyle: TextStyle(
                               //   color: !_lastNameEmpty
                               //       ? AppColors.primaryBlue
                               //       : AppColors.errorRed,
                               // ),
-                              labelStyle: const TextStyle(
+                              labelStyle: TextStyle(
                                 color: AppColors.primaryBlue,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
                               hintText: 'Last Name',
                               // hintStyle: TextStyle(
@@ -323,40 +374,44 @@ class _SignupScreenState extends State<SignupScreen> {
                               //       ? AppColors.primaryBlue
                               //       : AppColors.errorRed,
                               // ),
-                              hintStyle: const TextStyle(
+                              hintStyle: TextStyle(
                                 color: AppColors.primaryBlue,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              errorStyle: const TextStyle(
+                              errorStyle: TextStyle(
                                 color: AppColors.errorRed,
+                                fontSize: screenRatio * 5,
+                                fontWeight: FontWeight.normal,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // errorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedErrorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
                             ),
                             keyboardType: TextInputType.name,
                             // onChanged: (value) {
@@ -369,53 +424,63 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenSize.height * 0.02),
+                          SizedBox(height: screenRatio * 3),
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: screenRatio * 8,
+                                vertical: screenRatio * 4,
+                              ),
                               labelText: 'Email ID',
                               labelStyle: TextStyle(
                                 color: _isEmailValid == true
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
                               hintText: 'Email ID',
                               hintStyle: TextStyle(
                                 color: _isEmailValid
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              errorStyle: const TextStyle(
+                              errorStyle: TextStyle(
                                 color: AppColors.errorRed,
+                                fontSize: screenRatio * 5,
+                                fontWeight: FontWeight.normal,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // errorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedErrorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
                             ),
                             keyboardType: TextInputType.emailAddress,
                             onChanged: _validateEmail,
@@ -428,54 +493,64 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenSize.height * 0.02),
+                          SizedBox(height: screenRatio * 3),
                           // Password
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: screenRatio * 8,
+                                vertical: screenRatio * 4,
+                              ),
                               labelText: 'Password',
                               labelStyle: TextStyle(
                                 color: _isPasswordValid == true
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
                               hintText: 'Password',
                               hintStyle: TextStyle(
                                 color: _isPasswordValid
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              errorStyle: const TextStyle(
+                              errorStyle: TextStyle(
                                 color: AppColors.errorRed,
+                                fontSize: screenRatio * 5,
+                                fontWeight: FontWeight.normal,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // errorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedErrorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
                               suffixIcon: GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -489,6 +564,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   _pobscureText
                                       ? Icons.visibility_off
                                       : Icons.visibility,
+                                  size: screenRatio * 10,
                                 ),
                               ),
                             ),
@@ -504,54 +580,64 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenSize.height * 0.02),
+                          SizedBox(height: screenRatio * 3),
                           // Confirm Password
                           TextFormField(
                             controller: _confirmpasswordController,
                             decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: screenRatio * 8,
+                                vertical: screenRatio * 4,
+                              ),
                               labelText: 'Confirm Password',
                               labelStyle: TextStyle(
                                 color: _isConfirmPasswordValid == true
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
                               hintText: 'Confirm Password',
                               hintStyle: TextStyle(
                                 color: _isConfirmPasswordValid
                                     ? AppColors.primaryBlue
                                     : AppColors.errorRed,
+                                fontSize: screenRatio * 6,
+                                fontWeight: FontWeight.normal,
                               ),
-                              errorStyle: const TextStyle(
+                              errorStyle: TextStyle(
                                 color: AppColors.errorRed,
+                                fontSize: screenRatio * 5,
+                                fontWeight: FontWeight.normal,
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.primaryBlue,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorRed,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                              // enabledBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.primaryBlue,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // errorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
+                              // focusedErrorBorder: OutlineInputBorder(
+                              //   borderSide: const BorderSide(
+                              //     color: AppColors.errorRed,
+                              //     width: 2.0,
+                              //   ),
+                              //   borderRadius: BorderRadius.circular(8.0),
+                              // ),
                               suffixIcon: GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -565,6 +651,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   _cpobscureText
                                       ? Icons.visibility_off
                                       : Icons.visibility,
+                                  size: screenRatio * 10,
                                 ),
                               ),
                             ),
@@ -580,103 +667,146 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: screenSize.height * 0.04),
-                          // Sign Up Button
-                          ElevatedButton(
-                            onPressed: (_emailController.text.isNotEmpty &&
-                                    _passwordController.text.isNotEmpty &&
-                                    _confirmpasswordController.text.isNotEmpty)
-                                ? onSignUp
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(screenSize.width * 1.0,
-                                  screenSize.height * 0.06),
-                              foregroundColor:
-                                  (_emailController.text.isNotEmpty &&
-                                          _passwordController.text.isNotEmpty &&
-                                          _confirmpasswordController
-                                              .text.isNotEmpty)
-                                      ? AppColors.primaryBlueText
-                                      : AppColors.primaryGreyText,
-                              backgroundColor:
-                                  (_emailController.text.isNotEmpty &&
-                                          _passwordController.text.isNotEmpty &&
-                                          _confirmpasswordController
-                                              .text.isNotEmpty)
-                                      ? AppColors.primaryBlue
-                                      : AppColors.primaryGrey,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 15),
-                            ),
-                            child: Text('Sign Up',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: (_emailController.text.isNotEmpty &&
-                                          _passwordController.text.isNotEmpty &&
-                                          _confirmpasswordController
-                                              .text.isNotEmpty)
-                                      ? AppColors.primaryWhiteText
-                                      : AppColors.primaryGreyText,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                          ),
-                          SizedBox(height: screenSize.height * 0.02),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/forgotpassword');
-                            },
-                            child: const Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: AppColors.primaryBlue,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: screenSize.height * 0.02),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Don\'t have an account?',
-                                style: TextStyle(
-                                  color: AppColors.primaryBlueText,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.popAndPushNamed(
-                                    context,
-                                    '/signin',
-                                    arguments: {
-                                      'realm': widget.realm,
-                                      'deviceToken': widget.deviceToken,
-                                      'deviceType': widget.deviceType,
-                                    },
-                                  );
-                                },
-                                child: const Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                    color: AppColors.primaryBlue,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: screenRatio * 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value!;
+                            });
+                          },
+                        ),
+                        Text(
+                          'I have read and agree to the',
+                          style: TextStyle(
+                            color: AppColors.primaryBlack,
+                            fontSize: screenRatio * 5.2,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/terms_conditions',
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken ?? '',
+                                'deviceType': widget.deviceType ?? '',
+                                'pathPDF': pathPDF,
+                              },
+                            );
+                          },
+                          child: Text(
+                            'Terms & Conditions.',
+                            style: TextStyle(
+                              color: AppColors.primaryLightBlue,
+                              fontSize: screenRatio * 5.2,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        // ClickableText(
+                        //   textBeforeClickable: '',
+                        //   clickableText: 'Terms & Conditions ',
+                        //   color: Colors.blue,
+                        //   textAfterClickable: '',
+                        //   fontSize: 6 * screenRatio,
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) =>
+                        //               TermsAndConditionsScreen(path: pathPDF)),
+                        //     );
+                        //   },
+                        // )
+                      ],
+                    ),
+                    SizedBox(height: screenRatio * 10),
+                    // Sign Up Button
+                    ElevatedButton(
+                      onPressed: (_emailController.text.isNotEmpty &&
+                              _passwordController.text.isNotEmpty &&
+                              _confirmpasswordController.text.isNotEmpty)
+                          ? onSignUp
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        fixedSize:
+                            Size(screenSize.width * 1.0, screenRatio * 26),
+                        foregroundColor: (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty &&
+                                _confirmpasswordController.text.isNotEmpty)
+                            ? AppColors.primaryBlueText
+                            : AppColors.primaryGreyText,
+                        backgroundColor: (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty &&
+                                _confirmpasswordController.text.isNotEmpty)
+                            ? AppColors.primaryBlue
+                            : AppColors.primaryGrey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
+                      ),
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: screenRatio * 7,
+                          color: (_emailController.text.isNotEmpty &&
+                                  _passwordController.text.isNotEmpty &&
+                                  _confirmpasswordController.text.isNotEmpty)
+                              ? AppColors.primaryWhiteText
+                              : AppColors.primaryGreyText,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenRatio * 18),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already have an account?',
+                          style: TextStyle(
+                            color: AppColors.primaryBlueText,
+                            fontSize: screenRatio * 8,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.popAndPushNamed(
+                              context,
+                              '/signin',
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
+                          },
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: screenRatio * 8,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

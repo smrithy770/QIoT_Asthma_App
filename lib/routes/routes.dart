@@ -1,5 +1,6 @@
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signup_screen/signup_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/user_ui/notification_screen/notification_screen.dart';
 import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
@@ -45,6 +46,24 @@ void defineRoutes(FluroRouter router) {
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/terms_conditions',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        String pathPDF = args['pathPDF'];
+        return TermsConditionsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+          pathPDF: pathPDF,
         );
       },
     ),
