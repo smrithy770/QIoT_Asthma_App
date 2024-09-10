@@ -133,8 +133,8 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
     try {
       _services = await widget.device.discoverServices();
-      print(
-          "Services available: ${_services.length} ${_services.map((s) => s.uuid).toList()}");
+      // print(
+      //     "Services available: ${_services.length} ${_services.map((s) => s.uuid).toList()}");
 
       if (Platform.isAndroid && _services.length > 2) {
         // Skip the first two services for Android
@@ -168,21 +168,28 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
   }
 
   List<Widget> _buildServiceTiles() {
-    // Filter services to include only the one with the desired UUID
+    // Filter to include only the service with the desired UUID
     final filteredServices = _services
         .where((s) =>
             s.uuid.toString().toLowerCase() ==
             '4cde1523-f90f-4962-8f2d-e1adc76edb6d'.toLowerCase())
         .toList();
 
-    return filteredServices
-        .map((s) => ServiceTile(
-              service: s,
-              characteristicTiles: s.characteristics
-                  .map((c) => _buildCharacteristicTile(c))
-                  .toList(),
-            ))
-        .toList();
+    return filteredServices.map((s) {
+      // Filter characteristics to include only the one with the desired UUID
+      final filteredCharacteristics = s.characteristics
+          .where((c) =>
+              c.uuid.toString().toLowerCase() ==
+              '4cde1524-f90f-4962-8f2d-e1adc76edb6d'.toLowerCase())
+          .toList();
+
+      return ServiceTile(
+        service: s,
+        characteristicTiles: filteredCharacteristics
+            .map((c) => _buildCharacteristicTile(c))
+            .toList(),
+      );
+    }).toList();
   }
 
   CharacteristicTile _buildCharacteristicTile(BluetoothCharacteristic c) {
