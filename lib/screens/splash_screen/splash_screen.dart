@@ -13,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       body: Center(
@@ -26,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               SvgPicture.asset(
                 'assets/svgs/user_assets/logo.svg',
-                width: screenSize.width * 0.5,
+                width: screenRatio * 100,
               ),
               const CircularProgressIndicator(
                 valueColor:
