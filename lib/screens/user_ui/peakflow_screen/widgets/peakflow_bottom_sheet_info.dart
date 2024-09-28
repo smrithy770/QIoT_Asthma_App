@@ -16,6 +16,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
 
     Future<void> makePhoneCall(String phoneNumber) async {
       final Uri launchUri = Uri(
@@ -31,7 +32,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
 
     return Container(
       width: screenSize.width,
-      height: 320,
+      height: screenRatio * 160,
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -43,7 +44,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               IconButton(
                 icon: SvgPicture.asset(
                   'assets/svgs/user_assets/cross.svg',
-                  width: 32,
+                  width: screenRatio * 10,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -51,31 +52,31 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               ),
             ],
           ),
-          const Text(
+          Text(
             'If you can\'t speak in a sentence, dial 999 or call your GP urgently.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: screenRatio * 9,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
               color: Color(0xFFFD4646),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenSize.height * 0.01),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.01),
-            child: const Text(
+            child: Text(
               'Take 10 puffs of your reliever inhaler every 5 minutes untill you improve or help arrives.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.errorRed,
-                fontSize: 16,
+                fontSize: screenRatio * 8,
                 fontWeight: FontWeight.normal,
                 fontFamily: 'Roboto',
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenSize.height * 0.01),
           ElevatedButton(
             onPressed: () {
               makePhoneCall('07463435160');
@@ -83,7 +84,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
             style: ElevatedButton.styleFrom(
               fixedSize: Size(
                 screenSize.width * 0.8,
-                screenSize.height * 0.06,
+                screenSize.height * 0.08,
               ),
               foregroundColor: AppColors.primaryWhite,
               backgroundColor: AppColors.errorRed,
@@ -95,10 +96,10 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
                 vertical: 15,
               ),
             ),
-            child: const Text(
+            child: Text(
               'Call 999',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: screenRatio * 8,
                 fontWeight: FontWeight.normal,
                 fontFamily: 'Roboto',
               ),
@@ -111,7 +112,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               underline: true,
               color: const Color(0xFF004283),
               textAfterClickable: '',
-              fontSize: 16,
+              fontSize: screenRatio * 7,
               onTap: () {})
         ],
       ),

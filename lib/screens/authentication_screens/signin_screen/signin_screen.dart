@@ -162,7 +162,7 @@ class _SigninScreenState extends State<SigninScreen> {
             physics: const BouncingScrollPhysics(),
             child: Container(
               width: screenSize.width,
-              height: screenSize.height,
+              // height: screenSize.height,
               padding: const EdgeInsets.all(16),
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -335,7 +335,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   _pobscureText
                                       ? Icons.visibility_off
                                       : Icons.visibility,
-                                      size: screenRatio * 10,
+                                  size: screenRatio * 10,
                                 ),
                               ),
                             ),
@@ -346,7 +346,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Password is required';
                               } else if (!_isPasswordValid) {
-                                return 'Minimum 8 characters, \nMinimum 1 special character, \nMinimum 1 numerical character, \nMinimum 1 uppercase & lowercase character';
+                                return 'Enter valid Password';
                               }
                               return null;
                             },
@@ -403,7 +403,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenRatio * 64),
+                    SizedBox(height: screenRatio * 32),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

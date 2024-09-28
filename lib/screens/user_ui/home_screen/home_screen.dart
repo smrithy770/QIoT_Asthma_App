@@ -59,16 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
       // print(jsonResponse);
       final status = jsonResponse['status'];
       if (status == 200) {
-        int randomNumber =
-            Random().nextInt(jsonResponse['payload']['asthmaMessages'].length);
         setState(() {
           _baseLineScore = jsonResponse['payload']['baseLineScore'].toString();
           _steroidDosage = jsonResponse['payload']['steroidDosage'].toString();
           _salbutomalDosage =
               jsonResponse['payload']['salbutomalDosage'].toString();
-          _asthmamessages = jsonResponse['payload']['asthmaMessages']
-                  [randomNumber]['message']
-              .toString();
+          _asthmamessages =
+              jsonResponse['payload']['asthmaMessages']['message'].toString();
           _nextTaskTime = jsonResponse['payload']['nextTaskTime'];
           _children = jsonResponse['payload']['children'];
         });
@@ -469,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         _asthmamessages!,
                         textAlign: TextAlign.justify,
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: AppColors.primaryBlueText,
                           fontSize: screenRatio * 8,
                           fontWeight: FontWeight.normal,

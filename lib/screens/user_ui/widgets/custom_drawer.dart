@@ -1,10 +1,12 @@
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
+import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
+import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -139,6 +141,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Steroid Dose",
                     onTap: () {
                       widget.onItemSelected(2);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SteroidDoseScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(
@@ -151,6 +164,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Asthma Control Test(ACT)",
                     onTap: () {
                       widget.onItemSelected(3);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AsthmaControlTestScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(

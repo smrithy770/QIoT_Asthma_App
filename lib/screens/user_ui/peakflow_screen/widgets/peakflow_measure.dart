@@ -3,9 +3,11 @@ import 'package:flutter_dash/flutter_dash.dart';
 
 class PeakflowMeasure extends StatelessWidget {
   final Size screenSize;
+  final double screenRatio;
   const PeakflowMeasure({
     super.key,
     required this.screenSize,
+    required this.screenRatio,
   });
 
   @override
@@ -39,7 +41,7 @@ class PeakflowMeasure extends StatelessWidget {
               // 1st Dash
               const Dash(
                 direction: Axis.vertical,
-                length: 22,
+                length: 18,
                 dashLength: 4,
                 dashColor: Color(0xFFFF8500),
               ),
@@ -61,7 +63,7 @@ class PeakflowMeasure extends StatelessWidget {
               // 2nd Dash
               const Dash(
                 direction: Axis.vertical,
-                length: 48,
+                length: 32,
                 dashLength: 4,
                 dashColor: Color(0xFFFF8500),
               ),
@@ -83,7 +85,7 @@ class PeakflowMeasure extends StatelessWidget {
               // 3rd Dash
               const Dash(
                 direction: Axis.vertical,
-                length: 22,
+                length: 16,
                 dashLength: 4,
                 dashColor: Color(0xFFFF8500),
               ),
@@ -105,7 +107,7 @@ class PeakflowMeasure extends StatelessWidget {
               // 4th Dash
               const Dash(
                 direction: Axis.vertical,
-                length: 44,
+                length: 36,
                 dashLength: 4,
                 dashColor: Color(0xFFFF8500),
               ),
@@ -127,7 +129,7 @@ class PeakflowMeasure extends StatelessWidget {
               // 5th Dash
               const Dash(
                 direction: Axis.vertical,
-                length: 26,
+                length: 16,
                 dashLength: 4,
                 dashColor: Color(0xFFFF8500),
               ),
@@ -156,102 +158,103 @@ class PeakflowMeasure extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              const SizedBox(height: 4),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 28,
-                child: const Align(
+                height: 24,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Slide the marker to zero',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 46,
-                child: const Align(
+                height: 42,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Stand or sit upright and hold the meter level',
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 28,
-                child: const Align(
+                height: 24,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Take a deep breath',
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 46,
-                child: const Align(
+                height: 44,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Make sure your mouth makes a tight seal around the mouthpiece',
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 28,
-                child: const Align(
+                height: 24,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Blow as hard and fast as you can into the meter',
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 8),
               SizedBox(
                 width: screenSize.width * 0.9,
-                height: 46,
-                child: const Align(
+                height: 44,
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Repeat steps 1-5 three times and record your best score below',
                     style: TextStyle(
                       color: Color(0xFF6C6C6C),
-                      fontSize: 18,
+                      fontSize: screenRatio * 8,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
                     ),

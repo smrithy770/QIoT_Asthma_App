@@ -1,5 +1,6 @@
 import 'package:asthmaapp/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NotificationBottomSheet extends StatefulWidget {
@@ -21,6 +22,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
   // }
 
   TimeOfDay timeOfDay = TimeOfDay.now();
+  late String morningTime, eveningTime;
 
   Future<void> _selectMorningTime(BuildContext context) async {
     var initialTime =
@@ -68,7 +70,10 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
         setState(() {
           timeOfDay = time;
           _morningController.text =
-              "${time.hour}:${time.minute} ${time.period.name}";
+              "${time.hour}:${time.minute.toString().padLeft(2, '0')} ${time.period.name}";
+          morningTime =
+              "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
+          print(morningTime);
         });
       }
     }
@@ -120,7 +125,10 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
         setState(() {
           timeOfDay = time;
           _eveningController.text =
-              "${time.hour}:${time.minute} ${time.period.name}";
+              "${time.hour}:${time.minute.toString().padLeft(2, '0')} ${time.period.name}";
+          eveningTime =
+              "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
+          print(eveningTime);
         });
       }
     }
@@ -129,10 +137,11 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
 
     return Container(
       width: screenSize.width,
-      height: 384,
+      height: screenRatio * 176,
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -144,7 +153,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
               IconButton(
                 icon: SvgPicture.asset(
                   'assets/svgs/user_assets/cross.svg',
-                  width: 32,
+                  width: screenRatio * 10,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -152,17 +161,17 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
               ),
             ],
           ),
-          const Text(
+          Text(
             'Please select notification timings',
             textAlign: TextAlign.left,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: screenRatio * 9,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
               color: Color(0xFF004283),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: screenSize.height * 0.01),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Form(
@@ -172,12 +181,12 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                 children: <Widget>[
                   SizedBox(
                     width: screenSize.width,
-                    child: const Text(
+                    child: Text(
                       'Morning:',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF6C6C6C),
-                        fontSize: 18,
+                        fontSize: screenRatio * 8,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Roboto',
                       ),
@@ -186,21 +195,31 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                   TextFormField(
                     controller: _morningController,
                     onTap: () => _selectMorningTime(context),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: screenRatio * 8,
+                        vertical: screenRatio * 4,
+                      ),
                       hintText: 'Select Morning Time',
+                      hintStyle: TextStyle(
+                        color: Color(0xFF6C6C6C),
+                        fontSize: screenRatio * 7,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Roboto',
+                      ),
                       border: OutlineInputBorder(),
                     ),
                     readOnly: true,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: screenSize.height * 0.01),
                   SizedBox(
                     width: screenSize.width,
-                    child: const Text(
+                    child: Text(
                       'Evening:',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF6C6C6C),
-                        fontSize: 18,
+                        fontSize: screenRatio * 8,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Roboto',
                       ),
@@ -209,18 +228,28 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                   TextFormField(
                     controller: _eveningController,
                     onTap: () => _selectEveningTime(context),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: screenRatio * 8,
+                        vertical: screenRatio * 4,
+                      ),
                       hintText: 'Select Evening Time',
+                      hintStyle: TextStyle(
+                        color: Color(0xFF6C6C6C),
+                        fontSize: screenRatio * 7,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Roboto',
+                      ),
                       border: OutlineInputBorder(),
                     ),
                     readOnly: true,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: screenSize.height * 0.02),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(
-                        screenSize.width * 0.24,
+                        screenSize.width * 0.26,
                         56,
                       ),
                       foregroundColor: const Color(0xFFFFFFFF),
@@ -231,11 +260,11 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 8),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Submit',
                       style: TextStyle(
                         color: Color(0xFFFFFFFF),
-                        fontSize: 18,
+                        fontSize: screenRatio * 8,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Roboto',
                       ),
