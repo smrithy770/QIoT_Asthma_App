@@ -197,7 +197,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           },
         ),
         title: const Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.centerLeft,
           child: Text(
             'Devices',
             style: TextStyle(

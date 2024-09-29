@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:logger/logger.dart';
 import 'package:realm/realm.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -23,6 +24,8 @@ Future _firebaseBackgroundMessageHandler(RemoteMessage message) async {
     print('Message received in the background!');
   }
 }
+
+final Logger logger = Logger();
 
 void main() async {
   final router = FluroRouter();

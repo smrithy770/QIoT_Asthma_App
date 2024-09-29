@@ -3,7 +3,10 @@ import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
+import 'package:asthmaapp/screens/user_ui/education_screen/education_screen.dart';
+import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
+import 'package:asthmaapp/screens/user_ui/notes_screen/notes_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
@@ -15,6 +18,7 @@ import 'package:realm/realm.dart';
 class CustomDrawer extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
+  String? remoteEducationPDFpath;
   final VoidCallback onClose;
   final Function(int) onItemSelected;
 
@@ -23,6 +27,7 @@ class CustomDrawer extends StatefulWidget {
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
+    this.remoteEducationPDFpath,
     required this.onClose,
     required this.onItemSelected,
   });
@@ -95,16 +100,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Home",
                     onTap: () {
                       widget.onItemSelected(0);
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/home', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
@@ -118,16 +123,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Peakflow",
                     onTap: () {
                       widget.onItemSelected(1);
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => PeakflowScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/peakflow_record', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
@@ -187,6 +192,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Fitness and Stress",
                     onTap: () {
                       widget.onItemSelected(4);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FitnessStressScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(
@@ -222,6 +238,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Notes",
                     onTap: () {
                       widget.onItemSelected(6);
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotesScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                   ),
                   const Divider(
@@ -258,6 +285,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Education",
                     onTap: () {
                       widget.onItemSelected(9);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EducationScreen(
+                            realm: widget.realm,
+                            deviceToken: widget.deviceToken,
+                            deviceType: widget.deviceType,
+                            path: widget.remoteEducationPDFpath,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   const Divider(

@@ -18,5 +18,9 @@ class ApiConstants {
     return '/user/$id';
   }
 
+  static String uploadSteroidCardUrl(String userId) {
+    return '/user/uploadsteroidcard/$userId';
+  }
+
   static const String getAllAsthmaMessages = '/user/asthmamessages';
 }

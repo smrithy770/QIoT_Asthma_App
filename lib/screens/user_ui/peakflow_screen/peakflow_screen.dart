@@ -71,7 +71,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
         backgroundColor: const Color(0xFF004283),
         foregroundColor: const Color(0xFFFFFFFF),
         title: Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.centerLeft,
           child: Text(
             'Peakflow',
             style: TextStyle(

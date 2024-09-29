@@ -72,17 +72,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
-        title: const Align(
-          alignment: Alignment.bottomLeft,
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
+        title: Align(
+          alignment: Alignment.centerLeft,
           child: Text(
             'Profile',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: screenRatio * 10,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
             ),
@@ -114,17 +115,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // First Name
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.08,
-                  padding: EdgeInsets.all(screenSize.height * 0.01),
+                  height: screenRatio * 32,
+                  padding: EdgeInsets.all(screenRatio * 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primaryWhite,
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.08),
                         spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 4),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -132,15 +133,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'First Name',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: AppColors.primaryGreyText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
+                            fontSize: screenRatio * 8,
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
                           ),
                         ),
@@ -150,9 +151,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text(
                           _firstName ?? '-',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Color(0xFF004283),
-                              fontSize: 18,
+                          style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: screenRatio * 7,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Roboto'),
                         ),
@@ -164,17 +165,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Last Name
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.08,
-                  padding: EdgeInsets.all(screenSize.height * 0.01),
+                  height: screenRatio * 32,
+                  padding: EdgeInsets.all(screenRatio * 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primaryWhite,
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.08),
                         spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 4),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -182,15 +183,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Last Name',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: AppColors.primaryGreyText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
+                            fontSize: screenRatio * 8,
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
                           ),
                         ),
@@ -200,9 +201,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text(
                           _lastName ?? '-',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Color(0xFF004283),
-                              fontSize: 18,
+                          style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: screenRatio * 7,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Roboto'),
                         ),
@@ -214,17 +215,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Email Address
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.08,
-                  padding: EdgeInsets.all(screenSize.height * 0.01),
+                  height: screenRatio * 32,
+                  padding: EdgeInsets.all(screenRatio * 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primaryWhite,
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.08),
                         spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 4),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -232,15 +233,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Email Address',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: AppColors.primaryGreyText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
+                            fontSize: screenRatio * 8,
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
                           ),
                         ),
@@ -250,9 +251,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text(
                           _email ?? '-',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Color(0xFF004283),
-                              fontSize: 18,
+                          style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: screenRatio * 7,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Roboto'),
                         ),
@@ -264,17 +265,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // General Practitioner Number
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.08,
-                  padding: EdgeInsets.all(screenSize.height * 0.01),
+                  height: screenRatio * 32,
+                  padding: EdgeInsets.all(screenRatio * 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.primaryWhite,
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withOpacity(0.08),
                         spreadRadius: 1,
-                        blurRadius: 4,
-                        offset: const Offset(0, 4),
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -282,15 +283,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'General Practitioner Number',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: AppColors.primaryGreyText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
+                            fontSize: screenRatio * 8,
+                            fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
                           ),
                         ),
@@ -300,9 +301,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text(
                           '+${_practionerContact ?? '-'}',
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Color(0xFF004283),
-                              fontSize: 18,
+                          style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: screenRatio * 7,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Roboto'),
                         ),

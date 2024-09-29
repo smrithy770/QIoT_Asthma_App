@@ -16,9 +16,21 @@ class PushNotificationService {
     await _permissionService.notificationPermission();
   }
 
-  static Future<String?> getDeviceToken() async {
-    String? token = await _firebaseMessaging.getToken();
-    return token;
+  static Future<String?> getDeviceToken({int retries = 3}) async {
+    int attempt = 0;
+    while (attempt < retries) {
+      try {
+        String? token = await _firebaseMessaging.getToken();
+        return token;
+      } catch (e) {
+        attempt++;
+        if (attempt >= retries) {
+          throw Exception('Failed to get device token after $retries attempts: $e');
+        }
+        await Future.delayed(Duration(seconds: 2)); // Wait before retrying
+      }
+    }
+    return null;
   }
 
   static Future localNotificationInit() async {

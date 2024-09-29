@@ -38,7 +38,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           },
         ),
         title: const Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.centerLeft,
           child: Text(
             'Notifications',
             style: TextStyle(

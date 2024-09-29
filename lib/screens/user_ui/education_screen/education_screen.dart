@@ -1,25 +1,27 @@
 import 'dart:async';
-
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:realm_dart/src/realm_class.dart';
+import 'package:realm/realm.dart';
 
-class TermsConditionsScreen extends StatefulWidget {
+class EducationScreen extends StatefulWidget {
+  final String? path;
   final Realm realm;
-  final String? pathPDF, deviceToken, deviceType;
-  const TermsConditionsScreen(
-      {super.key,
-      required this.realm,
-      required this.pathPDF,
-      required this.deviceToken,
-      required this.deviceType});
+  final String? deviceToken, deviceType;
+  const EducationScreen({
+    super.key,
+    required this.path,
+    required this.realm,
+    required this.deviceToken,
+    required this.deviceType,
+  });
 
-  @override
-  State<TermsConditionsScreen> createState() => _TermsConditionsScreenState();
+  _EducationScreenState createState() => _EducationScreenState();
 }
 
-class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
+class _EducationScreenState extends State<EducationScreen>
+    with WidgetsBindingObserver {
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
   int? pages = 0;
@@ -31,7 +33,8 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-
+    final double screenRatio = screenSize.height / screenSize.width;
+    logger.i('remoteEducationPDFpath: ${widget.path}');
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
@@ -40,23 +43,15 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.popAndPushNamed(
-              context,
-              '/signup',
-              arguments: {
-                'realm': widget.realm,
-                'deviceToken': widget.deviceToken ?? '',
-                'deviceType': widget.deviceType ?? '',
-              },
-            );
+            Navigator.pop(context);
           },
         ),
-        title: const Align(
+        title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Home',
+            "Education",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: screenRatio * 10,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
             ),
@@ -66,7 +61,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
       body: Stack(
         children: <Widget>[
           PDFView(
-            filePath: widget.pathPDF,
+            filePath: widget.path,
             enableSwipe: true,
             swipeHorizontal: true,
             autoSpacing: false,
@@ -87,19 +82,19 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
               setState(() {
                 errorMessage = error.toString();
               });
-              print(error.toString());
+              logger.e(error.toString());
             },
             onPageError: (page, error) {
               setState(() {
                 errorMessage = '$page: ${error.toString()}';
               });
-              print('$page: ${error.toString()}');
+              logger.e('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController pdfViewController) {
               _controller.complete(pdfViewController);
             },
             onLinkHandler: (String? uri) {
-              print('goto uri: $uri');
+              logger.i('goto uri: $uri');
             },
             onPageChanged: (int? page, int? total) {
               setState(() {
@@ -107,7 +102,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                 _totalPages = total;
                 currentPage = page;
               });
-              print('page change: $_pages/$_totalPages');
+              logger.i('page change: $_pages/$_totalPages');
             },
           ),
           errorMessage.isEmpty
