@@ -5,9 +5,7 @@ import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_cont
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
 import 'package:asthmaapp/screens/user_ui/education_screen/education_screen.dart';
 import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
-import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/user_ui/notes_screen/notes_screen.dart';
-import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
@@ -18,11 +16,11 @@ import 'package:realm/realm.dart';
 class CustomDrawer extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  String? remoteEducationPDFpath;
+  final String? remoteEducationPDFpath;
   final VoidCallback onClose;
   final Function(int) onItemSelected;
 
-  CustomDrawer({
+  const CustomDrawer({
     super.key,
     required this.realm,
     required this.deviceToken,
@@ -238,16 +236,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: "Notes",
                     onTap: () {
                       widget.onItemSelected(6);
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => NotesScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/notes_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),

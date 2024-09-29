@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:asthmaapp/api/note_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 import 'notes_screen.dart';
@@ -26,7 +29,7 @@ class _AddNotesScreen extends State<AddNotesScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String painRating = '';
+  String feelRating = '';
 
   @override
   void initState() {
@@ -47,85 +50,85 @@ class _AddNotesScreen extends State<AddNotesScreen> {
   }
 
   void _submitNote() async {
-    // if (userModel == null) return;
-    // if (_formKey.currentState!.validate()) {
-    //   // Logic to submit the note to the database
+    if (userModel == null) return;
+    if (_formKey.currentState!.validate()) {
+      // Logic to submit the note to the database
 
-    //   String title = _titleController.text.trim();
-    //   String description = _descriptionController.text.trim();
-    //   try {
-    //     final response = await NoteApi().addNotes(
-    //       userModel!.id,
-    //       title,
-    //       description,
-    //       painRating,
-    //       userModel!.accessToken,
-    //     );
-    //     final jsonResponse = response;
-    //     final status = jsonResponse['status'];
-    //     if (status == 201) {
-    //       CustomSnackBarUtil.showCustomSnackBar("Note added successfully",
-    //           success: true);
-    //       if (mounted) {
-    //         Navigator.pushAndRemoveUntil(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => NotesScreen(
-    //               realm: widget.realm,
-    //               deviceToken: widget.deviceToken,
-    //               deviceType: widget.deviceType,
-    //             ),
-    //           ),
-    //           (Route<dynamic> route) => false,
-    //         );
-    //       }
-    //     } else {
-    //       // Handle different statuses
-    //       String errorMessage;
-    //       switch (status) {
-    //         case 400:
-    //           errorMessage = 'Bad request: Please check your input';
-    //           break;
-    //         case 500:
-    //           errorMessage = 'Server error: Please try again later';
-    //           break;
-    //         default:
-    //           errorMessage = 'Unexpected error: Please try again';
-    //       }
+      String title = _titleController.text.trim();
+      String description = _descriptionController.text.trim();
+      try {
+        final response = await NoteApi().addNotes(
+          userModel!.id,
+          title,
+          description,
+          feelRating,
+          userModel!.accessToken,
+        );
+        final jsonResponse = response;
+        final status = jsonResponse['status'];
+        if (status == 201) {
+          CustomSnackBarUtil.showCustomSnackBar("Note added successfully",
+              success: true);
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotesScreen(
+                  realm: widget.realm,
+                  deviceToken: widget.deviceToken,
+                  deviceType: widget.deviceType,
+                ),
+              ),
+              (Route<dynamic> route) => false,
+            );
+          }
+        } else {
+          // Handle different statuses
+          String errorMessage;
+          switch (status) {
+            case 400:
+              errorMessage = 'Bad request: Please check your input';
+              break;
+            case 500:
+              errorMessage = 'Server error: Please try again later';
+              break;
+            default:
+              errorMessage = 'Unexpected error: Please try again';
+          }
 
-    //       // Show error message
-    //       CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
-    //     }
-    //   } on SocketException catch (e) {
-    //     // Handle network-specific exceptions
-    //     logger.d('NetworkException: $e');
-    //     CustomSnackBarUtil.showCustomSnackBar(
-    //         'Network error: Please check your internet connection',
-    //         success: false);
-    //   } on Exception catch (e) {
-    //     // Handle generic exceptions
-    //     logger.d('Exception: $e');
-    //     CustomSnackBarUtil.showCustomSnackBar(
-    //         'An error occurred while adding the note',
-    //         success: false);
-    //   }
-    // } else {
-    //   if (_titleController.text.isEmpty) {
-    //     CustomSnackBarUtil.showCustomSnackBar('Title can not be empty',
-    //         success: false);
-    //     return;
-    //   }
-    //   if (_descriptionController.text.isEmpty) {
-    //     CustomSnackBarUtil.showCustomSnackBar('Description can not be empty',
-    //         success: false);
-    //     return;
-    //   }
-    //   if (painRating.isEmpty) {
-    //     CustomSnackBarUtil.showCustomSnackBar('Pain rating can not be empty',
-    //         success: false);
-    //     return;
-    //   }
-    // }
+          // Show error message
+          CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
+        }
+      } on SocketException catch (e) {
+        // Handle network-specific exceptions
+        logger.d('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Network error: Please check your internet connection',
+            success: false);
+      } on Exception catch (e) {
+        // Handle generic exceptions
+        logger.d('Exception: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'An error occurred while adding the note',
+            success: false);
+      }
+    } else {
+      if (_titleController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Title can not be empty',
+            success: false);
+        return;
+      }
+      if (_descriptionController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Description can not be empty',
+            success: false);
+        return;
+      }
+      if (feelRating.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Feeling rating can not be empty',
+            success: false);
+        return;
+      }
+    }
   }
 
   @override
@@ -224,7 +227,7 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'How is your Pain level today?',
+                              'How are you Feeling today?',
                               style: TextStyle(
                                 fontSize: 6 * screenRatio,
                               ),
@@ -233,7 +236,7 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                               children: [
                                 IconButton(
                                   icon: Container(
-                                    color: painRating == 'Low'
+                                    color: feelRating == 'Happy'
                                         ? Colors.green
                                         : Colors.white,
                                     child: Icon(
@@ -241,18 +244,18 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                                       size: screenRatio * 16,
                                     ),
                                   ),
-                                  color: painRating == 'Low'
+                                  color: feelRating == 'Happy'
                                       ? Colors.white
                                       : Colors.green,
                                   onPressed: () {
                                     setState(() {
-                                      painRating = 'Low';
+                                      feelRating = 'Happy';
                                     });
                                   },
                                 ),
                                 IconButton(
                                   icon: Container(
-                                    color: painRating == 'Medium'
+                                    color: feelRating == 'Average'
                                         ? Colors.orange
                                         : Colors.white,
                                     child: Icon(
@@ -260,18 +263,18 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                                       size: screenRatio * 16,
                                     ),
                                   ),
-                                  color: painRating == 'Mediium'
+                                  color: feelRating == 'Average'
                                       ? Colors.white
                                       : Colors.orange,
                                   onPressed: () {
                                     setState(() {
-                                      painRating = 'Medium';
+                                      feelRating = 'Average';
                                     });
                                   },
                                 ),
                                 IconButton(
                                   icon: Container(
-                                    color: painRating == 'High'
+                                    color: feelRating == 'Sad'
                                         ? Colors.amber
                                         : Colors.white,
                                     child: Icon(
@@ -279,12 +282,12 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                                       size: screenRatio * 16,
                                     ),
                                   ),
-                                  color: painRating == 'High'
+                                  color: feelRating == 'Sad'
                                       ? Colors.white
                                       : Colors.amber,
                                   onPressed: () {
                                     setState(() {
-                                      painRating = 'High';
+                                      feelRating = 'Sad';
                                     });
                                   },
                                 ),

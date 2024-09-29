@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_media_downloader/flutter_media_downloader.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:realm/realm.dart';
 
 class AsthmaActionPlan extends StatefulWidget {
   final String? url;

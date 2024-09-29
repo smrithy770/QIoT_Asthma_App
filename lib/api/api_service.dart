@@ -31,7 +31,7 @@ class ApiService {
         // Multipart request for file upload
         var request = http.MultipartRequest('POST', url);
         request.headers['Authorization'] = 'Bearer $accessToken';
-print('file: ${file.path}');
+        print('file: ${file.path}');
         // Add file
         request.files.add(await http.MultipartFile.fromPath('file', file.path));
 
@@ -53,12 +53,38 @@ print('file: ${file.path}');
     }
   }
 
-  Future<Map<String, dynamic>> delete(String endpoint) async {
+  Future<Map<String, dynamic>> put(
+      String endpoint, String? accessToken, Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    final headers = ApiHelper.buildHeaders(); // Adjust headers as needed
-    final response = await http.delete(url, headers: headers);
-    ApiHelper.handleError(response);
-    return ApiHelper.parseResponse(response);
+    if (accessToken == null) {
+      final headers = ApiHelper.buildHeaders();
+      final response =
+          await http.put(url, headers: headers, body: json.encode(data));
+      ApiHelper.handleError(response);
+      return ApiHelper.parseResponse(response);
+    } else {
+      final headers = ApiHelper.buildHeaders(accessToken);
+      final response =
+          await http.put(url, headers: headers, body: json.encode(data));
+      ApiHelper.handleError(response);
+      return ApiHelper.parseResponse(response);
+    }
+  }
+
+  Future<Map<String, dynamic>> delete(
+      String endpoint, String? accessToken) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    if (accessToken == null) {
+      final headers = ApiHelper.buildHeaders();
+      final response = await http.delete(url, headers: headers);
+      ApiHelper.handleError(response);
+      return ApiHelper.parseResponse(response);
+    } else {
+      final headers = ApiHelper.buildHeaders(accessToken);
+      final response = await http.delete(url, headers: headers);
+      ApiHelper.handleError(response);
+      return ApiHelper.parseResponse(response);
+    }
   }
 
   // Add more HTTP methods (GET, PUT, DELETE) as needed

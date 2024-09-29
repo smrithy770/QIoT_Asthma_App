@@ -18,7 +18,6 @@ import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:realm/realm.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   final Realm realm;
@@ -102,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Completer<File> completer = Completer();
     try {
       final filename = url.substring(url.lastIndexOf("/") + 1);
-      var request = await HttpClient().getUrl(Uri.parse(url!));
+      var request = await HttpClient().getUrl(Uri.parse(url));
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();

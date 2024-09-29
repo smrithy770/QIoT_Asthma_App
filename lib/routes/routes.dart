@@ -5,6 +5,7 @@ import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_cont
 import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
 import 'package:asthmaapp/screens/user_ui/notes_screen/add_notes_screen.dart';
+import 'package:asthmaapp/screens/user_ui/notes_screen/edit_notes_screen.dart';
 import 'package:asthmaapp/screens/user_ui/notes_screen/notes_screen.dart';
 import 'package:asthmaapp/screens/user_ui/notification_screen/notification_screen.dart';
 import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
@@ -187,6 +188,24 @@ void defineRoutes(FluroRouter router) {
         String deviceType = args['deviceType'];
         return AddNotesScreen(
           realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/edit_note_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String noteId = args['noteId'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return EditNotesScreen(
+          realm: realm,
+          noteId: noteId,
           deviceToken: deviceToken,
           deviceType: deviceType,
         );

@@ -22,5 +22,21 @@ class ApiConstants {
     return '/user/uploadsteroidcard/$userId';
   }
 
-  static const String getAllAsthmaMessages = '/user/asthmamessages';
+//Start of Note API
+  static String getAllNotesUrl(String userId) {
+    return '/user/$userId/notes';
+  }
+
+  static String getNotesByIdUrl(String userId, String noteId) {
+    return '/user/$userId/notes/$noteId';
+  }
+
+  static String editNoteByIdUrl(String userId, String noteId) {
+    return '/user/$userId/notes/$noteId';
+  }
+
+  static String deleteNoteByIdUrl(String userId, String noteId) {
+    return '/user/$userId/notes/$noteId';
+  }
+  //End of Note API
 }

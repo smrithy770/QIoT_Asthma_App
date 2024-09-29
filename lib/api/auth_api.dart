@@ -45,6 +45,6 @@ class AuthApi {
 
   Future<Map<String, dynamic>> signout(String id) async {
     final signoutUrl = ApiConstants.getSignoutUrl(id);
-    return _apiService.delete(signoutUrl);
+    return _apiService.delete(signoutUrl, null);
   }
 }
