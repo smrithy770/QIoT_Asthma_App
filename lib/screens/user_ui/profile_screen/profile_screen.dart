@@ -49,8 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _handleRefresh() async {
     try {
-      final response =
-          await UserApi().getUserById(userModel!.id, userModel!.accessToken);
+      final response = await UserApi()
+          .getUserById(userModel!.userId, userModel!.accessToken);
       final jsonResponse = response;
       logger.d(jsonResponse);
       final status = jsonResponse['status'];

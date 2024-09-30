@@ -56,7 +56,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
   Future<void> getNotesById(String noteId) async {
     try {
       final jsonResponse = await NoteApi().getNotesById(
-        userModel!.id,
+        userModel!.userId,
         noteId,
         userModel!.accessToken,
       );
@@ -99,7 +99,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
       String description = _descriptionController.text.trim();
       try {
         final response = await NoteApi().editNoteById(
-          userModel!.id,
+          userModel!.userId,
           widget.noteId,
           title,
           description,

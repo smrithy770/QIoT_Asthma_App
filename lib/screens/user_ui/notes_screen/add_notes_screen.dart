@@ -58,7 +58,7 @@ class _AddNotesScreen extends State<AddNotesScreen> {
       String description = _descriptionController.text.trim();
       try {
         final response = await NoteApi().addNotes(
-          userModel!.id,
+          userModel!.userId,
           title,
           description,
           feelRating,

@@ -6,16 +6,16 @@ class ApiConstants {
   static const String refreshtoken = '/auth/refreshtoken';
   static const String signin = '/auth/signin';
   static const String signup = '/auth/signup';
-  static String getSignoutUrl(String id) {
-    return '/auth/signout/$id';
+  static String getSignoutUrl(String userId) {
+    return '/auth/signout/$userId';
   }
 
-  static String getHomepageDataUrl(String id) {
-    return '/user/homepagedata/$id';
+  static String getHomepageDataUrl(String userId) {
+    return '/user/homepagedata/$userId';
   }
 
-  static String getUserByIdUrl(String id) {
-    return '/user/$id';
+  static String getUserByIdUrl(String userId) {
+    return '/user/$userId';
   }
 
   static String uploadSteroidCardUrl(String userId) {

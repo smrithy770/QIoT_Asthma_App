@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     logger.i(userModel!.accessToken);
     try {
       final jsonResponse = await UserApi()
-          .getHomepageData(userModel!.id, userModel!.accessToken);
+          .getHomepageData(userModel!.userId, userModel!.accessToken);
       final status = jsonResponse['status'];
       if (status == 200) {
         final payload = jsonResponse['payload'];

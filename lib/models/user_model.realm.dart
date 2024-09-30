@@ -10,11 +10,11 @@ part of 'user_model.dart';
 class UserModel extends _UserModel
     with RealmEntity, RealmObjectBase, RealmObject {
   UserModel(
-    String id,
+    String userId,
     String accessToken,
     String refreshToken,
   ) {
-    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'userId', userId);
     RealmObjectBase.set(this, 'accessToken', accessToken);
     RealmObjectBase.set(this, 'refreshToken', refreshToken);
   }
@@ -22,9 +22,9 @@ class UserModel extends _UserModel
   UserModel._();
 
   @override
-  String get id => RealmObjectBase.get<String>(this, 'id') as String;
+  String get userId => RealmObjectBase.get<String>(this, 'userId') as String;
   @override
-  set id(String value) => RealmObjectBase.set(this, 'id', value);
+  set userId(String value) => RealmObjectBase.set(this, 'userId', value);
 
   @override
   String get accessToken =>
@@ -53,7 +53,7 @@ class UserModel extends _UserModel
 
   EJsonValue toEJson() {
     return <String, dynamic>{
-      'id': id.toEJson(),
+      'userId': userId.toEJson(),
       'accessToken': accessToken.toEJson(),
       'refreshToken': refreshToken.toEJson(),
     };
@@ -63,12 +63,12 @@ class UserModel extends _UserModel
   static UserModel _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
-        'id': EJsonValue id,
+        'userId': EJsonValue userId,
         'accessToken': EJsonValue accessToken,
         'refreshToken': EJsonValue refreshToken,
       } =>
         UserModel(
-          fromEJson(id),
+          fromEJson(userId),
           fromEJson(accessToken),
           fromEJson(refreshToken),
         ),
@@ -80,7 +80,7 @@ class UserModel extends _UserModel
     RealmObjectBase.registerFactory(UserModel._);
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.realmObject, UserModel, 'UserModel', [
-      SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
+      SchemaProperty('userId', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('accessToken', RealmPropertyType.string),
       SchemaProperty('refreshToken', RealmPropertyType.string),
     ]);

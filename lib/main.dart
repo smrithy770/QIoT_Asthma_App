@@ -97,6 +97,7 @@ class _MainState extends State<Main> {
   bool _isRefreshTokenRefreshed = false;
   String? _deviceToken = '';
   String? _deviceType = '';
+  bool _isLoading = true; // Added loading state
 
   @override
   void initState() {
@@ -138,6 +139,7 @@ class _MainState extends State<Main> {
     bool isRefreshed = await TokenRefreshService().refreshToken();
     setState(() {
       _isRefreshTokenRefreshed = isRefreshed;
+      _isLoading = false; // Set loading to false once done
     });
   }
 
@@ -155,15 +157,17 @@ class _MainState extends State<Main> {
       navigatorKey: navigatorKey,
       title: 'QIoT',
       onGenerateRoute: widget.router.generator,
-      home: initialNavigation(),
+      home: _isLoading
+          ? const SplashScreen() // Show SplashScreen while loading
+          : initialNavigation(), // Navigate based on token status
     );
   }
 
   // Initial navigation logic based on user login and token status
   Widget initialNavigation() {
     UserModel? userModel = getUserData(widget.realm);
-    if (_isDeviceTokenInitialized && _isRefreshTokenRefreshed) {
-      return userModel?.id != null
+    if (_isDeviceTokenInitialized) {
+      return userModel?.userId != null && _isRefreshTokenRefreshed
           ? RouterProvider(
               router: widget.router,
               child: HomeScreen(

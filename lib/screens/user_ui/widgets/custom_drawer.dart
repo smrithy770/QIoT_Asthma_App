@@ -342,7 +342,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       UserModel? userModel = getUserData(widget.realm);
 
                       widget.itemName('Logout');
-                      final response = await AuthApi().signout(userModel!.id);
+                      final response =
+                          await AuthApi().signout(userModel!.userId);
                       final jsonResponse = response;
                       final status = jsonResponse['status'] as int;
 

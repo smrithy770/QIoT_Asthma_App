@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:asthmaapp/api/peakflow_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
@@ -5,6 +8,8 @@ import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_b
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_measure.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
+import 'package:asthmaapp/services/permission_service.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
@@ -29,6 +34,8 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _peakflowvalueController =
       TextEditingController();
+  final PermissionService _permissionService =
+      PermissionService(); // Create an instance of PermissionService
 
   @override
   void initState() {
@@ -77,10 +84,41 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
     }
   }
 
-  void _submitPeakflow() {
+  void _submitPeakflow() async {
+    if (userModel == null) return;
+
+    await _permissionService.locationPermission();
     if (_formKey.currentState!.validate()) {
-      int pFlow = int.parse(_peakflowvalueController.text.trim());
-      logger.d(pFlow);
+      int peakflowValue = int.parse(_peakflowvalueController.text.trim());
+      try {
+        final response = await PeakflowApi().addPeakflow(
+          userModel!.userId,
+          peakflowValue,
+          DateTime.now().month,
+          DateTime.now().year,
+          userModel!.accessToken,
+        );
+        final jsonResponse = response;
+        final status = jsonResponse['status'];
+      } on SocketException catch (e) {
+        // Handle network-specific exceptions
+        logger.d('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Network error: Please check your internet connection',
+            success: false);
+      } on Exception catch (e) {
+        // Handle generic exceptions
+        logger.d('Exception: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'An error occurred while adding the note',
+            success: false);
+      }
+    } else {
+      if (_peakflowvalueController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Peakflow Value can not be empty',
+            success: false);
+        return;
+      }
     }
   }
 

@@ -1,11 +1,10 @@
-import 'package:asthmaapp/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> notificationPermission() async {
+  Future<bool> notificationPermission() async {
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -17,16 +16,19 @@ class PermissionService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      logger.d('User granted full permission');
+      print('User granted full permission');
+      return true;
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      logger.d('User granted provisional permission');
+      print('User granted provisional permission');
+      return false;
     } else {
-      logger.d('User declined or has not accepted permission');
+      print('User declined or has not accepted permission');
+      return false;
     }
   }
 
-  Future<void> locationPermission() async {
+  Future<bool> locationPermission() async {
     PermissionStatus status = await Permission.location.status;
 
     if (status.isDenied) {
@@ -34,17 +36,22 @@ class PermissionService {
       status = await Permission.location.request();
     }
     if (status.isGranted) {
-      logger.d('User granted location permission');
+      print('User granted location permission');
+      return true;
     } else if (status.isDenied) {
-      logger.d('User denied location permission');
+      print('User denied location permission');
+      return false;
     } else if (status.isPermanentlyDenied) {
-      logger.d('User permanently denied location permission');
+      print('User permanently denied location permission');
       // You can open app settings to let the user manually enable the permission
       openAppSettings();
+      return false; // Add a return statement here
     } else if (status.isRestricted) {
-      logger.d('User restricted from granting location permission');
+      print('User restricted from granting location permission');
+      return false;
     } else if (status.isLimited) {
-      logger.d('User granted limited location permission');
+      print('User granted limited location permission');
     }
+    return false; // Add a return statement here
   }
 }

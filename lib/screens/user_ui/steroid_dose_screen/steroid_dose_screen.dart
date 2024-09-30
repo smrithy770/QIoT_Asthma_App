@@ -99,7 +99,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
     });
     try {
       final response = await UploadApi().uploadSteroidCard(
-        userModel!.id,
+        userModel!.userId,
         // file.path.toString(),
         file.path,
         userModel!.accessToken,

@@ -43,8 +43,8 @@ class AuthApi {
     });
   }
 
-  Future<Map<String, dynamic>> signout(String id) async {
-    final signoutUrl = ApiConstants.getSignoutUrl(id);
+  Future<Map<String, dynamic>> signout(String userId) async {
+    final signoutUrl = ApiConstants.getSignoutUrl(userId);
     return _apiService.delete(signoutUrl, null);
   }
 }

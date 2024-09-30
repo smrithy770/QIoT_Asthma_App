@@ -60,7 +60,7 @@ class _NoteScreenState extends State<NotesScreen> {
 
     try {
       final jsonResponse = await NoteApi().getAllNotes(
-        userModel!.id,
+        userModel!.userId,
         userModel!.accessToken,
       );
       final status = jsonResponse['status'];
@@ -89,7 +89,7 @@ class _NoteScreenState extends State<NotesScreen> {
 
     try {
       final response = await NoteApi().deleteNoteById(
-        userModel!.id,
+        userModel!.userId,
         noteId,
         userModel!.accessToken,
       );

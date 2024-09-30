@@ -7,10 +7,10 @@ import 'package:asthmaapp/main.dart';
 class UploadApi {
   final ApiService _apiService = ApiService(baseUrl: ApiConstants.baseURL);
 
-  Future<Map<String, dynamic>> uploadSteroidCard(String id, String? file,
+  Future<Map<String, dynamic>> uploadSteroidCard(String userId, String? file,
       [String? accessToken]) async {
     logger.d('file: $file');
-    final uploadSteroidCardUrl = ApiConstants.uploadSteroidCardUrl(id);
+    final uploadSteroidCardUrl = ApiConstants.uploadSteroidCardUrl(userId);
     return _apiService.post(
       uploadSteroidCardUrl,
       accessToken,
