@@ -1,3 +1,4 @@
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/widget/level_widget.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/gestures.dart';
@@ -62,13 +63,13 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
     // if (_canSubmit && _fitnessLevel != null && _stressLevel != null) {
     //   try {
     //     // Handle your submission logic here.
-    //     print('Submitted! Fitness Level: $fitness, Stress Level: $stress');
-    //     // print(
+    //     logger.d('Submitted! Fitness Level: $fitness, Stress Level: $stress');
+    //     // logger.d(
     //     //     'Submitted! Fitness Level: $_fitnessLevel, Stress Level: $_stressLevel');
     //     final Map<String, dynamic>? fitnessstressData =
     //         await FitnessStressDataApi.postFitnessStressData(fitness, stress);
     //     if (fitnessstressData != null) {
-    //       print('Fitness Stress Data: $fitnessstressData');
+    //       logger.d('Fitness Stress Data: $fitnessstressData');
     //       _showCustomSnackBar('Submitted successfully!', true);
     //       final now = DateTime.now();
     //       await storage.write(
@@ -102,7 +103,7 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
   Future<void> _submit() async {
     // if (_canSubmit) {
     //   // Handle your submission logic here.
-    //   print(
+    //   logger.d(
     //       'Submitted! Fitness Level: $_fitnessLevel, Stress Level: $_stressLevel');
 
     //   final now = DateTime.now();
@@ -152,14 +153,14 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
     setState(() {
       _fitnessLevel = value;
     });
-    print('Fitness Level: $_fitnessLevel');
+    logger.d('Fitness Level: $_fitnessLevel');
   }
 
   void _onStressLevelChanged(String? value) {
     setState(() {
       _stressLevel = value;
     });
-    print('Stress Level: $_stressLevel');
+    logger.d('Stress Level: $_stressLevel');
   }
 
   Future<void> openLink(String url) async {
@@ -207,7 +208,7 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
             Navigator.of(context).pop();
           },
           onItemSelected: (int index) {
-            print(index);
+            logger.d(index);
           },
         ),
         body: GestureDetector(
@@ -425,7 +426,7 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
                           ElevatedButton(
                             onPressed: _canSubmit
                                 ? () {
-                                    print(_canSubmit);
+                                    logger.d(_canSubmit);
                                     _submitFitnessStress(
                                         _fitnessLevel!, _stressLevel!);
                                   }
@@ -512,7 +513,7 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   openLink('www.asthmaandlung.org.uk');
-                                  print('Open asthmaandlung.org.uk');
+                                  logger.d('Open asthmaandlung.org.uk');
                                 },
                             ),
                             TextSpan(
@@ -552,7 +553,8 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
                                   //         const FitnessStressReportScreen(),
                                   //   ),
                                   // );
-                                  print('View your fitness and stress report');
+                                  logger
+                                      .d('View your fitness and stress report');
                                 },
                             ),
                           ],

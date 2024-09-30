@@ -1,3 +1,4 @@
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -73,7 +74,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
               "${time.hour}:${time.minute.toString().padLeft(2, '0')} ${time.period.name}";
           morningTime =
               "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
-          print(morningTime);
+          logger.d(morningTime);
         });
       }
     }
@@ -128,7 +129,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
               "${time.hour}:${time.minute.toString().padLeft(2, '0')} ${time.period.name}";
           eveningTime =
               "${time.hour}:${time.minute.toString().padLeft(2, '0')}";
-          print(eveningTime);
+          logger.d(eveningTime);
         });
       }
     }

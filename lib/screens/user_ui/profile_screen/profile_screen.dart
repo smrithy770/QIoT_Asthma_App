@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:asthmaapp/api/user_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final response =
           await UserApi().getUserById(userModel!.id, userModel!.accessToken);
       final jsonResponse = response;
-      print(jsonResponse);
+      logger.d(jsonResponse);
       final status = jsonResponse['status'];
       if (status == 200) {
         setState(() {
@@ -63,9 +64,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } on SocketException catch (e) {
-      print('NetworkException: $e');
+      logger.d('NetworkException: $e');
     } on Exception catch (e) {
-      print('Failed to fetch data: $e');
+      logger.d('Failed to fetch data: $e');
     }
   }
 
@@ -98,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Navigator.of(context).pop();
         },
         onItemSelected: (int index) {
-          print(index);
+          logger.d(index);
         },
       ),
       body: SingleChildScrollView(
@@ -322,7 +323,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          print('Edit');
+                          logger.d('Edit');
                         },
                         child: const Text(
                           'Edit',
@@ -337,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          print('Change Password');
+                          logger.d('Change Password');
                         },
                         child: const Text(
                           'Change Password',

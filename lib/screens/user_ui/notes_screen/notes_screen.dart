@@ -161,7 +161,7 @@ class _NoteScreenState extends State<NotesScreen> {
           Navigator.of(context).pop();
         },
         onItemSelected: (int index) {
-          print(index);
+          logger.d(index);
         },
       ),
       body: RefreshIndicator(

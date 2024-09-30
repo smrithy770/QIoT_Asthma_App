@@ -1,4 +1,6 @@
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
+import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_measure.dart';
@@ -23,9 +25,30 @@ class PeakflowScreen extends StatefulWidget {
 }
 
 class _PeakflowScreenState extends State<PeakflowScreen> {
+  UserModel? userModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _peakflowvalueController =
       TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = getUserData(widget.realm);
+    if (user != null) {
+      setState(() {
+        userModel = user;
+      });
+    }
+  }
+
+  UserModel? getUserData(Realm realm) {
+    final results = realm.all<UserModel>();
+    return results.isNotEmpty ? results[0] : null;
+  }
 
   void _openpeakflowbottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -57,7 +80,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
   void _submitPeakflow() {
     if (_formKey.currentState!.validate()) {
       int pFlow = int.parse(_peakflowvalueController.text.trim());
-      print(pFlow);
+      logger.d(pFlow);
     }
   }
 
@@ -90,7 +113,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
           Navigator.of(context).pop();
         },
         onItemSelected: (int index) {
-          print(index);
+          logger.d(index);
         },
       ),
       body: GestureDetector(
@@ -189,7 +212,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 openLink('asthmaandlung.org.uk');
-                                print('Open asthmaandlung.org.uk');
+                                logger.d('Open asthmaandlung.org.uk');
                               },
                           ),
                           TextSpan(
@@ -211,7 +234,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 openLink('nhs.uk');
-                                print('nhs.uk');
+                                logger.d('nhs.uk');
                               },
                           ),
                         ],

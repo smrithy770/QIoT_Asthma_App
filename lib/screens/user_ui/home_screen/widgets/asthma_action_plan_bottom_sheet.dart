@@ -48,7 +48,7 @@ class _AsthmaActionPlanBottomSheetState
     //       .uploadAsthmaActionPlanData(file.path.toString())
     //       .then((value) async {
     //     if (value != null) {
-    //       print('Submitted: $value');
+    //       logger.d('Submitted: $value');
     //       Navigator.pop(context);
 
     //       CustomSnackBarUtil.showCustomSnackBar(
@@ -57,7 +57,7 @@ class _AsthmaActionPlanBottomSheetState
     //     }
     //   });
     // } catch (e) {
-    //   print('Error: $e');
+    //   logger.d('Error: $e');
     //   throw Exception('Error: $e');
     //   // CustomSnackBar(
     //   //   message: 'Error: $e!',

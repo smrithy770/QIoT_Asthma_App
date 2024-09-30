@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -108,7 +109,7 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
 
     try {
       // Debugging: Print the length of _value and its content
-      print("Data length: ${_value.length}, Data content: $_value");
+      logger.d("Data length: ${_value.length}, Data content: $_value");
 
       if (_value.length == 2) {
         // Handle 2-byte unsigned integer

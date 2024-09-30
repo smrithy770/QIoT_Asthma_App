@@ -1,3 +1,4 @@
+import 'package:asthmaapp/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PermissionService {
@@ -17,9 +18,9 @@ class PermissionService {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
+      logger.d('User granted provisional permission');
     } else {
-      print('User declined or has not accepted permission');
+      logger.d('User declined or has not accepted permission');
     }
   }
 }

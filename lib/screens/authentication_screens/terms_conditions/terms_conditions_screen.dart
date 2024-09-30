@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:realm_dart/src/realm_class.dart';
@@ -87,19 +88,19 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
               setState(() {
                 errorMessage = error.toString();
               });
-              print(error.toString());
+              logger.d(error.toString());
             },
             onPageError: (page, error) {
               setState(() {
                 errorMessage = '$page: ${error.toString()}';
               });
-              print('$page: ${error.toString()}');
+              logger.d('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController pdfViewController) {
               _controller.complete(pdfViewController);
             },
             onLinkHandler: (String? uri) {
-              print('goto uri: $uri');
+              logger.d('goto uri: $uri');
             },
             onPageChanged: (int? page, int? total) {
               setState(() {
@@ -107,7 +108,7 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
                 _totalPages = total;
                 currentPage = page;
               });
-              print('page change: $_pages/$_totalPages');
+              logger.d('page change: $_pages/$_totalPages');
             },
           ),
           errorMessage.isEmpty

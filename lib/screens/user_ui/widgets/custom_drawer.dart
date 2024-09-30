@@ -123,7 +123,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       widget.onItemSelected(1);
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        '/peakflow_record', // Named route
+                        '/peakflow_record_screen', // Named route
                         (Route<dynamic> route) =>
                             false, // This removes all previous routes
                         arguments: {

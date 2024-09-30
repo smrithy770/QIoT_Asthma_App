@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:asthmaapp/api/auth_api.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
@@ -128,17 +129,17 @@ class _SignupScreenState extends State<SignupScreen> {
         }
       } on RealmException catch (e) {
         // Handle Realm-specific exceptions
-        print('RealmException: $e');
+        logger.d('RealmException: $e');
         CustomSnackBarUtil.showCustomSnackBar('Database error: ${e.message}',
             success: false);
       } on SocketException catch (e) {
         // Handle network-specific exceptions
-        print('NetworkException: $e');
+        logger.d('NetworkException: $e');
         CustomSnackBarUtil.showCustomSnackBar(
             'Network error: Please check your internet connection',
             success: false);
       } on Exception catch (e) {
-        print('Signup failed: $e');
+        logger.d('Signup failed: $e');
         CustomSnackBarUtil.showCustomSnackBar('Signup failed: ${e.toString()}',
             success: false);
       }
@@ -151,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
         _firstNameEmpty = value.isEmpty;
       });
     }
-    print('Last Name is empty: $_lastNameEmpty');
+    logger.d('Last Name is empty: $_lastNameEmpty');
   }
 
   void _validateLastName(String value) {
@@ -160,7 +161,7 @@ class _SignupScreenState extends State<SignupScreen> {
         _lastNameEmpty = value.isEmpty;
       });
     }
-    print('Last Name is empty: $_lastNameEmpty');
+    logger.d('Last Name is empty: $_lastNameEmpty');
   }
 
   void _validateEmail(String value) {
@@ -170,7 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
         _isEmailValid = isValid;
       });
     }
-    print('Email is valid: $_isEmailValid');
+    logger.d('Email is valid: $_isEmailValid');
   }
 
   void _validatePassword(String value) {

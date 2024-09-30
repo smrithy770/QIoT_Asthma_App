@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -107,7 +108,7 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
 
     // Convert the list of int (bytes) to a string
     String jsonString = utf8.decode(_value);
-    print("Received JSON String: $jsonString");
+    logger.d("Received JSON String: $jsonString");
 
     try {
       // Decode the JSON string
@@ -125,8 +126,7 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
           children: [
             Text(temperature,
                 style: TextStyle(fontSize: 13, color: Colors.grey)),
-            Text(humidity,
-                style: TextStyle(fontSize: 13, color: Colors.grey)),
+            Text(humidity, style: TextStyle(fontSize: 13, color: Colors.grey)),
           ],
         );
       } else {
@@ -134,7 +134,7 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
             style: TextStyle(fontSize: 13, color: Colors.grey));
       }
     } catch (e) {
-      print("Error decoding JSON: $e");
+      logger.d("Error decoding JSON: $e");
       return Text("Error decoding data",
           style: TextStyle(fontSize: 13, color: Colors.red));
     }

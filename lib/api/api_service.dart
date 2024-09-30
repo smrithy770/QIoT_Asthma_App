@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:asthmaapp/api/utils/api_helpers.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -31,7 +32,7 @@ class ApiService {
         // Multipart request for file upload
         var request = http.MultipartRequest('POST', url);
         request.headers['Authorization'] = 'Bearer $accessToken';
-        print('file: ${file.path}');
+        logger.d('file: ${file.path}');
         // Add file
         request.files.add(await http.MultipartFile.fromPath('file', file.path));
 

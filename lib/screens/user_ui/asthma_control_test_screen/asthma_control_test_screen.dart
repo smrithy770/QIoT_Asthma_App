@@ -1,3 +1,4 @@
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/questionnaire_widget.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/step_progress_indicator.dart';
@@ -47,7 +48,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
     setState(() {
       currentStep = _pageController.page?.round() ?? 0;
       if (currentStep == totalSteps - 1) {
-        print('Total Score: ${calculateTotalScore()} && step: $currentStep');
+        logger.d('Total Score: ${calculateTotalScore()} && step: $currentStep');
       }
     });
   }
@@ -62,7 +63,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
       setState(() {
         currentStep = totalSteps;
       });
-      print('Total Score: ${calculateTotalScore()} && step: $currentStep');
+      logger.d('Total Score: ${calculateTotalScore()} && step: $currentStep');
     }
   }
 
@@ -83,7 +84,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
     //   final Map<String, dynamic>? actData =
     //       await ACTDataApi().postAsthmaControlTestData(totalScore);
     //   if (actData != null) {
-    //     print('ACT Data: $actData');
+    //     logger.d('ACT Data: $actData');
     //     const CustomSnackBar(
     //       message: 'Your ACT has been submitted!',
     //       success: true,
@@ -154,7 +155,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
             Navigator.of(context).pop();
           },
           onItemSelected: (int index) {
-            print(index);
+            logger.d(index);
           },
         ),
         body: GestureDetector(

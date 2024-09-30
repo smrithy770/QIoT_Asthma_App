@@ -178,7 +178,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
           Navigator.of(context).pop();
         },
         onItemSelected: (int index) {
-          print(index);
+          logger.d(index);
         },
       ),
       body: Stack(

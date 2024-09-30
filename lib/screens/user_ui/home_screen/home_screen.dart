@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         });
         downloadPdfFile(homepageData['educationalPlan']).then((f) {
-          print("Download education files: ${f.path}");
+          logger.d("Download education files: ${f.path}");
           setState(() {
             remoteEducationPDFpath = f.path;
           });
@@ -105,14 +105,14 @@ class _HomeScreenState extends State<HomeScreen> {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();
-      print("Download files");
-      print("${dir.path}/$filename");
+      logger.d("Download files");
+      logger.d("${dir.path}/$filename");
       File file = File("${dir.path}/$filename");
 
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);
     } catch (e) {
-      print('Error parsing asset file: $e');
+      logger.d('Error parsing asset file: $e');
       throw Exception('Error parsing asset file!');
     }
     return completer.future;
@@ -173,194 +173,219 @@ class _HomeScreenState extends State<HomeScreen> {
           logger.i(index);
         },
       ),
-      body: RefreshIndicator(
-        color: AppColors.primaryBlue,
-        onRefresh: _handleRefresh,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Center(
-            child: Container(
-              width: screenSize.width,
-              padding: EdgeInsets.all(screenRatio * 6),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Top section
-                  SizedBox(
-                    child: screenSize.width <= 375
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              NarrowInfoCard(
-                                title: 'Peakflow Baseline',
-                                value: '${homepageData['baseLineScore']}',
-                                backgroundColor: AppColors.primaryBlue,
-                                width: screenSize.width * 0.9,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            color: AppColors.primaryBlue,
+            onRefresh: _handleRefresh,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Center(
+                child: Container(
+                  width: screenSize.width,
+                  padding: EdgeInsets.all(screenRatio * 6),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Top section
+                      SizedBox(
+                        child: screenSize.width <= 375
+                            ? Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  NarrowInfoCard(
+                                    title: 'Peakflow Baseline',
+                                    value: '${homepageData['baseLineScore']}',
+                                    backgroundColor: AppColors.primaryBlue,
+                                    width: screenSize.width * 0.9,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                  SizedBox(height: screenSize.height * 0.01),
+                                  NarrowInfoCard(
+                                    title: 'Steroid Dosage',
+                                    value: '${homepageData['steroidDosage']}',
+                                    backgroundColor: const Color(0xFFFF8500),
+                                    width: screenSize.width * 0.9,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                  SizedBox(height: screenSize.height * 0.01),
+                                  NarrowInfoCard(
+                                    title: 'Salbutamol Dosage',
+                                    value:
+                                        '${homepageData['salbutomalDosage']}',
+                                    backgroundColor: const Color(0xFF0D8EF8),
+                                    width: screenSize.width * 0.9,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  WideInfoCard(
+                                    title: 'Peakflow Baseline',
+                                    value: '${homepageData['baseLineScore']}',
+                                    backgroundColor: AppColors.primaryBlue,
+                                    width: screenSize.width * 0.3,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                  WideInfoCard(
+                                    title: 'Steroid Dosage',
+                                    value: '${homepageData['steroidDosage']}',
+                                    backgroundColor: const Color(0xFFFF8500),
+                                    width: screenSize.width * 0.3,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                  WideInfoCard(
+                                    title: 'Salbutamol Dosage',
+                                    value:
+                                        '${homepageData['salbutomalDosage']}',
+                                    backgroundColor: const Color(0xFF0D8EF8),
+                                    width: screenSize.width * 0.3,
+                                    height: screenSize.height * 0.12,
+                                    screenRatio: screenRatio,
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: screenSize.height * 0.01),
-                              NarrowInfoCard(
-                                title: 'Steroid Dosage',
-                                value: '${homepageData['steroidDosage']}',
-                                backgroundColor: const Color(0xFFFF8500),
-                                width: screenSize.width * 0.9,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
-                              ),
-                              SizedBox(height: screenSize.height * 0.01),
-                              NarrowInfoCard(
-                                title: 'Salbutamol Dosage',
-                                value: '${homepageData['salbutomalDosage']}',
-                                backgroundColor: const Color(0xFF0D8EF8),
-                                width: screenSize.width * 0.9,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
-                              ),
-                            ],
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              WideInfoCard(
-                                title: 'Peakflow Baseline',
-                                value: '${homepageData['baseLineScore']}',
-                                backgroundColor: AppColors.primaryBlue,
-                                width: screenSize.width * 0.3,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
-                              ),
-                              WideInfoCard(
-                                title: 'Steroid Dosage',
-                                value: '${homepageData['steroidDosage']}',
-                                backgroundColor: const Color(0xFFFF8500),
-                                width: screenSize.width * 0.3,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
-                              ),
-                              WideInfoCard(
-                                title: 'Salbutamol Dosage',
-                                value: '${homepageData['salbutomalDosage']}',
-                                backgroundColor: const Color(0xFF0D8EF8),
-                                width: screenSize.width * 0.3,
-                                height: screenSize.height * 0.12,
-                                screenRatio: screenRatio,
-                              ),
-                            ],
-                          ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.016),
-                  // Medication reminder section
-                  SizedBox(
-                    width: screenSize.width * 0.968,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        MedicationReminderCard(
-                          svgAsset: "assets/svgs/user_assets/peakflow.svg",
-                          title: 'Your Peakflow Test',
-                          subtitle: '${homepageData['nextTaskTime']}',
-                          screenRatio: screenRatio,
-                          onTap: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/peakflow_record',
-                              (Route<dynamic> route) => false,
-                              arguments: {
-                                'realm': widget.realm,
-                                'deviceToken': widget.deviceToken,
-                                'deviceType': widget.deviceType,
+                      ),
+                      SizedBox(height: screenSize.height * 0.016),
+                      // Medication reminder section
+                      SizedBox(
+                        width: screenSize.width * 0.968,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            MedicationReminderCard(
+                              svgAsset: "assets/svgs/user_assets/peakflow.svg",
+                              title: 'Your Peakflow Test',
+                              subtitle: '${homepageData['nextTaskTime']}',
+                              screenRatio: screenRatio,
+                              onTap: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  '/peakflow_record_screen',
+                                  (Route<dynamic> route) => false,
+                                  arguments: {
+                                    'realm': widget.realm,
+                                    'deviceToken': widget.deviceToken,
+                                    'deviceType': widget.deviceType,
+                                  },
+                                );
                               },
-                            );
-                          },
-                        ),
-                        SizedBox(height: screenSize.height * 0.016),
-                        MedicationReminderCard(
-                          svgAsset: "assets/svgs/user_assets/act.svg",
-                          title: 'Your ACT is due in next 2 days',
-                          subtitle: 'Due on 20 Feb',
-                          screenRatio: screenRatio,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.016),
-                  // Message section
-                  SizedBox(
-                    width: screenSize.width * 0.968,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        homepageData.isEmpty
-                            ? 'Loading...'
-                            : '${homepageData['asthmaMessages']!['message']}',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          color: AppColors.primaryBlueText,
-                          fontSize: screenRatio * 8,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Roboto',
+                            ),
+                            SizedBox(height: screenSize.height * 0.016),
+                            MedicationReminderCard(
+                              svgAsset: "assets/svgs/user_assets/act.svg",
+                              title: 'Your ACT is due in next 2 days',
+                              subtitle: 'Due on 20 Feb',
+                              screenRatio: screenRatio,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: screenSize.height * 0.016),
-                  homepageData['steroidCard'] == null ||
-                          homepageData['steroidCard'].isEmpty
-                      ? const SizedBox.shrink()
-                      : CustomElevatedButton(
-                          label: 'View Steroid Card',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SteroidCard(
-                                  url: homepageData['steroidCard'],
-                                  path: remoteAsthmaActionPlanPDFpath,
-                                  screenRatio: screenRatio,
-                                ),
-                              ),
-                            );
-                          },
-                          isViewSteroidCardButton: true,
-                          screenRatio: screenRatio,
-                          screenWidth: screenSize.width,
-                          screenHeight: screenSize.height,
+                      SizedBox(height: screenSize.height * 0.016),
+                      // Message section
+                      SizedBox(
+                        width: screenSize.width * 0.968,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            homepageData.isEmpty
+                                ? 'Loading...'
+                                : '${homepageData['asthmaMessages']!['message']}',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              color: AppColors.primaryBlueText,
+                              fontSize: screenRatio * 8,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
                         ),
-                  SizedBox(height: screenSize.height * 0.016),
-                  CustomElevatedButton(
-                    label: (homepageData['asthmaActionPlan'] == null ||
-                            homepageData['asthmaActionPlan'].isEmpty)
-                        ? 'Upload Personal Asthma Action Plan'
-                        : 'View Personal Asthma Action Plan',
-                    onPressed: () {
-                      homepageData['asthmaActionPlan'].isNotEmpty
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AsthmaActionPlan(
-                                  url: homepageData['asthmaActionPlan'],
-                                  path: remoteAsthmaActionPlanPDFpath,
-                                  screenRatio: screenRatio,
-                                ),
-                              ),
-                            )
-                          : _openAsthmaActionPlanbottomSheet(context);
-                    },
-                    isViewSteroidCardButton: false,
-                    screenRatio: screenRatio,
-                    screenWidth: screenSize.width,
-                    screenHeight: screenSize.height,
+                      ),
+                      SizedBox(height: screenSize.height * 0.016),
+                      homepageData['steroidCard'] == null ||
+                              homepageData['steroidCard'].isEmpty
+                          ? const SizedBox.shrink()
+                          : CustomElevatedButton(
+                              label: 'View Steroid Card',
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SteroidCard(
+                                      url: homepageData['steroidCard'],
+                                      path: remoteAsthmaActionPlanPDFpath,
+                                      screenRatio: screenRatio,
+                                    ),
+                                  ),
+                                );
+                              },
+                              isViewSteroidCardButton: true,
+                              screenRatio: screenRatio,
+                              screenWidth: screenSize.width,
+                              screenHeight: screenSize.height,
+                            ),
+                      SizedBox(height: screenSize.height * 0.016),
+                      CustomElevatedButton(
+                        label: (homepageData['asthmaActionPlan'] == null ||
+                                homepageData['asthmaActionPlan'].isEmpty)
+                            ? 'Upload Personal Asthma Action Plan'
+                            : 'View Personal Asthma Action Plan',
+                        onPressed: () {
+                          homepageData['asthmaActionPlan'].isNotEmpty
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AsthmaActionPlan(
+                                      url: homepageData['asthmaActionPlan'],
+                                      path: remoteAsthmaActionPlanPDFpath,
+                                      screenRatio: screenRatio,
+                                    ),
+                                  ),
+                                )
+                              : _openAsthmaActionPlanbottomSheet(context);
+                        },
+                        isViewSteroidCardButton: false,
+                        screenRatio: screenRatio,
+                        screenWidth: screenSize.width,
+                        screenHeight: screenSize.height,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          if (homepageData.isEmpty)
+            Center(
+              child: Container(
+                width: screenRatio * 32,
+                height: screenRatio * 32,
+                padding: EdgeInsets.all(screenRatio * 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryWhite.withOpacity(1.0),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const CircularProgressIndicator(
+                  backgroundColor: AppColors.primaryWhite,
+                  color: AppColors.primaryBlue,
+                  strokeCap: StrokeCap.round,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

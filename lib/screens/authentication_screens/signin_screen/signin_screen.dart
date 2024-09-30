@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:asthmaapp/api/auth_api.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +46,14 @@ class _SigninScreenState extends State<SigninScreen> {
             email, password, null, widget.deviceToken!, widget.deviceType!);
 
         final jsonResponse = response;
-        // print('Signin response: $jsonResponse');
+        // logger.d('Signin response: $jsonResponse');
         final status = jsonResponse['status'] as int;
-        print('Signin status: $status');
+        logger.d('Signin status: $status');
         if (status == 200) {
           final accessToken = jsonResponse['accessToken'] as String;
-          print('Access Token: $accessToken');
+          logger.d('Access Token: $accessToken');
           final refreshToken = jsonResponse['refreshToken'] as String;
-          print('Refresh Token: $refreshToken');
+          logger.d('Refresh Token: $refreshToken');
           final userData =
               jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
           final userModel =
@@ -96,17 +97,17 @@ class _SigninScreenState extends State<SigninScreen> {
         }
       } on RealmException catch (e) {
         // Handle Realm-specific exceptions
-        print('RealmException: $e');
+        logger.d('RealmException: $e');
         CustomSnackBarUtil.showCustomSnackBar('Database error: ${e.message}',
             success: false);
       } on SocketException catch (e) {
         // Handle network-specific exceptions
-        print('NetworkException: $e');
+        logger.d('NetworkException: $e');
         CustomSnackBarUtil.showCustomSnackBar(
             'Network error: Please check your internet connection',
             success: false);
       } on Exception catch (e) {
-        print('Signin failed: $e');
+        logger.d('Signin failed: $e');
         CustomSnackBarUtil.showCustomSnackBar('Signin failed: ${e.toString()}',
             success: false);
       }
@@ -120,7 +121,7 @@ class _SigninScreenState extends State<SigninScreen> {
         _isEmailValid = isValid;
       });
     }
-    print('Email is valid: $_isEmailValid');
+    logger.d('Email is valid: $_isEmailValid');
   }
 
   void _validatePassword(String value) {
@@ -132,7 +133,7 @@ class _SigninScreenState extends State<SigninScreen> {
         _isPasswordValid = isValid;
       });
     }
-    print('Password is valid: $_isPasswordValid');
+    logger.d('Password is valid: $_isPasswordValid');
   }
 
   @override

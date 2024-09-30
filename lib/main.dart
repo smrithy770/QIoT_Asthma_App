@@ -21,7 +21,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future _firebaseBackgroundMessageHandler(RemoteMessage message) async {
   if (message.notification != null) {
-    print('Message received in the background!');
+    logger.d('Message received in the background!');
   }
 }
 
@@ -31,19 +31,25 @@ void main() async {
   final router = FluroRouter();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   // Initialize Realm configuration
   final config = Configuration.local([
     UserModel.schema,
   ]);
   final realm = Realm(config);
+
+  // Fetch stored user data from Realm
   UserModel? userModel;
   final results = realm.all<UserModel>();
   if (results.isNotEmpty) {
     userModel = results[0];
   }
+
+  // Initialize various services
   await PushNotificationService.initialize();
   await AnalyticsService.initialize();
   await PushNotificationService.localNotificationInit();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessageHandler);
   PushNotificationService.onNotificationTapBackground();
   PushNotificationService.onNotificationTapForeground();
@@ -74,6 +80,7 @@ class Main extends StatefulWidget {
   final Realm realm;
   final UserModel? userModel;
   final FluroRouter router;
+
   const Main({
     super.key,
     required this.realm,
@@ -86,16 +93,10 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  bool _initialized = false;
+  bool _isDeviceTokenInitialized = false;
+  bool _isRefreshTokenRefreshed = false;
   String? _deviceToken = '';
   String? _deviceType = '';
-  UserModel? getUserData(Realm realm) {
-    final results = realm.all<UserModel>();
-    if (results.isNotEmpty) {
-      return results[0];
-    }
-    return null;
-  }
 
   @override
   void initState() {
@@ -106,30 +107,38 @@ class _MainState extends State<Main> {
   }
 
   Future<void> _getDeviceToken() async {
+    // Fetch the device token
     String? deviceToken = await PushNotificationService.getDeviceToken();
     if (Platform.isAndroid) {
       setState(() {
         _deviceToken = deviceToken;
-        _initialized = true;
+        _isDeviceTokenInitialized = true;
         _deviceType = 'android';
       });
     } else if (Platform.isIOS) {
       setState(() {
         _deviceToken = deviceToken;
-        _initialized = true;
+        _isDeviceTokenInitialized = true;
         _deviceType = 'ios';
       });
     }
 
-    if (widget.userModel != null && _initialized) {
+    // Start TokenRefreshService once device token is available
+    if (widget.userModel != null && _isDeviceTokenInitialized) {
       _startTokenRefreshService();
     }
   }
 
-  void _startTokenRefreshService() {
-    // Initialize the TokenRefreshService
+  Future<void> _startTokenRefreshService() async {
+    // Initialize TokenRefreshService
     TokenRefreshService().initialize(
         widget.realm, widget.userModel!, _deviceToken!, _deviceType!);
+
+    // Refresh the token and update the state
+    bool isRefreshed = await TokenRefreshService().refreshToken();
+    setState(() {
+      _isRefreshTokenRefreshed = isRefreshed;
+    });
   }
 
   @override
@@ -150,9 +159,10 @@ class _MainState extends State<Main> {
     );
   }
 
+  // Initial navigation logic based on user login and token status
   Widget initialNavigation() {
     UserModel? userModel = getUserData(widget.realm);
-    if (_initialized) {
+    if (_isDeviceTokenInitialized && _isRefreshTokenRefreshed) {
       return userModel?.id != null
           ? RouterProvider(
               router: widget.router,
@@ -173,5 +183,11 @@ class _MainState extends State<Main> {
     } else {
       return const SplashScreen();
     }
+  }
+
+  // Helper to get user data from Realm
+  UserModel? getUserData(Realm realm) {
+    final results = realm.all<UserModel>();
+    return results.isNotEmpty ? results[0] : null;
   }
 }

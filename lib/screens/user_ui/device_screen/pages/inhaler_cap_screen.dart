@@ -133,7 +133,7 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
     try {
       _services = await widget.device.discoverServices();
-      // print(
+      // logger.d(
       //     "Services available: ${_services.length} ${_services.map((s) => s.uuid).toList()}");
 
       if (Platform.isAndroid && _services.length > 2) {

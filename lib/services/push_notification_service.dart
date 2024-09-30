@@ -25,7 +25,8 @@ class PushNotificationService {
       } catch (e) {
         attempt++;
         if (attempt >= retries) {
-          throw Exception('Failed to get device token after $retries attempts: $e');
+          throw Exception(
+              'Failed to get device token after $retries attempts: $e');
         }
         await Future.delayed(Duration(seconds: 2)); // Wait before retrying
       }
@@ -64,7 +65,7 @@ class PushNotificationService {
       );
     } else {
       // Handle the case where _flutterLocalNotificationsPlugin is null
-      print('Error: _flutterLocalNotificationsPlugin is null');
+      logger.d('Error: _flutterLocalNotificationsPlugin is null');
     }
   }
 
@@ -81,7 +82,7 @@ class PushNotificationService {
   static void onNotificationTapBackground() {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
-        print('Message received in the background!');
+        logger.d('Message received in the background!');
         navigatorKey.currentState!.pushNamed(
           "/notification",
           arguments: message,
@@ -93,7 +94,7 @@ class PushNotificationService {
   static void onNotificationTapForeground() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       String payloadData = jsonEncode(message.data);
-      print('Message received in the foreground!');
+      logger.d('Message received in the foreground!');
       if (message.notification != null) {
         PushNotificationService.showSimpleNotification(
           title: message.notification!.title,
@@ -108,7 +109,7 @@ class PushNotificationService {
     final RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      print('Message received in terminated state!');
+      logger.d('Message received in terminated state!');
       Future.delayed(const Duration(seconds: 1), () {
         navigatorKey.currentState!.pushNamed(
           "/notification",

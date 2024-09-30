@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/pages/inhaler_cap_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/pages/pef_device_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
@@ -216,7 +217,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           Navigator.of(context).pop();
         },
         onItemSelected: (int index) {
-          print(index);
+          logger.d(index);
         },
       ),
       body: SingleChildScrollView(

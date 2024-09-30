@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/characteristic_tile.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/descriptor_tile.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/service_tile.dart';
@@ -133,7 +134,7 @@ class _DeviceScreenState extends State<PEFDeviceScreen> {
     }
     try {
       _services = await widget.device.discoverServices();
-      print(
+      logger.d(
           "Services available: ${_services.length} ${_services.map((s) => s.uuid).toList()}");
 
       if (Platform.isAndroid && _services.length > 2) {

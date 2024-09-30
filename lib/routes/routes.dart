@@ -99,7 +99,7 @@ void defineRoutes(FluroRouter router) {
     ),
   );
   router.define(
-    '/peakflow_record',
+    '/peakflow_record_screen',
     handler: Handler(
       handlerFunc: (context, params) {
         final args = context?.settings?.arguments as Map<String, dynamic>;
