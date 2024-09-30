@@ -1,14 +1,16 @@
 import 'dart:io';
 
-import 'package:asthmaapp/api/upload_api.dart';
+import 'package:asthmaapp/api/steroid_dose_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
+import 'package:asthmaapp/services/permission_service.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:realm/realm.dart';
 
 class SteroidDoseScreen extends StatefulWidget {
@@ -27,9 +29,12 @@ class SteroidDoseScreen extends StatefulWidget {
 
 class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
   UserModel? userModel;
-  final GlobalKey<FormState> _steroiddoseformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _steroiddosevalueController =
       TextEditingController();
+  final PermissionService _permissionService =
+      PermissionService(); // Create an instance of PermissionService
+  Position? _currentPosition;
   FilePickerResult? result;
   String? _result;
   final int maxSizeInBytes = 5 * 1024 * 1024; // 5 MB in bytes
@@ -39,10 +44,38 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
   void initState() {
     super.initState();
     _loadUserData();
+    _requestPermissions();
+  }
+
+  Future<void> _requestPermissions() async {
+    await _permissionService.locationPermission();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+        ),
+      );
+      // Store the location data
+      setState(() {
+        _currentPosition = position;
+      });
+      // Use the location data (latitude, longitude)
+      logger.d('Current Location: ${position.latitude}, ${position.longitude}');
+    } catch (e) {
+      // Handle location retrieval error
+      CustomSnackBarUtil.showCustomSnackBar('Error retrieving location: $e',
+          success: false);
+    }
   }
 
   Future<void> _loadUserData() async {
     final user = getUserData(widget.realm);
+
     setState(() {
       userModel = user;
     });
@@ -53,7 +86,97 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
     return results.isNotEmpty ? results[0] : null;
   }
 
-  Future<void> _submitSteroidDose(int steroidDose) async {}
+  Future<void> _submitSteroidDose() async {
+    if (userModel == null) return;
+    if (_formKey.currentState!.validate()) {
+      int steroidDoseValue = int.parse(_steroiddosevalueController.text.trim());
+
+      // Ensure location data is available
+      if (_currentPosition == null) {
+        CustomSnackBarUtil.showCustomSnackBar(
+          'Unable to get location. Please enable location services.',
+          success: false,
+        );
+        return;
+      }
+
+      try {
+        final response = await SteroidDoseApi().addSteroidDose(
+          userModel!.userId,
+          steroidDoseValue,
+          {
+            'type': 'Point',
+            'coordinates': [
+              _currentPosition!.longitude,
+              _currentPosition!.latitude
+            ],
+          },
+          DateTime.now().month,
+          DateTime.now().year,
+          userModel!.accessToken,
+        );
+        final jsonResponse = response;
+        final status = jsonResponse['status'];
+        if (status == 201) {
+          // setState(() {
+          //   baseLineScore = jsonResponse['payload']['baseLineScore'];
+          //   practionerContact = jsonResponse['payload']['practionerContact'];
+          // });
+          CustomSnackBarUtil.showCustomSnackBar(
+              "Steroid Dose added successfully",
+              success: true);
+          if (mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/home', // Named route
+              (Route<dynamic> route) =>
+                  false, // This removes all previous routes
+              arguments: {
+                'realm': widget.realm,
+                'deviceToken': widget.deviceToken,
+                'deviceType': widget.deviceType,
+              },
+            );
+          }
+        } else {
+          // Handle different statuses
+          String errorMessage;
+          switch (status) {
+            case 400:
+              errorMessage = 'Bad request: Please check your input';
+              break;
+            case 500:
+              errorMessage = 'Server error: Please try again later';
+              break;
+            default:
+              errorMessage = 'Unexpected error: Please try again';
+          }
+
+          // Show error message
+          CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
+        }
+      } on SocketException catch (e) {
+        // Handle network-specific exceptions
+        logger.d('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Network error: Please check your internet connection',
+            success: false);
+      } on Exception catch (e) {
+        // Handle generic exceptions
+        logger.d('Exception: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'An error occurred while adding the note',
+            success: false);
+      }
+    } else {
+      if (_steroiddosevalueController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Steroid Dose Value  can not be empty',
+            success: false);
+        return;
+      }
+    }
+  }
 
   Future<void> selectFile() async {
     result = await FilePicker.platform.pickFiles(
@@ -98,7 +221,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
       _isLoading = true;
     });
     try {
-      final response = await UploadApi().uploadSteroidCard(
+      final response = await SteroidDoseApi().uploadSteroidCard(
         userModel!.userId,
         // file.path.toString(),
         file.path,
@@ -110,7 +233,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
       logger.d('Status: $status');
       if (status == 200) {
         logger.d('Image uploaded successfully');
-        CustomSnackBarUtil.showCustomSnackBar("Image uploaded successfully",
+        CustomSnackBarUtil.showCustomSnackBar("File uploaded successfully",
             success: true);
       } else {
         // Handle different statuses
@@ -245,7 +368,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 92, vertical: 8),
                         child: Form(
-                          key: _steroiddoseformKey,
+                          key: _formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -291,7 +414,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                               SizedBox(height: screenSize.height * 0.01),
                               ElevatedButton(
                                 onPressed: () {
-                                  // _checkSteroidDose();
+                                  _submitSteroidDose();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   fixedSize: Size(screenSize.width * 0.24,

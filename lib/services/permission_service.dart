@@ -1,5 +1,6 @@
 import 'package:asthmaapp/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
@@ -26,25 +27,26 @@ class PermissionService {
     }
   }
 
-  Future<void> locationPermission() async {
-    PermissionStatus status = await Permission.location.status;
+  Future<LocationPermission> locationPermission() async {
+    // Check and request location permission using Geolocator
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    if (status.isDenied) {
-      // Request permission
-      status = await Permission.location.request();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
-    if (status.isGranted) {
-      logger.d('User granted location permission');
-    } else if (status.isDenied) {
-      logger.d('User denied location permission');
-    } else if (status.isPermanentlyDenied) {
+
+    if (permission == LocationPermission.deniedForever) {
       logger.d('User permanently denied location permission');
       // You can open app settings to let the user manually enable the permission
       openAppSettings();
-    } else if (status.isRestricted) {
-      logger.d('User restricted from granting location permission');
-    } else if (status.isLimited) {
-      logger.d('User granted limited location permission');
+    } else if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      logger.d('User granted location permission');
+      // You can now get the location if needed
+    } else {
+      logger.d('User denied location permission');
     }
+
+    return permission; // Return the permission status
   }
 }

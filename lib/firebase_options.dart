@@ -50,20 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCt7B9uGctHT-TPiXqyxeAZWpZSQeJjw8k',
-    appId: '1:969307232289:android:942c5cf5329e25207eeb60',
-    messagingSenderId: '969307232289',
-    projectId: 'qiot-330510',
-    storageBucket: 'qiot-330510.appspot.com',
+    apiKey: 'AIzaSyA5_Jahro-o73HHCgygV5Ws35_TrVEwRrM',
+    appId: '1:762241847490:android:044182958d06ad8df62b5b',
+    messagingSenderId: '762241847490',
+    projectId: 'qiot-test',
+    storageBucket: 'qiot-test.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDVNNLdViRVfwMVHmGhF8WEwUJ2z0YvX7w',
-    appId: '1:969307232289:ios:ee4797c8f450c9467eeb60',
-    messagingSenderId: '969307232289',
-    projectId: 'qiot-330510',
-    storageBucket: 'qiot-330510.appspot.com',
-    androidClientId: '969307232289-3prmseln0rdfqqerafl7qumq35kk09u1.apps.googleusercontent.com',
+    apiKey: 'AIzaSyALs-c_JUMwjsm7zjlexFHLYVXdXKIdeAg',
+    appId: '1:762241847490:ios:aad49d1ff50500f5f62b5b',
+    messagingSenderId: '762241847490',
+    projectId: 'qiot-test',
+    storageBucket: 'qiot-test.appspot.com',
     iosBundleId: 'com.qiot.asthmaapp',
   );
 }

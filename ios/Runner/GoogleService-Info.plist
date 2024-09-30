@@ -2,20 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>969307232289-3prmseln0rdfqqerafl7qumq35kk09u1.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDVNNLdViRVfwMVHmGhF8WEwUJ2z0YvX7w</string>
+	<string>AIzaSyALs-c_JUMwjsm7zjlexFHLYVXdXKIdeAg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>969307232289</string>
+	<string>762241847490</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.qiot.asthmaapp</string>
 	<key>PROJECT_ID</key>
-	<string>qiot-330510</string>
+	<string>qiot-test</string>
 	<key>STORAGE_BUCKET</key>
-	<string>qiot-330510.appspot.com</string>
+	<string>qiot-test.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -27,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:969307232289:ios:ee4797c8f450c9467eeb60</string>
+	<string>1:762241847490:ios:aad49d1ff50500f5f62b5b</string>
 </dict>
 </plist>

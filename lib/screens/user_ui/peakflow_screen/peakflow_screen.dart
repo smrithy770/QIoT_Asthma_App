@@ -4,6 +4,7 @@ import 'package:asthmaapp/api/peakflow_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_measure.dart';
@@ -12,6 +13,7 @@ import 'package:asthmaapp/services/permission_service.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:realm/realm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -36,11 +38,41 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
       TextEditingController();
   final PermissionService _permissionService =
       PermissionService(); // Create an instance of PermissionService
+  Position? _currentPosition;
+  int baseLineScore = 0;
+  String practionerContact = '';
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _requestPermissions();
+  }
+
+  Future<void> _requestPermissions() async {
+    await _permissionService.locationPermission();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+        ),
+      );
+      // Store the location data
+      setState(() {
+        _currentPosition = position;
+      });
+      // Use the location data (latitude, longitude)
+      logger.d('Current Location: ${position.latitude}, ${position.longitude}');
+    } catch (e) {
+      // Handle location retrieval error
+      CustomSnackBarUtil.showCustomSnackBar('Error retrieving location: $e',
+          success: false);
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -86,20 +118,74 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
 
   void _submitPeakflow() async {
     if (userModel == null) return;
-
-    await _permissionService.locationPermission();
     if (_formKey.currentState!.validate()) {
       int peakflowValue = int.parse(_peakflowvalueController.text.trim());
+
+      // Ensure location data is available
+      if (_currentPosition == null) {
+        CustomSnackBarUtil.showCustomSnackBar(
+          'Unable to get location. Please enable location services.',
+          success: false,
+        );
+        return;
+      }
+
       try {
         final response = await PeakflowApi().addPeakflow(
           userModel!.userId,
           peakflowValue,
+          {
+            'type': 'Point',
+            'coordinates': [
+              _currentPosition!.longitude,
+              _currentPosition!.latitude
+            ],
+          },
           DateTime.now().month,
           DateTime.now().year,
           userModel!.accessToken,
         );
         final jsonResponse = response;
         final status = jsonResponse['status'];
+        if (status == 201) {
+          setState(() {
+            baseLineScore = jsonResponse['payload']['baseLineScore'];
+            practionerContact = jsonResponse['payload']['practionerContact'];
+          });
+          CustomSnackBarUtil.showCustomSnackBar("Peakflow added successfully",
+              success: true);
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PeakflowBaselineScreen(
+                  realm: widget.realm,
+                  deviceToken: widget.deviceToken,
+                  deviceType: widget.deviceType,
+                  peakFlow: peakflowValue,
+                  baseLineScore: baseLineScore,
+                  practionerContact: practionerContact,
+                ),
+              ),
+            );
+          }
+        } else {
+          // Handle different statuses
+          String errorMessage;
+          switch (status) {
+            case 400:
+              errorMessage = 'Bad request: Please check your input';
+              break;
+            case 500:
+              errorMessage = 'Server error: Please try again later';
+              break;
+            default:
+              errorMessage = 'Unexpected error: Please try again';
+          }
+
+          // Show error message
+          CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
+        }
       } on SocketException catch (e) {
         // Handle network-specific exceptions
         logger.d('NetworkException: $e');

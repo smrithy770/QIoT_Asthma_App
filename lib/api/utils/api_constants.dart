@@ -18,8 +18,24 @@ class ApiConstants {
     return '/user/$userId';
   }
 
+  static String addPeakflowUrl(String userId) {
+    return '/user/$userId/peakflow';
+  }
+
+  static String getAllPeakflowUrl(String userId) {
+    return '/user/$userId/peakflow';
+  }
+
+  static String addSteroidDoseUrl(String userId) {
+    return '/user/$userId/steroiddose';
+  }
+
   static String uploadSteroidCardUrl(String userId) {
-    return '/user/uploadsteroidcard/$userId';
+    return '/user/$userId/steroiddose/uploadsteroidcard';
+  }
+
+  static String getAllSteroidDoseUrl(String userId) {
+    return '/user/$userId/steroiddose';
   }
 
 //Start of Note API

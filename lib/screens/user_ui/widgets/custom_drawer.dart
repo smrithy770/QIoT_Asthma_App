@@ -143,16 +143,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Steroid Dose',
                     onTap: () {
                       widget.itemName('Steroid Dose');
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SteroidDoseScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/steroid_dose_record', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),

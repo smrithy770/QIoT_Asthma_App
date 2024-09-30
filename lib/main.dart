@@ -127,6 +127,10 @@ class _MainState extends State<Main> {
     // Start TokenRefreshService once device token is available
     if (widget.userModel != null && _isDeviceTokenInitialized) {
       _startTokenRefreshService();
+    } else {
+      setState(() {
+        _isLoading = false; // Set loading to false once done
+      });
     }
   }
 

@@ -4,46 +4,22 @@ import 'package:asthmaapp/api/utils/api_constants.dart';
 class PeakflowApi {
   final ApiService _apiService = ApiService(baseUrl: ApiConstants.baseURL);
 
-  Future<Map<String, dynamic>> addPeakflow(
-      String userId, int peakflowValue, int month, int year,
+  Future<Map<String, dynamic>> addPeakflow(String userId, int peakflowValue,
+      Map<String, dynamic> location, int month, int year,
       [String? accessToken]) async {
-    final getAllNotesUrl = ApiConstants.getAllNotesUrl(userId);
-    return _apiService.post(getAllNotesUrl, accessToken, {
+    final addPeakflowUrl = ApiConstants.addPeakflowUrl(userId);
+    return _apiService.post(addPeakflowUrl, accessToken, {
       'peakflowValue': peakflowValue,
+      'location': location,
       'month': month,
       'year': year,
     });
   }
 
-  Future<Map<String, dynamic>> getAllNotes(String userId,
+  Future<Map<String, dynamic>> getAllPeakflow(
+      String userId, int month, int year,
       [String? accessToken]) async {
-    final getAllNotesUrl = ApiConstants.getAllNotesUrl(userId);
-    return _apiService.get(getAllNotesUrl, accessToken);
-  }
-
-  Future<Map<String, dynamic>> getNotesById(String userId, String noteId,
-      [String? accessToken]) async {
-    final getNotesByIdUrl = ApiConstants.getNotesByIdUrl(userId, noteId);
-    return _apiService.get(getNotesByIdUrl, accessToken);
-  }
-
-  Future<Map<String, dynamic>> editNoteById(String userId, String noteId,
-      String title, String description, String painRating,
-      [String? accessToken]) async {
-    final editNoteByIdUrl = ApiConstants.editNoteByIdUrl(userId, noteId);
-    return _apiService.put(editNoteByIdUrl, accessToken, {
-      'title': title,
-      'description': description,
-      'painRating': painRating,
-    });
-  }
-
-  Future<Map<String, dynamic>> deleteNoteById(String userId, String noteId,
-      [String? accessToken]) async {
-    final deleteNoteByIdUrl = ApiConstants.deleteNoteByIdUrl(userId, noteId);
-    return _apiService.delete(
-      deleteNoteByIdUrl,
-      accessToken,
-    );
+    final getAllPeakflowUrl = ApiConstants.getAllPeakflowUrl(userId);
+    return _apiService.get(getAllPeakflowUrl, accessToken);
   }
 }
