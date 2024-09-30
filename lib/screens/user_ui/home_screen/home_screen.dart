@@ -165,12 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
         realm: widget.realm,
         deviceToken: widget.deviceToken,
         deviceType: widget.deviceType,
-        remoteEducationPDFpath: remoteEducationPDFpath,
         onClose: () {
           Navigator.of(context).pop();
         },
-        onItemSelected: (int index) {
-          logger.i(index);
+        itemName: (String name) {
+          logger.d(name);
         },
       ),
       body: Stack(

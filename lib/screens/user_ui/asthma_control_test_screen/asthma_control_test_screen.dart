@@ -154,8 +154,8 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
           onClose: () {
             Navigator.of(context).pop();
           },
-          onItemSelected: (int index) {
-            logger.d(index);
+          itemName: (String name) {
+            logger.d(name);
           },
         ),
         body: GestureDetector(

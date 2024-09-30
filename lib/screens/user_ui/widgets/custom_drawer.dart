@@ -5,7 +5,6 @@ import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_cont
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
 import 'package:asthmaapp/screens/user_ui/education_screen/education_screen.dart';
 import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
-import 'package:asthmaapp/screens/user_ui/notes_screen/notes_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
@@ -18,7 +17,7 @@ class CustomDrawer extends StatefulWidget {
   final String? deviceToken, deviceType;
   final String? remoteEducationPDFpath;
   final VoidCallback onClose;
-  final Function(int) onItemSelected;
+  final Function(String) itemName;
 
   const CustomDrawer({
     super.key,
@@ -27,7 +26,7 @@ class CustomDrawer extends StatefulWidget {
     required this.deviceType,
     this.remoteEducationPDFpath,
     required this.onClose,
-    required this.onItemSelected,
+    required this.itemName,
   });
 
   @override
@@ -94,10 +93,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/home.svg",
-                    name: "Home",
+                    assetPath: 'assets/svgs/user_assets/home.svg',
+                    name: 'Home',
                     onTap: () {
-                      widget.onItemSelected(0);
+                      widget.itemName('Home');
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/home', // Named route
@@ -117,10 +116,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/peakflow.svg",
-                    name: "Peakflow",
+                    assetPath: 'assets/svgs/user_assets/peakflow.svg',
+                    name: 'Peakflow',
                     onTap: () {
-                      widget.onItemSelected(1);
+                      widget.itemName('Peakflow');
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/peakflow_record_screen', // Named route
@@ -140,10 +139,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/steroid.svg",
-                    name: "Steroid Dose",
+                    assetPath: 'assets/svgs/user_assets/steroid.svg',
+                    name: 'Steroid Dose',
                     onTap: () {
-                      widget.onItemSelected(2);
+                      widget.itemName('Steroid Dose');
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -163,10 +162,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/act.svg",
-                    name: "Asthma Control Test(ACT)",
+                    assetPath: 'assets/svgs/user_assets/act.svg',
+                    name: 'Asthma Control Test(ACT)',
                     onTap: () {
-                      widget.onItemSelected(3);
+                      widget.itemName('Asthma Control Test(ACT)');
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -186,10 +185,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/fitness.svg",
-                    name: "Fitness and Stress",
+                    assetPath: 'assets/svgs/user_assets/fitness.svg',
+                    name: 'Fitness and Stress',
                     onTap: () {
-                      widget.onItemSelected(4);
+                      widget.itemName('Fitness and Stress');
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -209,10 +208,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/device.svg",
-                    name: "Device",
+                    assetPath: 'assets/svgs/user_assets/device.svg',
+                    name: 'Device',
                     onTap: () {
-                      widget.onItemSelected(5);
+                      widget.itemName('Device');
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -232,10 +231,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/notes.svg",
-                    name: "Notes",
+                    assetPath: 'assets/svgs/user_assets/notes.svg',
+                    name: 'Notes',
                     onTap: () {
-                      widget.onItemSelected(6);
+                      widget.itemName('Notes');
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/notes_screen', // Named route
@@ -255,10 +254,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/report.svg",
-                    name: "Report",
+                    assetPath: 'assets/svgs/user_assets/report.svg',
+                    name: 'Report',
                     onTap: () {
-                      widget.onItemSelected(7);
+                      widget.itemName('Report');
                     },
                   ),
                   const Divider(
@@ -267,10 +266,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/pollen.svg",
-                    name: "Pollen",
+                    assetPath: 'assets/svgs/user_assets/pollen.svg',
+                    name: 'Pollen',
                     onTap: () {
-                      widget.onItemSelected(8);
+                      widget.itemName('Pollen');
                     },
                   ),
                   const Divider(
@@ -279,10 +278,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/education.svg",
-                    name: "Education",
+                    assetPath: 'assets/svgs/user_assets/education.svg',
+                    name: 'Education',
                     onTap: () {
-                      widget.onItemSelected(9);
+                      widget.itemName('Education');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -302,10 +301,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/about.svg",
-                    name: "About",
+                    assetPath: 'assets/svgs/user_assets/about.svg',
+                    name: 'About',
                     onTap: () {
-                      widget.onItemSelected(10);
+                      widget.itemName('About');
                     },
                   ),
                   const Divider(
@@ -314,10 +313,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/profile.svg",
-                    name: "Profile",
+                    assetPath: 'assets/svgs/user_assets/profile.svg',
+                    name: 'Profile',
                     onTap: () {
-                      widget.onItemSelected(11);
+                      widget.itemName('Profile');
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -337,12 +336,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     color: Color(0xFFD7D7D7),
                   ),
                   CustomDrawerListItem(
-                    assetPath: "assets/svgs/user_assets/logout.svg",
-                    name: "Logout",
+                    assetPath: 'assets/svgs/user_assets/logout.svg',
+                    name: 'Logout',
                     onTap: () async {
                       UserModel? userModel = getUserData(widget.realm);
 
-                      widget.onItemSelected(12);
+                      widget.itemName('Logout');
                       final response = await AuthApi().signout(userModel!.id);
                       final jsonResponse = response;
                       final status = jsonResponse['status'] as int;

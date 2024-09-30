@@ -216,8 +216,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
         onClose: () {
           Navigator.of(context).pop();
         },
-        onItemSelected: (int index) {
-          logger.d(index);
+        itemName: (String name) {
+          logger.d(name);
         },
       ),
       body: SingleChildScrollView(
