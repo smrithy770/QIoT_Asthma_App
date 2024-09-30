@@ -7,12 +7,12 @@ class QuestionnaireWidget extends StatelessWidget {
   final Function(int, int) onTap;
 
   const QuestionnaireWidget({
-    Key? key,
+    super.key,
     required this.question,
     required this.options,
     required this.selectedAnswerIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

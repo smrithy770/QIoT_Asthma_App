@@ -38,6 +38,14 @@ class ApiConstants {
     return '/user/$userId/steroiddose';
   }
 
+  static String addAsthamControlTestUrl(String userId) {
+    return '/user/$userId/asthamcontroltest';
+  }
+
+  static String getAllAsthamControlTestUrl(String userId) {
+    return '/user/$userId/asthamcontroltest';
+  }
+
 //Start of Note API
   static String getAllNotesUrl(String userId) {
     return '/user/$userId/notes';

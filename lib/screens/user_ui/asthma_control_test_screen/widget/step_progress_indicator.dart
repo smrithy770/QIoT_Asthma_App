@@ -4,7 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 class StepProgressIndicator extends StatefulWidget {
   final int totalSteps, currentStep;
 
-  StepProgressIndicator({required this.totalSteps, required this.currentStep});
+  const StepProgressIndicator({
+    super.key,
+    required this.totalSteps,
+    required this.currentStep,
+  });
 
   @override
   _StepProgressIndicatorState createState() => _StepProgressIndicatorState();

@@ -110,6 +110,7 @@ class _MainState extends State<Main> {
   Future<void> _getDeviceToken() async {
     // Fetch the device token
     String? deviceToken = await PushNotificationService.getDeviceToken();
+    logger.d('Device Token: $deviceToken');
     if (Platform.isAndroid) {
       setState(() {
         _deviceToken = deviceToken;
