@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:realm/realm.dart';
 
 class TokenRefreshService {

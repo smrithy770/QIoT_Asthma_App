@@ -1,5 +1,5 @@
 import 'package:asthmaapp/constants/app_colors.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

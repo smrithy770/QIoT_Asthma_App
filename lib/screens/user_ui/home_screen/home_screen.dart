@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:asthmaapp/api/user_api.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/asthma_action_plan.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/steroid_card.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/widgets/asthma_action_plan_bottom_sheet.dart';
@@ -38,15 +38,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> homepageData = {};
   String? remoteAsthmaActionPlanPDFpath = '';
   String? remoteEducationPDFpath = '';
-  String userId = '';
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      userModel = getUserData(widget.realm);
-    });
+    _loadUserData();
     _handleRefresh();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = getUserData(widget.realm);
+    if (user != null) {
+      setState(() {
+        userModel = user;
+      });
+    }
   }
 
   UserModel? getUserData(Realm realm) {
@@ -136,7 +142,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
-    logger.d('AsthmaActionPlan: ${homepageData['asthmaActionPlan']}');
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(

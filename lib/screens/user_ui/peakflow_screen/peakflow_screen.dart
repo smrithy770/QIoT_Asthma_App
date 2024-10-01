@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:asthmaapp/api/peakflow_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';

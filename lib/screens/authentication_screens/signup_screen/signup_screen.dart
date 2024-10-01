@@ -240,7 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
             // physics: const BouncingScrollPhysics(),
             child: Container(
               width: screenSize.width,
-              height: screenSize.height,
+              // height: screenSize.height,
               padding: const EdgeInsets.all(16),
               child: Padding(
                 padding: EdgeInsets.symmetric(

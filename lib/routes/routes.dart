@@ -15,6 +15,9 @@ import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/peakflow_report_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/report_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/steroid_dose_report_screen/steroid_dose_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:fluro/fluro.dart';
 import 'package:realm/realm.dart';
@@ -258,6 +261,54 @@ void defineRoutes(FluroRouter router) {
         return EditNotesScreen(
           realm: realm,
           noteId: noteId,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/reports_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return ReportsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/peakflow_reports_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return PeakflowReportsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/steroid_dose_report_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return SteroidDoseReportsScreen(
+          realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,
         );

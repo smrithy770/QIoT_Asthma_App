@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/routes/router_provider.dart';
 import 'package:asthmaapp/routes/routes.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';

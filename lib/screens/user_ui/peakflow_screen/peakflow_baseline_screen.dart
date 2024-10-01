@@ -1,5 +1,5 @@
 import 'package:asthmaapp/constants/app_colors.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_baseline_report_chart.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_percentage.dart';
@@ -248,7 +248,6 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 openLink('www.asthmaandlung.org.uk');
-                                print('Open asthmaandlung.org.uk');
                               },
                           ),
                           const TextSpan(
@@ -270,7 +269,6 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 openLink('www.nhs.uk');
-                                print('Open nhs.uk');
                               },
                           ),
                         ],

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:asthmaapp/api/asthmacontroltest_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_result_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/widget/questionnaire_widget.dart';

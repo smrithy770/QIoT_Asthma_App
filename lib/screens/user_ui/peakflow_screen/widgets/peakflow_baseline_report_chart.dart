@@ -24,7 +24,6 @@ class _PeakflowBaselineChartState extends State<PeakflowBaselineChart> {
     final List<ChartData> chartData2 = [
       ChartData('Baseline', widget.baseLineScore),
     ];
-    print(widget.integerPeakflowPercentage);
     return Scaffold(
       body: Center(
         child: SfCartesianChart(

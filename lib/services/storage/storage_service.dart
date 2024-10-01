@@ -1,14 +1,13 @@
 import 'package:asthmaapp/main.dart';
 
 class StorageService {
-
   Future<void> saveUserData(Map<String, dynamic> userData) async {
     try {
       userData.forEach((key, value) async {
         await storage.write(key: key, value: value.toString());
       });
     } catch (e) {
-      print('Error saving user data: $e');
+      logger.d('Error saving user data: $e');
     }
   }
 
@@ -28,7 +27,7 @@ class StorageService {
     try {
       await storage.deleteAll();
     } catch (e) {
-      print('Error clearing user data: $e');
+      logger.d('Error clearing user data: $e');
     }
   }
 }

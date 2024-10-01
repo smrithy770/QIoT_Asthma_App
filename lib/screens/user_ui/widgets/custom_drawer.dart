@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/user_model.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
@@ -301,6 +301,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Report',
                     onTap: () {
                       widget.itemName('Report');
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/reports_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
+                      );
                     },
                   ),
                   const Divider(
