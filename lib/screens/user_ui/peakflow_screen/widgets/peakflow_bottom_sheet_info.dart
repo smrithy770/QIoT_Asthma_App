@@ -110,7 +110,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
               textBeforeClickable: '',
               clickableText: 'Call In Case of Emergency (ICE) contact',
               underline: true,
-              color: const Color(0xFF004283),
+              color: AppColors.primaryBlue,
               textAfterClickable: '',
               fontSize: screenRatio * 7,
               onTap: () {})

@@ -1,4 +1,4 @@
-import 'package:asthmaapp/api/api_service.dart';
+import 'package:asthmaapp/services/api_service.dart';
 import 'package:asthmaapp/api/utils/api_constants.dart';
 
 class AsthmacontroltestApi {
@@ -17,11 +17,11 @@ class AsthmacontroltestApi {
     });
   }
 
-  Future<Map<String, dynamic>> getAllAsthamControlTest(
+  Future<Map<String, dynamic>> getAsthamControlTestHistory(
       String userId, int month, int year,
       [String? accessToken]) async {
-    final getAllAsthamControlTestUrl =
-        ApiConstants.getAllAsthamControlTestUrl(userId);
-    return _apiService.get(getAllAsthamControlTestUrl, accessToken);
+    final getAsthamControlTestHistoryUrl =
+        ApiConstants.getAsthamControlTestHistoryUrl(userId, month, year);
+    return _apiService.get(getAsthamControlTestHistoryUrl, accessToken);
   }
 }

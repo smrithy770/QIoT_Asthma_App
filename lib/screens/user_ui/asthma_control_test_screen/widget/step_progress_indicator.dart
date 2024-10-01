@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,8 +31,8 @@ class _StepProgressIndicatorState extends State<StepProgressIndicator> {
               return CircleAvatar(
                 radius: 20,
                 backgroundColor: stepIndex <= widget.currentStep
-                    ? const Color(0xFF004283)
-                    : const Color(0xFF004283).withOpacity(0.1),
+                    ? AppColors.primaryBlue
+                    : AppColors.primaryBlue.withOpacity(0.1),
                 child: stepIndex == widget.currentStep
                     ? SvgPicture.asset(
                         'assets/svgs/user_assets/check.svg',
@@ -40,7 +41,7 @@ class _StepProgressIndicatorState extends State<StepProgressIndicator> {
                     : Text(
                         (stepIndex + 1).toString(),
                         style: const TextStyle(
-                          color: Color(0xFFFFFFFF),
+                          color: AppColors.primaryWhite,
                         ),
                       ),
               );
@@ -49,7 +50,7 @@ class _StepProgressIndicatorState extends State<StepProgressIndicator> {
                 width: 28,
                 height: 2,
                 color: index ~/ 2 < widget.currentStep
-                    ? const Color(0xFF004283)
+                    ? AppColors.primaryBlue
                     : const Color(0xFFD7D7D7),
               );
             }

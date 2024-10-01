@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:asthmaapp/api/asthmacontroltest_api.dart';
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_result_screen.dart';
@@ -227,10 +228,10 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
     final double screenRatio = screenSize.height / screenSize.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -358,8 +359,8 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(screenSize.width * 0.24,
                                 screenSize.height * 0.06),
-                            foregroundColor: const Color(0xFFFFFFFF),
-                            backgroundColor: const Color(0xFF004283),
+                            foregroundColor: AppColors.primaryWhite,
+                            backgroundColor: AppColors.primaryBlue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -384,7 +385,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
                             fixedSize: Size(screenSize.width * 0.24,
                                 screenSize.height * 0.06),
                             foregroundColor: const Color(0xFF707070),
-                            backgroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor: AppColors.primaryWhite,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                               side: const BorderSide(

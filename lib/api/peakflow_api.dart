@@ -1,4 +1,4 @@
-import 'package:asthmaapp/api/api_service.dart';
+import 'package:asthmaapp/services/api_service.dart';
 import 'package:asthmaapp/api/utils/api_constants.dart';
 
 class PeakflowApi {
@@ -16,10 +16,10 @@ class PeakflowApi {
     });
   }
 
-  Future<Map<String, dynamic>> getAllPeakflow(
+  Future<Map<String, dynamic>> getPeakflowHistory(
       String userId, int month, int year,
       [String? accessToken]) async {
-    final getAllPeakflowUrl = ApiConstants.getAllPeakflowUrl(userId);
-    return _apiService.get(getAllPeakflowUrl, accessToken);
+    final getPeakflowHistoryUrl = ApiConstants.getPeakflowHistoryUrl(userId, month, year);
+    return _apiService.get(getPeakflowHistoryUrl, accessToken);
   }
 }

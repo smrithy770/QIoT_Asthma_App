@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -42,7 +43,7 @@ class _PeakflowBaselineChartState extends State<PeakflowBaselineChart> {
                         widget.integerPeakflowPercentage >= 60
                     ? const Color(0xFFFF8500)
                     : const Color(0xFFFD4646),
-            const Color(0xFF004283)
+            AppColors.primaryBlue
           ],
           series: <CartesianSeries<ChartData, String>>[
             // Renders column chart
@@ -56,7 +57,7 @@ class _PeakflowBaselineChartState extends State<PeakflowBaselineChart> {
             ),
             // Renders column chart
             ColumnSeries<ChartData, String>(
-              color: const Color(0xFF004283),
+              color: AppColors.primaryBlue,
               dataSource: chartData2,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,

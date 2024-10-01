@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class AsthmaControlTestResultScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  final int totalScore;
+  final int? totalScore;
   const AsthmaControlTestResultScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
-    required this.totalScore,
+    this.totalScore,
   });
 
   @override
@@ -56,8 +57,8 @@ class _AsthmaControlTestResultScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -124,9 +125,9 @@ class _AsthmaControlTestResultScreenState
                     height: screenSize.width * 0.5,
                     child: SfCircularChart(
                       palette: <Color>[
-                        widget.totalScore <= 20
+                        widget.totalScore! <= 20
                             ? const Color(0xFFFD4646)
-                            : widget.totalScore < 25 && widget.totalScore > 20
+                            : widget.totalScore! < 25 && widget.totalScore! > 20
                                 ? const Color(0xFFFF8500)
                                 : const Color(0xFF27AE60),
                       ],
@@ -134,12 +135,12 @@ class _AsthmaControlTestResultScreenState
                         CircularChartAnnotation(
                           widget: SizedBox(
                             child: Text(
-                              widget.totalScore.toString(),
+                              widget.totalScore!.toString(),
                               style: TextStyle(
-                                color: widget.totalScore <= 20
+                                color: widget.totalScore! <= 20
                                     ? const Color(0xFFFD4646)
-                                    : widget.totalScore < 25 &&
-                                            widget.totalScore > 20
+                                    : widget.totalScore! < 25 &&
+                                            widget.totalScore! > 20
                                         ? const Color(0xFFFF8500)
                                         : const Color(0xFF27AE60),
                                 fontSize: 22,
@@ -173,7 +174,7 @@ class _AsthmaControlTestResultScreenState
                       'What does your score mean?',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Color(0xFF004283),
+                        color: AppColors.primaryBlue,
                         fontSize: 16,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Roboto',
@@ -207,7 +208,7 @@ class _AsthmaControlTestResultScreenState
                               'ACT test results are for statistical analysis only and also not to be used as an emergency alerts system. They are not a substitute for professional medical advice.',
                               textAlign: TextAlign.justify,
                               style: TextStyle(
-                                color: const Color(0xFF004283),
+                                color: AppColors.primaryBlue,
                                 fontSize: 5 * screenRatio,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Roboto',
@@ -485,7 +486,7 @@ class _AsthmaControlTestResultScreenState
 
   List<ACTData> getChartData() {
     final List<ACTData> chartData = [
-      ACTData('Score', widget.totalScore),
+      ACTData('Score', widget.totalScore!),
     ];
     return chartData;
   }

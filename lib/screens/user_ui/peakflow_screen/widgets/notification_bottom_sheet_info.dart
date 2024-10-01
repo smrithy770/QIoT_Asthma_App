@@ -1,7 +1,7 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NotificationBottomSheet extends StatefulWidget {
@@ -169,7 +169,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
               fontSize: screenRatio * 9,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
-              color: Color(0xFF004283),
+              color: AppColors.primaryBlue,
             ),
           ),
           SizedBox(height: screenSize.height * 0.01),
@@ -241,7 +241,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Roboto',
                       ),
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                     ),
                     readOnly: true,
                   ),
@@ -253,8 +253,8 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                         screenSize.width * 0.26,
                         56,
                       ),
-                      foregroundColor: const Color(0xFFFFFFFF),
-                      backgroundColor: const Color(0xFF004283),
+                      foregroundColor: AppColors.primaryWhite,
+                      backgroundColor: AppColors.primaryBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

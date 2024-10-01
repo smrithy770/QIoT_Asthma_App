@@ -1,21 +1,21 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:asthmaapp/api/auth_api.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
-import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
-import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
-import 'package:asthmaapp/screens/user_ui/education_screen/education_screen.dart';
-import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
-import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:realm/realm.dart';
 
 class CustomDrawer extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  final String? remoteEducationPDFpath;
   final VoidCallback onClose;
   final Function(String) itemName;
 
@@ -24,7 +24,6 @@ class CustomDrawer extends StatefulWidget {
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
-    this.remoteEducationPDFpath,
     required this.onClose,
     required this.itemName,
   });
@@ -34,6 +33,25 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
+  UserModel? userModel;
+  String? remoteEducationPDFpath = '';
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      userModel = getUserData(widget.realm);
+    });
+    getUserData(widget.realm);
+
+    downloadPdfFile(userModel?.educationalPlan).then((f) {
+      logger.d("Download education files: ${f.path}");
+      setState(() {
+        remoteEducationPDFpath = f.path;
+      });
+    });
+  }
+
   UserModel? getUserData(Realm realm) {
     final results = realm.all<UserModel>();
     if (results.isNotEmpty) {
@@ -42,9 +60,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
     return null;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<File> downloadPdfFile(String? url) async {
+    Completer<File> completer = Completer();
+    try {
+      final filename = url?.substring(url.lastIndexOf("/") + 1);
+      var request = await HttpClient().getUrl(Uri.parse(url!));
+      var response = await request.close();
+      var bytes = await consolidateHttpClientResponseBytes(response);
+      var dir = await getApplicationDocumentsDirectory();
+      logger.d("Download files");
+      logger.d("${dir.path}/$filename");
+      File file = File("${dir.path}/$filename");
+
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      logger.d('Error parsing asset file: $e');
+      throw Exception('Error parsing asset file!');
+    }
+    return completer.future;
   }
 
   @override
@@ -79,8 +113,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     child: IconButton(
                       icon: SvgPicture.asset(
                         'assets/svgs/user_assets/cross.svg',
-                        width: 32,
-                        height: 32,
+                        width: 24,
+                        height: 24,
                       ),
                       onPressed: widget.onClose,
                     ),
@@ -92,6 +126,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
+                  // Home Screen
                   CustomDrawerListItem(
                     assetPath: 'assets/svgs/user_assets/home.svg',
                     name: 'Home',
@@ -110,11 +145,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       );
                     },
                   ),
+                  // Divider
                   const Divider(
                     indent: 16,
                     endIndent: 16,
                     color: Color(0xFFD7D7D7),
                   ),
+                  // Peakflow Screen
                   CustomDrawerListItem(
                     assetPath: 'assets/svgs/user_assets/peakflow.svg',
                     name: 'Peakflow',
@@ -133,11 +170,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       );
                     },
                   ),
+                  // Divider
                   const Divider(
                     indent: 16,
                     endIndent: 16,
                     color: Color(0xFFD7D7D7),
                   ),
+                  // Steroid Dose Screen
                   CustomDrawerListItem(
                     assetPath: 'assets/svgs/user_assets/steroid.svg',
                     name: 'Steroid Dose',
@@ -156,49 +195,53 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       );
                     },
                   ),
+                  // Divider
                   const Divider(
                     indent: 16,
                     endIndent: 16,
                     color: Color(0xFFD7D7D7),
                   ),
+                  // Asthma Control Test Screen
                   CustomDrawerListItem(
                     assetPath: 'assets/svgs/user_assets/act.svg',
                     name: 'Asthma Control Test(ACT)',
                     onTap: () {
                       widget.itemName('Asthma Control Test(ACT)');
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => AsthmaControlTestScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/asthma_control_test_record_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
+                  // Divider
                   const Divider(
                     indent: 16,
                     endIndent: 16,
                     color: Color(0xFFD7D7D7),
                   ),
+                  // Fitness and Stress Screen
                   CustomDrawerListItem(
                     assetPath: 'assets/svgs/user_assets/fitness.svg',
                     name: 'Fitness and Stress',
                     onTap: () {
                       widget.itemName('Fitness and Stress');
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => FitnessStressScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/fitness_stress_record_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
@@ -212,16 +255,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Device',
                     onTap: () {
                       widget.itemName('Device');
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => DeviceScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/device_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
@@ -282,16 +325,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Education',
                     onTap: () {
                       widget.itemName('Education');
-                      Navigator.push(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => EducationScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                            path: widget.remoteEducationPDFpath,
-                          ),
-                        ),
+                        '/education_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                          'path': remoteEducationPDFpath,
+                        },
                       );
                     },
                   ),

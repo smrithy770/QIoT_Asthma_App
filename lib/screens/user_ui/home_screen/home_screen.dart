@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> homepageData = {};
   String? remoteAsthmaActionPlanPDFpath = '';
   String? remoteEducationPDFpath = '';
+  String userId = '';
 
   @override
   void initState() {
@@ -67,6 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           homepageData = payload;
         });
+        widget.realm.write(() {
+          userModel?.educationalPlan =
+              homepageData['educationalPlan']; // Update educationalPlan
+        });
         logger.i('Homepage data: $homepageData');
         _createPdfAfterDelay();
       }
@@ -79,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _createPdfAfterDelay() {
     Future.delayed(const Duration(milliseconds: 750), () {
-      if (homepageData['asthmaActionPlan'] != '-') {
+      if (homepageData['asthmaActionPlan'] != '' ||
+          homepageData['educationalPlan'] != '') {
         downloadPdfFile(homepageData['asthmaActionPlan']).then((f) {
           setState(() {
             remoteAsthmaActionPlanPDFpath = f.path;
@@ -165,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
         realm: widget.realm,
         deviceToken: widget.deviceToken,
         deviceType: widget.deviceType,
-        remoteEducationPDFpath: remoteEducationPDFpath,
         onClose: () {
           Navigator.of(context).pop();
         },

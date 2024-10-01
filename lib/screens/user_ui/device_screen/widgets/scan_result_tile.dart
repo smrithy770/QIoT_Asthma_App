@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ScanResultTile extends StatefulWidget {
-  const ScanResultTile({Key? key, required this.result, this.onTap})
-      : super(key: key);
+  const ScanResultTile({
+    super.key,
+    required this.result,
+    this.onTap,
+  });
 
   final ScanResult result;
   final VoidCallback? onTap;
@@ -87,8 +91,8 @@ class _ScanResultTileState extends State<ScanResultTile> {
   Widget _buildConnectButton(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: const Color(0xFFFFFFFF),
-        backgroundColor: const Color(0xFF004283),
+        foregroundColor: AppColors.primaryWhite,
+        backgroundColor: AppColors.primaryBlue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

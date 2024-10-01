@@ -7,6 +7,7 @@ part 'user_model.realm.dart';
 class _UserModel {
   @PrimaryKey()
   late String userId;
+  late String educationalPlan;
   late String accessToken;
   late String refreshToken;
 }

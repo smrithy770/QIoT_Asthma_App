@@ -215,8 +215,8 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -434,8 +434,8 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
                             style: ElevatedButton.styleFrom(
                               fixedSize: Size(screenSize.width * 0.24,
                                   screenSize.height * 0.06),
-                              foregroundColor: const Color(0xFFFFFFFF),
-                              backgroundColor: const Color(0xFF004283),
+                              foregroundColor: AppColors.primaryWhite,
+                              backgroundColor: AppColors.primaryBlue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),

@@ -56,8 +56,13 @@ class _SigninScreenState extends State<SigninScreen> {
           logger.d('Refresh Token: $refreshToken');
           final userData =
               jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
-          final userModel =
-              UserModel(userData['_id'], accessToken, refreshToken);
+
+          final userModel = UserModel(
+            userData['_id'],
+            '',
+            accessToken,
+            refreshToken,
+          );
           // Save to Realm
           widget.realm.write(() {
             widget.realm.add(userModel);

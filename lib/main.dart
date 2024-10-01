@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:realm/realm.dart';
 
@@ -24,6 +25,11 @@ Future _firebaseBackgroundMessageHandler(RemoteMessage message) async {
     logger.d('Message received in the background!');
   }
 }
+
+AndroidOptions _getAndroidOptions() => const AndroidOptions(
+      encryptedSharedPreferences: true,
+    );
+final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
 
 final Logger logger = Logger();
 
@@ -54,14 +60,6 @@ void main() async {
   PushNotificationService.onNotificationTapBackground();
   PushNotificationService.onNotificationTapForeground();
   PushNotificationService.onNotificationTerminatedState();
-
-  if (userModel != null) {
-    // Replace with your actual device token and device type fetching logic
-    String deviceToken = "your_device_token";
-    String deviceType = "your_device_type";
-
-    TokenRefreshService().initialize(realm, userModel, deviceToken, deviceType);
-  }
 
   defineRoutes(router);
   runApp(

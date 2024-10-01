@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/models/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_baseline_report_chart.dart';
@@ -12,16 +13,16 @@ import 'package:url_launcher/url_launcher.dart';
 class PeakflowBaselineScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  final int peakFlow, baseLineScore;
-  final String practionerContact;
+  final int? peakFlow, baseLineScore;
+  final String? practionerContact;
   const PeakflowBaselineScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
-    required this.peakFlow,
-    required this.baseLineScore,
-    required this.practionerContact,
+    this.peakFlow,
+    this.baseLineScore,
+    this.practionerContact,
   });
 
   @override
@@ -84,15 +85,15 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
 
-    peakFlowPercentage = ((widget.peakFlow / widget.baseLineScore) * 100);
+    peakFlowPercentage = ((widget.peakFlow! / widget.baseLineScore!) * 100);
     stringPeakflowPercentage = peakFlowPercentage.toStringAsFixed(0);
     integerPeakflowPercentage = int.parse(stringPeakflowPercentage);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -139,7 +140,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                     'Result:',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color(0xFF004283),
+                      color: AppColors.primaryBlue,
                       fontSize: 7 * screenRatio,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Roboto',
@@ -151,8 +152,8 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                   width: screenSize.width,
                   height: screenSize.height * 0.26,
                   child: PeakflowBaselineChart(
-                      peakFlow: widget.peakFlow,
-                      baseLineScore: widget.baseLineScore,
+                      peakFlow: widget.peakFlow!,
+                      baseLineScore: widget.baseLineScore!,
                       integerPeakflowPercentage: integerPeakflowPercentage),
                 ),
                 SizedBox(height: screenSize.height * 0.02),
@@ -163,7 +164,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                     'Peakflow Record:',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color(0xFF004283),
+                      color: AppColors.primaryBlue,
                       fontSize: 7 * screenRatio,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Roboto',
@@ -199,7 +200,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                     'Instruction:',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: const Color(0xFF004283),
+                      color: AppColors.primaryBlue,
                       fontSize: 7 * screenRatio,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Roboto',
@@ -294,8 +295,8 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                               style: ElevatedButton.styleFrom(
                                 fixedSize: Size(screenSize.width * 0.32,
                                     screenSize.height * 0.08),
-                                foregroundColor: const Color(0xFFFFFFFF),
-                                backgroundColor: const Color(0xFF004283),
+                                foregroundColor: AppColors.primaryWhite,
+                                backgroundColor: AppColors.primaryBlue,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -320,7 +321,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                               style: ElevatedButton.styleFrom(
                                 fixedSize: Size(screenSize.width * 0.32,
                                     screenSize.height * 0.08),
-                                foregroundColor: const Color(0xFFFFFFFF),
+                                foregroundColor: AppColors.primaryWhite,
                                 backgroundColor: const Color(0xFFFD4646),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -361,8 +362,8 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                       screenSize.width,
                       screenSize.height * 0.064,
                     ),
-                    foregroundColor: const Color(0xFFFFFFFF),
-                    backgroundColor: const Color(0xFF004283),
+                    foregroundColor: AppColors.primaryWhite,
+                    backgroundColor: AppColors.primaryBlue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -373,7 +374,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                     'Did you administer a Steroid dose?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color(0xFFFFFFFF),
+                      color: AppColors.primaryWhite,
                       fontSize: 7 * screenRatio,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Roboto',
@@ -408,7 +409,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                             'Peakflow results are for statistical purposes only and also not to be used as an emergency alerts system. They are not a substitute for professional medical advice.',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
-                              color: const Color(0xFF004283),
+                              color: AppColors.primaryBlue,
                               fontSize: 6 * screenRatio,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Roboto',

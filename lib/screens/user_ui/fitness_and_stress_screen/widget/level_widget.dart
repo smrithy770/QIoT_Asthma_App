@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class LevelWidget extends StatelessWidget {
@@ -8,13 +9,13 @@ class LevelWidget extends StatelessWidget {
   final Size screenSize;
 
   const LevelWidget({
-    Key? key,
+    super.key,
     required this.widgetName,
     required this.level,
     required this.groupValue,
     required this.onChanged,
     required this.screenSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class LevelWidget extends StatelessWidget {
         onChanged(level);
       },
       child: Container(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         width: screenSize.width * 0.28,
         // height: screenSize.height * 0.1,
         constraints: const BoxConstraints(
@@ -33,7 +34,7 @@ class LevelWidget extends StatelessWidget {
           maxHeight: double.infinity,
         ),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: AppColors.primaryWhite,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(

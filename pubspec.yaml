@@ -34,8 +34,9 @@ dependencies:
   logger: ^2.4.0
   geolocator: ^13.0.1
 
-  syncfusion_flutter_charts: ^25.2.4
-  syncfusion_flutter_datagrid: ^25.2.4
+  syncfusion_flutter_charts: ^25.2.7
+  syncfusion_flutter_datagrid: ^25.2.7
+  flutter_secure_storage: ^9.1.1
 
 dev_dependencies:
   flutter_test:

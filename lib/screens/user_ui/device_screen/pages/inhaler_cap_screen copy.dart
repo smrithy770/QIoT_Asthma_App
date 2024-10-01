@@ -238,8 +238,8 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF004283),
-          foregroundColor: const Color(0xFFFFFFFF),
+          backgroundColor: AppColors.primaryBlue,
+          foregroundColor: AppColors.primaryWhite,
           title: const Align(
             alignment: Alignment.centerLeft,
             child: Text(

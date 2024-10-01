@@ -277,8 +277,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(screenSize.width * 0.5,
                                 screenSize.height * 0.08),
-                            foregroundColor: const Color(0xFF004283),
-                            backgroundColor: const Color(0xFFFFFFFF),
+                            foregroundColor: AppColors.primaryBlue,
+                            backgroundColor: AppColors.primaryWhite,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -309,8 +309,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(screenSize.width * 0.5,
                                 screenSize.height * 0.08),
-                            foregroundColor: const Color(0xFF004283),
-                            backgroundColor: const Color(0xFFFFFFFF),
+                            foregroundColor: AppColors.primaryBlue,
+                            backgroundColor: AppColors.primaryWhite,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

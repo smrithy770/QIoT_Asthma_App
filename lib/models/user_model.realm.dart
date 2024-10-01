@@ -11,10 +11,12 @@ class UserModel extends _UserModel
     with RealmEntity, RealmObjectBase, RealmObject {
   UserModel(
     String userId,
+    String educationalPlan,
     String accessToken,
     String refreshToken,
   ) {
     RealmObjectBase.set(this, 'userId', userId);
+    RealmObjectBase.set(this, 'educationalPlan', educationalPlan);
     RealmObjectBase.set(this, 'accessToken', accessToken);
     RealmObjectBase.set(this, 'refreshToken', refreshToken);
   }
@@ -25,6 +27,13 @@ class UserModel extends _UserModel
   String get userId => RealmObjectBase.get<String>(this, 'userId') as String;
   @override
   set userId(String value) => RealmObjectBase.set(this, 'userId', value);
+
+  @override
+  String get educationalPlan =>
+      RealmObjectBase.get<String>(this, 'educationalPlan') as String;
+  @override
+  set educationalPlan(String value) =>
+      RealmObjectBase.set(this, 'educationalPlan', value);
 
   @override
   String get accessToken =>
@@ -54,6 +63,7 @@ class UserModel extends _UserModel
   EJsonValue toEJson() {
     return <String, dynamic>{
       'userId': userId.toEJson(),
+      'educationalPlan': educationalPlan.toEJson(),
       'accessToken': accessToken.toEJson(),
       'refreshToken': refreshToken.toEJson(),
     };
@@ -61,14 +71,17 @@ class UserModel extends _UserModel
 
   static EJsonValue _toEJson(UserModel value) => value.toEJson();
   static UserModel _fromEJson(EJsonValue ejson) {
+    if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
         'userId': EJsonValue userId,
+        'educationalPlan': EJsonValue educationalPlan,
         'accessToken': EJsonValue accessToken,
         'refreshToken': EJsonValue refreshToken,
       } =>
         UserModel(
           fromEJson(userId),
+          fromEJson(educationalPlan),
           fromEJson(accessToken),
           fromEJson(refreshToken),
         ),
@@ -79,8 +92,9 @@ class UserModel extends _UserModel
   static final schema = () {
     RealmObjectBase.registerFactory(UserModel._);
     register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.realmObject, UserModel, 'UserModel', [
+    return const SchemaObject(ObjectType.realmObject, UserModel, 'UserModel', [
       SchemaProperty('userId', RealmPropertyType.string, primaryKey: true),
+      SchemaProperty('educationalPlan', RealmPropertyType.string),
       SchemaProperty('accessToken', RealmPropertyType.string),
       SchemaProperty('refreshToken', RealmPropertyType.string),
     ]);

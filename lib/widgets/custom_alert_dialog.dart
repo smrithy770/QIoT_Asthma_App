@@ -71,8 +71,8 @@ class CustomAlertDialog extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   fixedSize:
                       Size(screenSize.width * 1.0, screenSize.height * 0.06),
-                  foregroundColor: const Color(0xFFFFFFFF),
-                  backgroundColor: const Color(0xFF004283),
+                  foregroundColor: AppColors.primaryWhite,
+                  backgroundColor: AppColors.primaryBlue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -94,7 +94,7 @@ class CustomAlertDialog extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(
                             screenSize.width * 1.0, screenSize.height * 0.06),
-                        foregroundColor: const Color(0xFFFFFFFF),
+                        foregroundColor: AppColors.primaryWhite,
                         backgroundColor: AppColors.okGreen,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -114,7 +114,7 @@ class CustomAlertDialog extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(
                             screenSize.width * 1.0, screenSize.height * 0.06),
-                        foregroundColor: const Color(0xFFFFFFFF),
+                        foregroundColor: AppColors.primaryWhite,
                         backgroundColor: AppColors.errorRed,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

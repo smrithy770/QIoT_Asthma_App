@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
@@ -103,7 +104,7 @@ class _AsthmaActionPlanBottomSheetState
                 fontSize: 8 * screenRatio,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Roboto',
-                color: const Color(0xFF004283),
+                color: AppColors.primaryBlue,
               ),
             ),
             SizedBox(height: screenSize.height * 0.01),
@@ -114,7 +115,7 @@ class _AsthmaActionPlanBottomSheetState
                 fontSize: 6 * screenRatio,
                 fontWeight: FontWeight.normal,
                 fontFamily: 'Roboto',
-                color: const Color(0xFF004283),
+                color: AppColors.primaryBlue,
               ),
             ),
             SizedBox(height: screenSize.height * 0.01),
@@ -262,7 +263,7 @@ class _AsthmaActionPlanBottomSheetState
                 'Set personal asthma action plan',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color(0xFF004283),
+                  color: AppColors.primaryBlue,
                   fontSize: 7 * screenRatio,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Roboto',
@@ -306,10 +307,10 @@ class _AsthmaActionPlanBottomSheetState
                       fixedSize: Size(
                           screenSize.width * 0.24, screenSize.height * 0.06),
                       foregroundColor: _result != null
-                          ? const Color(0xFFFFFFFF)
+                          ? AppColors.primaryWhite
                           : const Color(0xFFA6A6A6),
                       backgroundColor: _result != null
-                          ? const Color(0xFF004283)
+                          ? AppColors.primaryBlue
                           : const Color(0xFFEDEDED),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),

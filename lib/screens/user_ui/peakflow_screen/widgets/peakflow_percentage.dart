@@ -1,3 +1,4 @@
+import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -79,7 +80,7 @@ class PeakflowPercentage extends StatelessWidget {
                             : 'assets/svgs/user_assets/very-sad.svg',
                 width: 36,
                 height: 36,
-                color: const Color(0xFF004283),
+                color: AppColors.primaryBlue,
               ),
             ],
           ),

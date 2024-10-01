@@ -372,7 +372,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
                               screenRatio * 24,
                             ),
                             foregroundColor: const Color(0xFF707070),
-                            backgroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor: AppColors.primaryWhite,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                               side: const BorderSide(
@@ -409,8 +409,8 @@ class _EditNotesScreen extends State<EditNotesScreen> {
                               screenRatio * 16,
                               screenRatio * 24,
                             ),
-                            foregroundColor: const Color(0xFFFFFFFF),
-                            backgroundColor: const Color(0xFF004283),
+                            foregroundColor: AppColors.primaryWhite,
+                            backgroundColor: AppColors.primaryBlue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

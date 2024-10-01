@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
+import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:realm/realm.dart';
 
 class EducationScreen extends StatefulWidget {
@@ -40,10 +42,17 @@ class _EducationScreenState extends State<EducationScreen>
       appBar: AppBar(
         backgroundColor: AppColors.primaryBlue,
         foregroundColor: AppColors.primaryWhite,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: SvgPicture.asset(
+                'assets/svgs/user_assets/user_drawer_icon.svg', // Replace with your custom icon asset path
+                width: screenRatio * 10,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
         title: Align(
@@ -57,6 +66,17 @@ class _EducationScreenState extends State<EducationScreen>
             ),
           ),
         ),
+      ),
+      drawer: CustomDrawer(
+        realm: widget.realm,
+        deviceToken: widget.deviceToken,
+        deviceType: widget.deviceType,
+        onClose: () {
+          Navigator.of(context).pop();
+        },
+        itemName: (String name) {
+          logger.d(name);
+        },
       ),
       body: Stack(
         children: <Widget>[

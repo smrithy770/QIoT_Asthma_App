@@ -1,4 +1,4 @@
-import 'package:asthmaapp/api/api_service.dart';
+import 'package:asthmaapp/services/api_service.dart';
 import 'package:asthmaapp/api/utils/api_constants.dart';
 
 class UserApi {

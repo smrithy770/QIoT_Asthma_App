@@ -279,8 +279,8 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
     return Scaffold(
       backgroundColor: AppColors.primaryWhite,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF004283),
-        foregroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: AppColors.primaryBlue,
+        foregroundColor: AppColors.primaryWhite,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -331,7 +331,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                           'Steroid Dose Entry',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: const Color(0xFF004283),
+                            color: AppColors.primaryBlue,
                             fontSize: screenRatio * 8,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
@@ -356,7 +356,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                           'Please enter your steroid dosage and hit submit.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: const Color(0xFF004283),
+                            color: AppColors.primaryBlue,
                             fontSize: screenRatio * 7,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Roboto',
@@ -419,8 +419,8 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                                 style: ElevatedButton.styleFrom(
                                   fixedSize: Size(screenSize.width * 0.24,
                                       screenSize.height * 0.08),
-                                  foregroundColor: const Color(0xFFFFFFFF),
-                                  backgroundColor: const Color(0xFF004283),
+                                  foregroundColor: AppColors.primaryWhite,
+                                  backgroundColor: AppColors.primaryBlue,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -430,7 +430,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                                 child: Text(
                                   'Submit',
                                   style: TextStyle(
-                                    color: const Color(0xFFFFFFFF),
+                                    color: AppColors.primaryWhite,
                                     fontSize: 8 * screenRatio,
                                     fontWeight: FontWeight.normal,
                                     fontFamily: 'Roboto',
@@ -449,7 +449,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                           'Upload your steroid card',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: const Color(0xFF004283),
+                            color: AppColors.primaryBlue,
                             fontSize: 7 * screenRatio,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto',
@@ -497,10 +497,10 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
                                 fixedSize: Size(screenSize.width * 0.24,
                                     screenSize.height * 0.08),
                                 foregroundColor: _result != null
-                                    ? const Color(0xFFFFFFFF)
+                                    ? AppColors.primaryWhite
                                     : const Color(0xFFA6A6A6),
                                 backgroundColor: _result != null
-                                    ? const Color(0xFF004283)
+                                    ? AppColors.primaryBlue
                                     : const Color(0xFFEDEDED),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),

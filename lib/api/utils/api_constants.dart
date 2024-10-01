@@ -22,8 +22,8 @@ class ApiConstants {
     return '/user/$userId/peakflow';
   }
 
-  static String getAllPeakflowUrl(String userId) {
-    return '/user/$userId/peakflow';
+  static String getPeakflowHistoryUrl(String userId, int month, int year) {
+    return '/user/$userId/peakflow?month=$month&year=$year';
   }
 
   static String addSteroidDoseUrl(String userId) {
@@ -34,16 +34,26 @@ class ApiConstants {
     return '/user/$userId/steroiddose/uploadsteroidcard';
   }
 
-  static String getAllSteroidDoseUrl(String userId) {
-    return '/user/$userId/steroiddose';
+  static String getSteroidDoseHistoryUrl(String userId, int month, int year) {
+    return '/user/$userId/steroiddose?month=$month&year=$year';
   }
 
   static String addAsthamControlTestUrl(String userId) {
     return '/user/$userId/asthamcontroltest';
   }
 
-  static String getAllAsthamControlTestUrl(String userId) {
-    return '/user/$userId/asthamcontroltest';
+  static String getAsthamControlTestHistoryUrl(
+      String userId, int month, int year) {
+    return '/user/$userId/asthamcontroltest?month=$month&year=$year';
+  }
+
+  static String addFitnessandStressUrl(String userId) {
+    return '/user/$userId/fitnessandstress';
+  }
+
+  static String getFitnessandStressHistoryUrl(
+      String userId, int month, int year) {
+    return '/user/$userId/fitnessandstress?month=$month&year=$year';
   }
 
 //Start of Note API
