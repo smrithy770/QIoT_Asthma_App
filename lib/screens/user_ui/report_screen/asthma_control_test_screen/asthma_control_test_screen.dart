@@ -1,22 +1,21 @@
 import 'dart:io';
 
-import 'package:asthmaapp/api/peakflow_api.dart';
+import 'package:asthmaapp/api/asthmacontroltest_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/constants/month_abbreviations.dart';
 import 'package:asthmaapp/main.dart';
-import 'package:asthmaapp/models/peakflow_report_model/peakflow_report_chart_model.dart';
-import 'package:asthmaapp/models/peakflow_report_model/peakflow_report_table_model.dart';
+import 'package:asthmaapp/models/asthma_control_test_report_model/asthma_control_test_report_chart_model.dart';
+import 'package:asthmaapp/models/asthma_control_test_report_model/asthma_control_test_report_table_model.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
-import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/widgets/peakflow_legends_zone.dart';
-import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/widgets/peakflow_report_table.dart';
-import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/widgets/reloadable_chart.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_screen/widgets/asthma_control_test_report_table.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_screen/widgets/reloadable_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 
-class PeakflowReportsScreen extends StatefulWidget {
+class AsthmaControlTestReportScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  const PeakflowReportsScreen({
+  const AsthmaControlTestReportScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
@@ -24,15 +23,17 @@ class PeakflowReportsScreen extends StatefulWidget {
   });
 
   @override
-  State<PeakflowReportsScreen> createState() => _PeakflowReportsScreenState();
+  State<AsthmaControlTestReportScreen> createState() =>
+      _AsthmaControlTestReportScreenState();
 }
 
-class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
+class _AsthmaControlTestReportScreenState
+    extends State<AsthmaControlTestReportScreen> {
   UserModel? userModel;
-  Map<String, dynamic> peakflowReportData = {};
+  Map<String, dynamic> asthmacontroltestReportData = {};
 
-  List<PeakflowReportChartModel> peakflowReportChartData = [];
-  List<PeakflowReportTableModel> peakflowReportTableData = [];
+  List<AsthmaControlTestReportChartModel> asthmacontroltestReportChartData = [];
+  List<AsthmaControlTestReportTableModel> asthmacontroltestReportTableData = [];
 
   DateTime currentDate = DateTime.now();
   int currentMonth = 1;
@@ -68,7 +69,8 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
 
   Future<void> _handleRefresh(int currentMonth, int currentYear) async {
     try {
-      final jsonResponse = await PeakflowApi().getPeakflowHistory(
+      final jsonResponse =
+          await AsthmaControlTestApi().getAsthamControlTestHistory(
         userModel!.userId,
         currentMonth,
         currentYear,
@@ -78,23 +80,19 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
       if (status == 200) {
         final payload = jsonResponse['payload'];
         setState(() {
-          peakflowReportData = payload;
+          asthmacontroltestReportData = payload;
         });
-        for (var i in peakflowReportData['peakflow']) {
-          peakflowReportChartData.add(
-            PeakflowReportChartModel(
+        for (var i in asthmacontroltestReportData['asthamcontroltest']) {
+          asthmacontroltestReportChartData.add(
+            AsthmaControlTestReportChartModel(
               i['createdAt'],
-              i['peakflowValue'],
+              i['actScore'],
             ),
           );
-          peakflowReportTableData.add(
-            PeakflowReportTableModel(
+          asthmacontroltestReportTableData.add(
+            AsthmaControlTestReportTableModel(
               i['createdAt'],
-              i['peakflowValue'],
-              i['highValue'],
-              i['lowValue'],
-              double.tryParse(i['averageValue'].toString()) ?? 0.0,
-              double.tryParse(i['dailyVariation'].toString()) ?? 0.0,
+              i['actScore'],
             ),
           );
         }
@@ -108,8 +106,8 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
 
   void getPrevMonth() {
     setState(() {
-      peakflowReportChartData.clear();
-      peakflowReportTableData.clear();
+      asthmacontroltestReportChartData.clear();
+      asthmacontroltestReportTableData.clear();
       currentMonth -= 1;
       if (currentMonth == 0) {
         currentMonth = 12;
@@ -121,8 +119,8 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
 
   void getNextMonth() {
     setState(() {
-      peakflowReportChartData.clear();
-      peakflowReportTableData.clear();
+      asthmacontroltestReportChartData.clear();
+      asthmacontroltestReportTableData.clear();
       currentMonth += 1;
       if (currentMonth == 13) {
         currentMonth = 1;
@@ -150,7 +148,7 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Peakflow Reports',
+            'Asthma Control Test Reports',
             style: TextStyle(
               fontSize: screenRatio * 10,
               fontWeight: FontWeight.bold,
@@ -178,7 +176,7 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Peakflow Recorded On
+                  // Asthma Control Test Recorded On
                   Container(
                     width: screenSize.width,
                     height: screenSize.height * 0.06,
@@ -198,7 +196,7 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Peakflow recorded on:',
+                              'Asthma Control Test recorded on:',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 color: AppColors.primaryBlue,
@@ -217,7 +215,8 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              peakflowReportData['peakflowRecordedOn']
+                              asthmacontroltestReportData[
+                                      'asthamcontroltestRecordedOn']
                                   .toString(),
                               textAlign: TextAlign.right,
                               style: TextStyle(
@@ -241,11 +240,11 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Peakflow Record
+                        // Asthma Control Test Record
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Peakflow Record:',
+                            'Asthma Control Test Record:',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               color: AppColors.primaryBlue,
@@ -388,31 +387,27 @@ class _PeakflowReportsScreenState extends State<PeakflowReportsScreen> {
                       ],
                     ),
                   ),
-                  // Peakflow Chart
+                  // Asthma Control Test Chart
                   SizedBox(
                     width: screenSize.width,
-                    height: 160 * screenRatio,
+                    height: 384,
                     child: ReloadableChart(
-                      baseLineScore:
-                          peakflowReportData['baseLineScore'].toString(),
-                      peakflowReportChartData: peakflowReportChartData,
-                      hasData:
-                          peakflowReportChartData.isNotEmpty ? true : false,
+                      asthmaControlTestReportChartData:
+                          asthmacontroltestReportChartData,
+                      hasData: asthmacontroltestReportChartData.isNotEmpty
+                          ? true
+                          : false,
                     ),
                   ),
-                  // Peakflow Legends Zone
-                  PeakflowLegendsZone(
-                    screenRatio: screenRatio,
-                    screenSize: screenSize,
-                  ),
-                  // Peakflow Table
+                  // Asthma Control Test Table
                   Expanded(
-                    child: peakflowReportChartData.isNotEmpty
+                    child: asthmacontroltestReportTableData.isNotEmpty
                         ? SizedBox(
                             key: ValueKey(currentMonth),
                             width: screenSize.width,
-                            child: PeakflowReportTable(
-                              peakflowReportTableData: peakflowReportTableData,
+                            child: AsthmaControlTestReportTable(
+                              asthmacontroltestReportTableData:
+                                  asthmacontroltestReportTableData,
                             ),
                           )
                         : const SizedBox.shrink(),

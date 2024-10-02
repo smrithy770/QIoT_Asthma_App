@@ -15,6 +15,7 @@ import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/peakflow_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/steroid_dose_report_screen/steroid_dose_report_screen.dart';
@@ -308,6 +309,22 @@ void defineRoutes(FluroRouter router) {
         String deviceToken = args['deviceToken'];
         String deviceType = args['deviceType'];
         return SteroidDoseReportsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/asthma_control_test_report_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return AsthmaControlTestReportScreen(
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,

@@ -1,7 +1,7 @@
 import 'package:asthmaapp/services/api_service.dart';
 import 'package:asthmaapp/api/utils/api_constants.dart';
 
-class AsthmacontroltestApi {
+class AsthmaControlTestApi {
   final ApiService _apiService = ApiService(baseUrl: ApiConstants.baseURL);
 
   Future<Map<String, dynamic>> addAsthamControlTest(String userId, int actScore,

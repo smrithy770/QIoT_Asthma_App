@@ -1,4 +1,5 @@
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/peakflow_report_model/peakflow_report_chart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +34,7 @@ class _PeakflowReportChartState extends State<PeakflowReportChart> {
     final double screenRatio =
         MediaQuery.of(context).size.height / MediaQuery.of(context).size.width;
 
+    logger.d('Peakflow: ${widget.hasData}');
     return !widget.hasData
         ? Center(
             child: Text(

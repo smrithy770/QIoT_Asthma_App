@@ -247,6 +247,92 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             ),
                           ),
                         ),
+                        // ACT Report
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/asthma_control_test_report_screen', // Named route
+                              (Route<dynamic> route) => true,
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: screenSize.width * 0.4,
+                            height: screenSize.height * 0.2,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF27AE60).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svgs/user_assets/act_report.svg',
+                                  width: 40 * screenRatio,
+                                  height: 40 * screenRatio,
+                                ),
+                                Text(
+                                  'ACT',
+                                  style: TextStyle(
+                                    fontSize: 8 * screenRatio,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Roboto',
+                                    color: Color(0xFF27AE60),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // Fitness and Stress Report
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/fitness_and_stress_report_screen', // Named route
+                              (Route<dynamic> route) => true,
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: screenSize.width * 0.4,
+                            height: screenSize.height * 0.2,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF004283).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/svgs/user_assets/fitness_stress_report.svg',
+                                  width: 40 * screenRatio,
+                                  height: 40 * screenRatio,
+                                ),
+                                Text(
+                                  'Fitness and Stress',
+                                  style: TextStyle(
+                                    fontSize: 8 * screenRatio,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: 'Roboto',
+                                    color: AppColors.primaryBlue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

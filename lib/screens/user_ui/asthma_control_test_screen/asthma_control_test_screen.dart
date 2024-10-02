@@ -144,7 +144,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
       return;
     }
     try {
-      final response = await AsthmacontroltestApi().addAsthamControlTest(
+      final response = await AsthmaControlTestApi().addAsthamControlTest(
         userModel!.userId,
         totalScore,
         {
@@ -165,6 +165,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
         CustomSnackBarUtil.showCustomSnackBar(
             "Asthma Control Test score added successfully",
             success: true);
+        _clearAllSelections();
         if (mounted) {
           Navigator.push(
             context,
