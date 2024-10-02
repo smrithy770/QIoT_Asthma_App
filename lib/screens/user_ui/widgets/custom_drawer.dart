@@ -360,6 +360,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'About',
                     onTap: () {
                       widget.itemName('About');
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/about_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
+                      );
                     },
                   ),
                   const Divider(

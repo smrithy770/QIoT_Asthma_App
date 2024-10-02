@@ -1,9 +1,11 @@
+import 'package:asthmaapp/screens/about_screen/about_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signup_screen/signup_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/terms_conditions/terms_conditions_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_result_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
+import 'package:asthmaapp/screens/user_ui/device_screen/pages/inhaler_cap_screen.dart';
 import 'package:asthmaapp/screens/user_ui/education_screen/education_screen.dart';
 import 'package:asthmaapp/screens/user_ui/fitness_and_stress_screen/fitness_stress.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/home_screen.dart';
@@ -15,7 +17,9 @@ import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
-import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_screen/asthma_control_test_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_report_screen/asthma_control_test_report_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/fitness_and_stress_report_screen/fitness_and_stress_report_screen.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/inhaler_report_screen/inhaler_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/peakflow_report_screen/peakflow_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/steroid_dose_report_screen/steroid_dose_report_screen.dart';
@@ -301,6 +305,22 @@ void defineRoutes(FluroRouter router) {
     ),
   );
   router.define(
+    '/inhaler_reports_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return InhalerReportScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
     '/steroid_dose_report_screen',
     handler: Handler(
       handlerFunc: (context, params) {
@@ -333,6 +353,22 @@ void defineRoutes(FluroRouter router) {
     ),
   );
   router.define(
+    '/fitness_and_stress_report_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return FitnessAndStressReportScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
     '/education_screen',
     handler: Handler(
       handlerFunc: (context, params) {
@@ -346,6 +382,22 @@ void defineRoutes(FluroRouter router) {
           deviceToken: deviceToken,
           deviceType: deviceType,
           path: path,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/about_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return AboutScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
         );
       },
     ),

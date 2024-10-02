@@ -1,6 +1,7 @@
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
+import 'package:asthmaapp/screens/user_ui/report_screen/widgets/report_items_widget.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -156,17 +157,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 128 * screenRatio,
                         mainAxisSpacing: 8 * screenRatio,
-                        mainAxisExtent: 90 *
+                        mainAxisExtent: 80 *
                             screenRatio, // 90 is the height of the grid item
                         crossAxisSpacing: 8 * screenRatio,
                       ),
                       children: [
                         // Peakflow Report
-                        GestureDetector(
+                        ReportItem(
+                          assetPath:
+                              'assets/svgs/user_assets/peakflow_report.svg',
+                          reportTitle: 'Peakflow',
+                          backgroundColor: const Color(0xFF004283),
+                          textColor: const Color(0xFF004283),
+                          screenRatio: screenRatio,
                           onTap: () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              '/peakflow_reports_screen', // Named route
+                              '/peakflow_reports_screen',
                               (Route<dynamic> route) => true,
                               arguments: {
                                 'realm': widget.realm,
@@ -175,41 +182,40 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               },
                             );
                           },
-                          child: Container(
-                            width: screenSize.width * 0.4,
-                            height: screenSize.height * 0.2,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF004283).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svgs/user_assets/peakflow_report.svg',
-                                  width: 40 * screenRatio,
-                                  height: 40 * screenRatio,
-                                ),
-                                Text(
-                                  'Peakflow',
-                                  style: TextStyle(
-                                    fontSize: 8 * screenRatio,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Roboto',
-                                    color: Color(0xFF004283),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
+                        // Inhaler Cap Report
+                        ReportItem(
+                          assetPath:
+                              'assets/svgs/user_assets/peakflow_report.svg',
+                          reportTitle: 'Inhaler Cap',
+                          backgroundColor: const Color(0xFF004283),
+                          textColor: const Color(0xFF004283),
+                          screenRatio: screenRatio,
+                          onTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/inhaler_reports_screen',
+                              (Route<dynamic> route) => true,
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
+                          },
                         ),
                         // Steroid Dosage Report
-                        GestureDetector(
+                        ReportItem(
+                          assetPath:
+                              'assets/svgs/user_assets/steroid_report.svg',
+                          reportTitle: 'Steroid Dosage',
+                          backgroundColor: const Color(0xFFFF8500),
+                          textColor: const Color(0xFFFF8500),
+                          screenRatio: screenRatio,
                           onTap: () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              '/steroid_dose_report_screen', // Named route
+                              '/steroid_dose_report_screen',
                               (Route<dynamic> route) => true,
                               arguments: {
                                 'realm': widget.realm,
@@ -218,41 +224,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               },
                             );
                           },
-                          child: Container(
-                            width: screenSize.width * 0.4,
-                            height: screenSize.height * 0.2,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF8500).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svgs/user_assets/steroid_report.svg',
-                                  width: 40 * screenRatio,
-                                  height: 40 * screenRatio,
-                                ),
-                                Text(
-                                  'Steroid Dosage',
-                                  style: TextStyle(
-                                    fontSize: 8 * screenRatio,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Roboto',
-                                    color: Color(0xFFFF8500),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                         // ACT Report
-                        GestureDetector(
+                        ReportItem(
+                          assetPath: 'assets/svgs/user_assets/act_report.svg',
+                          reportTitle: 'ACT',
+                          backgroundColor: const Color(0xFF27AE60),
+                          textColor: const Color(0xFF27AE60),
+                          screenRatio: screenRatio,
                           onTap: () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              '/asthma_control_test_report_screen', // Named route
+                              '/asthma_control_test_report_screen',
                               (Route<dynamic> route) => true,
                               arguments: {
                                 'realm': widget.realm,
@@ -261,41 +244,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               },
                             );
                           },
-                          child: Container(
-                            width: screenSize.width * 0.4,
-                            height: screenSize.height * 0.2,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF27AE60).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svgs/user_assets/act_report.svg',
-                                  width: 40 * screenRatio,
-                                  height: 40 * screenRatio,
-                                ),
-                                Text(
-                                  'ACT',
-                                  style: TextStyle(
-                                    fontSize: 8 * screenRatio,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Roboto',
-                                    color: Color(0xFF27AE60),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                         // Fitness and Stress Report
-                        GestureDetector(
+                        ReportItem(
+                          assetPath:
+                              'assets/svgs/user_assets/fitness_stress_report.svg',
+                          reportTitle: 'Fitness and Stress',
+                          backgroundColor: const Color(0xFF004283),
+                          textColor: AppColors.primaryBlue,
+                          screenRatio: screenRatio,
                           onTap: () {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              '/fitness_and_stress_report_screen', // Named route
+                              '/fitness_and_stress_report_screen',
                               (Route<dynamic> route) => true,
                               arguments: {
                                 'realm': widget.realm,
@@ -304,34 +265,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               },
                             );
                           },
-                          child: Container(
-                            width: screenSize.width * 0.4,
-                            height: screenSize.height * 0.2,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF004283).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/svgs/user_assets/fitness_stress_report.svg',
-                                  width: 40 * screenRatio,
-                                  height: 40 * screenRatio,
-                                ),
-                                Text(
-                                  'Fitness and Stress',
-                                  style: TextStyle(
-                                    fontSize: 8 * screenRatio,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Roboto',
-                                    color: AppColors.primaryBlue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ],
                     ),

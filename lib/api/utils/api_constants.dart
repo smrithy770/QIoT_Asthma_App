@@ -26,6 +26,14 @@ class ApiConstants {
     return '/user/$userId/peakflow?month=$month&year=$year';
   }
 
+  static String addInhalerUrl(String userId) {
+    return '/user/$userId/inhaler';
+  }
+
+  static String getInhalerHistoryUrl(String userId, int month, int year) {
+    return '/user/$userId/inhaler?month=$month&year=$year';
+  }
+
   static String addSteroidDoseUrl(String userId) {
     return '/user/$userId/steroiddose';
   }
