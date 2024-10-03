@@ -31,11 +31,15 @@ class NoteApi {
       String title, String description, String painRating,
       [String? accessToken]) async {
     final editNoteByIdUrl = ApiConstants.editNoteByIdUrl(userId, noteId);
-    return _apiService.put(editNoteByIdUrl, accessToken, {
-      'title': title,
-      'description': description,
-      'painRating': painRating,
-    });
+    return _apiService.put(
+      editNoteByIdUrl,
+      {
+        'title': title,
+        'description': description,
+        'painRating': painRating,
+      },
+      accessToken,
+    );
   }
 
   Future<Map<String, dynamic>> deleteNoteById(String userId, String noteId,

@@ -16,11 +16,13 @@ import 'package:realm/realm.dart';
 class SteroidDoseScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
+  final bool? fromPeakflow;
   const SteroidDoseScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
+    this.fromPeakflow,
   });
 
   @override
@@ -281,6 +283,14 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryBlue,
         foregroundColor: AppColors.primaryWhite,
+        leading: widget.fromPeakflow == true
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -293,17 +303,19 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
           ),
         ),
       ),
-      drawer: CustomDrawer(
-        realm: widget.realm,
-        deviceToken: widget.deviceToken,
-        deviceType: widget.deviceType,
-        onClose: () {
-          Navigator.of(context).pop();
-        },
-        itemName: (String name) {
-          logger.d(name);
-        },
-      ),
+      drawer: widget.fromPeakflow != true
+          ? CustomDrawer(
+              realm: widget.realm,
+              deviceToken: widget.deviceToken,
+              deviceType: widget.deviceType,
+              onClose: () {
+                Navigator.of(context).pop();
+              },
+              itemName: (String name) {
+                logger.d(name);
+              },
+            )
+          : null,
       body: Stack(
         children: [
           GestureDetector(

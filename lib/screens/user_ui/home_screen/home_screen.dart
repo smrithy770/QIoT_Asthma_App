@@ -64,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _handleRefresh() async {
-    logger.i(userModel!.accessToken);
     try {
       final jsonResponse = await UserApi()
           .getHomepageData(userModel!.userId, userModel!.accessToken);

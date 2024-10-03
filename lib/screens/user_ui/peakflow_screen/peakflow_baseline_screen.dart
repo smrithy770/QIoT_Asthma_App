@@ -13,14 +13,14 @@ import 'package:url_launcher/url_launcher.dart';
 class PeakflowBaselineScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  final int? peakFlow, baseLineScore;
+  final int? peakflowValue, baseLineScore;
   final String? practionerContact;
   const PeakflowBaselineScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
-    this.peakFlow,
+    this.peakflowValue,
     this.baseLineScore,
     this.practionerContact,
   });
@@ -85,7 +85,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
 
-    peakFlowPercentage = ((widget.peakFlow! / widget.baseLineScore!) * 100);
+    peakFlowPercentage = ((widget.peakflowValue! / widget.baseLineScore!) * 100);
     stringPeakflowPercentage = peakFlowPercentage.toStringAsFixed(0);
     integerPeakflowPercentage = int.parse(stringPeakflowPercentage);
 
@@ -152,7 +152,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                   width: screenSize.width,
                   height: screenSize.height * 0.26,
                   child: PeakflowBaselineChart(
-                      peakFlow: widget.peakFlow!,
+                      peakFlow: widget.peakflowValue!,
                       baseLineScore: widget.baseLineScore!,
                       integerPeakflowPercentage: integerPeakflowPercentage),
                 ),
@@ -346,12 +346,12 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       '/steroid_dose_record', // Named route
-                      (Route<dynamic> route) =>
-                          false, // This removes all previous routes
+                      (Route<dynamic> route) => true,
                       arguments: {
                         'realm': widget.realm,
                         'deviceToken': widget.deviceToken,
                         'deviceType': widget.deviceType,
+                        'fromPeakflow': true,
                       },
                     );
                   },

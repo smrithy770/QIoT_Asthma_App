@@ -55,7 +55,10 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> put(
-      String endpoint, String? accessToken, Map<String, dynamic> data) async {
+    String endpoint,
+    Map<String, dynamic> data,
+    String? accessToken,
+  ) async {
     final url = Uri.parse('$baseUrl$endpoint');
     if (accessToken == null) {
       final headers = ApiHelper.buildHeaders();

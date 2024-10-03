@@ -22,10 +22,7 @@ class TokenRefreshService {
   // Initialize method with boolean return
   void initialize(
       Realm realm, UserModel userModel, String deviceToken, String deviceType) {
-    if (realm == null ||
-        userModel == null ||
-        deviceToken.isEmpty ||
-        deviceType.isEmpty) {
+    if (deviceToken.isEmpty || deviceType.isEmpty) {
       logger.d('Initialization failed: Insufficient data');
     }
     this.realm = realm;

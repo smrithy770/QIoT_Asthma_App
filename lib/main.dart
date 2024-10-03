@@ -123,6 +123,15 @@ class _MainState extends State<Main> {
       });
     }
 
+    // Pass the token and other details to PushNotificationService
+    if (_isDeviceTokenInitialized) {
+      PushNotificationService.setDeviceDetails(
+        realm: widget.realm,
+        deviceToken: _deviceToken!,
+        deviceType: _deviceType!,
+      );
+    }
+
     // Start TokenRefreshService once device token is available
     if (widget.userModel != null && _isDeviceTokenInitialized) {
       _startTokenRefreshService();

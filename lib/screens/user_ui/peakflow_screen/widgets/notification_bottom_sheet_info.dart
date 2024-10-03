@@ -1,11 +1,24 @@
+import 'dart:io';
+
+import 'package:asthmaapp/api/user_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:asthmaapp/widgets/custom_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:realm/realm.dart';
 
 class NotificationBottomSheet extends StatefulWidget {
-  const NotificationBottomSheet({super.key});
+  final Realm realm;
+  final String? deviceToken, deviceType;
+  const NotificationBottomSheet({
+    super.key,
+    required this.realm,
+    required this.deviceToken,
+    required this.deviceType,
+  });
 
   @override
   State<NotificationBottomSheet> createState() =>
@@ -13,17 +26,108 @@ class NotificationBottomSheet extends StatefulWidget {
 }
 
 class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
+  UserModel? userModel;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _morningController = TextEditingController();
 
   final TextEditingController _eveningController = TextEditingController();
 
-  // String _timeToString(TimeOfDay time) {
-  //   return "${time.hour}:${time.minute} ${time.period.name}";
-  // }
-
   TimeOfDay timeOfDay = TimeOfDay.now();
   late String morningTime, eveningTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = getUserData(widget.realm);
+    if (user != null) {
+      setState(() {
+        userModel = user;
+      });
+    }
+  }
+
+  UserModel? getUserData(Realm realm) {
+    final results = realm.all<UserModel>();
+    if (results.isNotEmpty) {
+      return results[0];
+    }
+    return null;
+  }
+
+  void _submitPeakflow() async {
+    if (userModel == null) return;
+    if (_formKey.currentState!.validate()) {
+      try {
+        final response = await UserApi().updateUserDataById(
+          userModel!.userId,
+          morningTime,
+          eveningTime,
+          userModel!.accessToken,
+        );
+        final jsonResponse = response;
+        final status = jsonResponse['status'];
+        if (status == 201) {
+          CustomSnackBarUtil.showCustomSnackBar("Peakflow added successfully",
+              success: true);
+          // if (mounted) {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //     context,
+          //     '/peakflow_record_result_screen',
+          //     (Route<dynamic> route) => true,
+          //     arguments: {
+          //       'realm': widget.realm,
+          //       'deviceToken': widget.deviceToken,
+          //       'deviceType': widget.deviceType,
+          //     },
+          //   );
+          // }
+        } else {
+          // Handle different statuses
+          String errorMessage;
+          switch (status) {
+            case 400:
+              errorMessage = 'Bad request: Please check your input';
+              break;
+            case 500:
+              errorMessage = 'Server error: Please try again later';
+              break;
+            default:
+              errorMessage = 'Unexpected error: Please try again';
+          }
+
+          // Show error message
+          CustomSnackBarUtil.showCustomSnackBar(errorMessage, success: false);
+        }
+      } on SocketException catch (e) {
+        // Handle network-specific exceptions
+        logger.d('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'Network error: Please check your internet connection',
+            success: false);
+      } on Exception catch (e) {
+        // Handle generic exceptions
+        logger.d('Exception: $e');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'An error occurred while adding the note',
+            success: false);
+      }
+    } else {
+      if (_morningController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Please select morning time',
+            success: false);
+        return;
+      }
+      if (_eveningController.text.isEmpty) {
+        CustomSnackBarUtil.showCustomSnackBar('Please select evening time',
+            success: false);
+        return;
+      }
+    }
+  }
 
   Future<void> _selectMorningTime(BuildContext context) async {
     var initialTime =
@@ -247,7 +351,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
                   ),
                   SizedBox(height: screenSize.height * 0.02),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _submitPeakflow,
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(
                         screenSize.width * 0.26,

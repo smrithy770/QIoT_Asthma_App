@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/services/permission_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:realm/realm.dart';
 
 class PushNotificationService {
   static final FirebaseMessaging _firebaseMessaging =
@@ -11,6 +13,22 @@ class PushNotificationService {
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static final PermissionService _permissionService = PermissionService();
+
+  // Variables to store realm, deviceToken, and deviceType
+  static late Realm realm;
+  static late String deviceToken;
+  static late String deviceType;
+
+  // Method to set the device details
+  static void setDeviceDetails({
+    required Realm realm,
+    required String deviceToken,
+    required String deviceType,
+  }) {
+    PushNotificationService.realm = realm;
+    PushNotificationService.deviceToken = deviceToken;
+    PushNotificationService.deviceType = deviceType;
+  }
 
   static Future<void> initialize() async {
     await _permissionService.notificationPermission();
@@ -72,9 +90,14 @@ class PushNotificationService {
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
     Future.delayed(const Duration(seconds: 1), () {
-      navigatorKey.currentState!.pushNamed(
-        "/notification",
-        arguments: notificationResponse,
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(
+        '/peakflow_record_screen', // Named route
+        (Route<dynamic> route) => false, // This removes all previous routes
+        arguments: {
+          'realm': realm,
+          'deviceToken': deviceToken,
+          'deviceType': deviceType,
+        },
       );
     });
   }
@@ -83,9 +106,14 @@ class PushNotificationService {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
         logger.d('Message received in the background!');
-        navigatorKey.currentState!.pushNamed(
-          "/notification",
-          arguments: message,
+        navigatorKey.currentState!.pushNamedAndRemoveUntil(
+          '/peakflow_record_screen', // Named route
+          (Route<dynamic> route) => false, // This removes all previous routes
+          arguments: {
+            'realm': realm,
+            'deviceToken': deviceToken,
+            'deviceType': deviceType,
+          },
         );
       }
     });
@@ -110,11 +138,25 @@ class PushNotificationService {
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       logger.d('Message received in terminated state!');
-      Future.delayed(const Duration(seconds: 1), () {
-        navigatorKey.currentState!.pushNamed(
-          "/notification",
-          arguments: initialMessage,
-        );
+
+      // Wait until app is initialized or a bit longer if needed
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(seconds: 2), () {
+          if (navigatorKey.currentState != null) {
+            navigatorKey.currentState!.pushNamedAndRemoveUntil(
+              '/peakflow_record_screen', // Named route
+              (Route<dynamic> route) =>
+                  false, // This removes all previous routes
+              arguments: {
+                'realm': realm,
+                'deviceToken': deviceToken,
+                'deviceType': deviceType,
+              },
+            );
+          } else {
+            logger.d('Navigator key state is null, cannot navigate.');
+          }
+        });
       });
     }
   }

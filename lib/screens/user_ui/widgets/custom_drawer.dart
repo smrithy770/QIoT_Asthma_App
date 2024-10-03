@@ -324,6 +324,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Pollen',
                     onTap: () {
                       widget.itemName('Pollen');
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/pollen_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
+                      );
                     },
                   ),
                   const Divider(

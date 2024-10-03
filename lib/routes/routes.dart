@@ -16,6 +16,7 @@ import 'package:asthmaapp/screens/user_ui/notification_screen/notification_scree
 import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
+import 'package:asthmaapp/screens/user_ui/pollen_screen/pollen_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_report_screen/asthma_control_test_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/fitness_and_stress_report_screen/fitness_and_stress_report_screen.dart';
@@ -134,10 +135,16 @@ void defineRoutes(FluroRouter router) {
         Realm realm = args['realm'];
         String deviceToken = args['deviceToken'];
         String deviceType = args['deviceType'];
+        int peakflowValue = args['peakflowValue'];
+        int baseLineScore = args['baseLineScore'];
+        String practionerContact = args['practionerContact'];
         return PeakflowBaselineScreen(
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,
+          peakflowValue: peakflowValue,
+          baseLineScore: baseLineScore,
+          practionerContact: practionerContact,
         );
       },
     ),
@@ -150,10 +157,12 @@ void defineRoutes(FluroRouter router) {
         Realm realm = args['realm'];
         String deviceToken = args['deviceToken'];
         String deviceType = args['deviceType'];
+        bool fromPeakflow = args['fromPeakflow'] ?? false;
         return SteroidDoseScreen(
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,
+          fromPeakflow: fromPeakflow,
         );
       },
     ),
@@ -361,6 +370,22 @@ void defineRoutes(FluroRouter router) {
         String deviceToken = args['deviceToken'];
         String deviceType = args['deviceType'];
         return FitnessAndStressReportScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/pollen_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return PollenScreen(
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,

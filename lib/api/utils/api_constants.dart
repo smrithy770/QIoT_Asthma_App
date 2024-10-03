@@ -10,12 +10,20 @@ class ApiConstants {
     return '/auth/signout/$userId';
   }
 
+  static String getPushNotificationUrl() {
+    return '/user/pushnotifications';
+  }
+
   static String getHomepageDataUrl(String userId) {
     return '/user/homepagedata/$userId';
   }
 
   static String getUserByIdUrl(String userId) {
     return '/user/$userId';
+  }
+
+  static String updateUserDataByIdUrl(String userId) {
+    return '/user/$userId/update';
   }
 
   static String addPeakflowUrl(String userId) {

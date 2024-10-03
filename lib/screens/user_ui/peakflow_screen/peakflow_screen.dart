@@ -99,7 +99,11 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
   void _opennotificationbottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const NotificationBottomSheet(),
+      builder: (ctx) => NotificationBottomSheet(
+        realm: widget.realm,
+        deviceToken: widget.deviceToken,
+        deviceType: widget.deviceType,
+      ),
     );
   }
 
@@ -155,18 +159,18 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
           CustomSnackBarUtil.showCustomSnackBar("Peakflow added successfully",
               success: true);
           if (mounted) {
-            Navigator.push(
+            Navigator.pushNamedAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => PeakflowBaselineScreen(
-                  realm: widget.realm,
-                  deviceToken: widget.deviceToken,
-                  deviceType: widget.deviceType,
-                  peakFlow: peakflowValue,
-                  baseLineScore: baseLineScore,
-                  practionerContact: practionerContact,
-                ),
-              ),
+              '/peakflow_record_result_screen',
+              (Route<dynamic> route) => true,
+              arguments: {
+                'realm': widget.realm,
+                'deviceToken': widget.deviceToken,
+                'deviceType': widget.deviceType,
+                'peakflowValue': peakflowValue,
+                'baseLineScore': baseLineScore,
+                'practionerContact': practionerContact,
+              },
             );
           }
         } else {
