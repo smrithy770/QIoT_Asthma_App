@@ -30,6 +30,7 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
   int _counterValue = 0; // Counter value
   String _formattedTimestamp = 'Unknown'; // Timestamp value
   int _buttonPresses = 0; // Button presses value
+  int _cumulativeButtonPresses = 0; // Cumulative button presses value
   int _requestDataIndex = 0; // Request Data Index value
 
   BluetoothService?
@@ -65,6 +66,8 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
         await _readCounterCharacteristic(_dataPointService!);
         await _readTimestampCharacteristic(_dataPointService!);
         await _readButtonPressesCharacteristic(_dataPointService!);
+        await _readCumulativeButtonPressesCharacteristic(
+            _dataPointService!); // Read cumulative button presses
         await _readRequestDataIndexCharacteristic(_dataPointService!);
       } else {
         logger.e("Data Point Service not found");
@@ -188,6 +191,45 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
   }
 
+  Future<void> _readCumulativeButtonPressesCharacteristic(
+      BluetoothService _dataPointService) async {
+    BluetoothCharacteristic? cumulativeButtonPressesCharacteristic =
+        _dataPointService.characteristics.firstWhereOrNull(
+      (characteristic) =>
+          characteristic.uuid.toString() ==
+          '4cde1528-f90f-4962-8f2d-e1adc76edb6d', // Cumulative Button Presses UUID
+    );
+
+    if (cumulativeButtonPressesCharacteristic != null &&
+        cumulativeButtonPressesCharacteristic.properties.read) {
+      try {
+        List<int> value = await cumulativeButtonPressesCharacteristic.read();
+
+        if (value.length == 2) {
+          int cumulativeButtonPresses =
+              value[0] | (value[1] << 8); // Little-endian format
+          logger.d("Cumulative Button Presses Value: $cumulativeButtonPresses");
+          setState(() {
+            _cumulativeButtonPresses =
+                cumulativeButtonPresses; // Update the cumulative button presses value
+          });
+          CustomSnackBarUtil.showCustomSnackBar(
+            "Cumulative Button Presses Value: $cumulativeButtonPresses",
+            success: true,
+          );
+        } else {
+          logger.e(
+              "Unexpected value length for Cumulative Button Presses characteristic: ${value.length}");
+        }
+      } catch (e) {
+        logger.e("Error reading Cumulative Button Presses characteristic: $e");
+      }
+    } else {
+      logger.e(
+          "Cumulative Button Presses characteristic not found or not readable");
+    }
+  }
+
   Future<void> _readRequestDataIndexCharacteristic(
       BluetoothService _dataPointService) async {
     BluetoothCharacteristic? requestDataIndexCharacteristic =
@@ -204,17 +246,13 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
 
         if (value.length == 4) {
           int requestDataIndex = (value[1] << 8) | value[0]; // First two bytes
-          // If there are other data points, you can extract them here as well
-          int anotherValue =
-              (value[3] << 8) | value[2]; // Last two bytes, if needed
-
-          logger.d(
-              "Request Data Index Value: $requestDataIndex, Another Value: $anotherValue");
+          // If there are other data points, handle them accordingly
+          logger.d("Request Data Index Value: $requestDataIndex");
           setState(() {
-            _requestDataIndex = requestDataIndex;
+            _requestDataIndex = requestDataIndex; // Update request data index
           });
           CustomSnackBarUtil.showCustomSnackBar(
-            "Request Data Index Value: $requestDataIndex, Another Value: $anotherValue",
+            "Request Data Index Value: $requestDataIndex",
             success: true,
           );
         } else {
@@ -229,44 +267,22 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
   }
 
-  Future<void> _writeRequestDataIndexCharacteristic(
-      BluetoothService _dataPointService, int index) async {
-    BluetoothCharacteristic? requestDataIndexCharacteristic =
-        _dataPointService.characteristics.firstWhereOrNull(
-      (characteristic) =>
-          characteristic.uuid.toString() ==
-          '4cde1527-f90f-4962-8f2d-e1adc76edb6d',
-    );
-
-    if (requestDataIndexCharacteristic != null &&
-        requestDataIndexCharacteristic.properties.write) {
-      try {
-        List<int> valueToWrite = [
-          index & 0xFF, // Lower byte
-          (index >> 8) & 0xFF, // Upper byte
-        ];
-
-        await requestDataIndexCharacteristic.write(valueToWrite);
-        logger.d("Wrote Request Data Index Value: $index");
-        CustomSnackBarUtil.showCustomSnackBar(
-          "Wrote Request Data Index Value: $index",
-          success: true,
-        );
-      } catch (e) {
-        logger.e("Error writing Request Data Index characteristic: $e");
-      }
-    } else {
-      logger.e("Request Data Index characteristic not found or not writable");
+  Future<void> _disconnectDevice() async {
+    if (widget.inhalerDevice.isConnected) {
+      await widget.inhalerDevice.disconnect();
+      logger
+          .d("Disconnected from device: ${widget.inhalerDevice.platformName}");
+      CustomSnackBarUtil.showCustomSnackBar(
+        "Disconnected from device: ${widget.inhalerDevice.platformName}",
+        success: true,
+      );
     }
   }
 
-  void _disconnectDevice() {
-    widget.inhalerDevice.disconnect();
-    logger.d("Disconnected from device: ${widget.inhalerDevice.platformName}");
-    CustomSnackBarUtil.showCustomSnackBar(
-      "Disconnected from device: ${widget.inhalerDevice.platformName}",
-      success: true,
-    );
+  @override
+  void dispose() {
+    _disconnectDevice();
+    super.dispose();
   }
 
   @override
@@ -275,39 +291,39 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inhaler Cap"),
-        backgroundColor: AppColors.primaryBlue,
+        title: const Text('Inhaler Cap Screen'),
       ),
-      body: Column(
-        children: [
-          CustomDeviceData(
-            label: "Counter Value",
-            value: _counterValue.toString(),
-            screenRatio: screenRatio,
-          ),
-          CustomDeviceData(
-            label: "Timestamp",
-            value: _formattedTimestamp,
-            screenRatio: screenRatio,
-          ),
-          CustomDeviceData(
-            label: "Button Presses",
-            value: _buttonPresses.toString(),
-            screenRatio: screenRatio,
-          ),
-          CustomDeviceData(
-            label: "Request Data Index",
-            value: _requestDataIndex.toString(),
-            screenRatio: screenRatio,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Example: Write a new Request Data Index (e.g., 1)
-              _writeRequestDataIndexCharacteristic(_dataPointService!, 1);
-            },
-            child: const Text("Write Request Data Index"),
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CustomDeviceData(
+              label: 'Counter Value',
+              value: '$_counterValue',
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Timestamp',
+              value: _formattedTimestamp,
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Button Presses',
+              value: '$_buttonPresses',
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Cumulative Button Presses',
+              value: '$_cumulativeButtonPresses',
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Request Data Index',
+              value: '$_requestDataIndex',
+              screenRatio: screenRatio,
+            ),
+          ],
+        ),
       ),
     );
   }

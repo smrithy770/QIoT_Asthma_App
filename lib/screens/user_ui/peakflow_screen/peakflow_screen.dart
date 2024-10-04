@@ -4,7 +4,6 @@ import 'package:asthmaapp/api/peakflow_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
-import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/notification_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/peakflow_measure.dart';
@@ -13,6 +12,7 @@ import 'package:asthmaapp/services/permission_service.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:realm/realm.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -221,6 +221,19 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryBlue,
         foregroundColor: AppColors.primaryWhite,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: SvgPicture.asset(
+                'assets/svgs/user_assets/user_drawer_icon.svg', // Replace with your custom icon asset path
+                width: 24,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(

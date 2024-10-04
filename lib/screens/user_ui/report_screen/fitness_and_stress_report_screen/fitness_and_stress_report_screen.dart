@@ -208,11 +208,11 @@ class _FitnessAndStressReportScreenState
                             height: screenSize.height * 0.06,
                             decoration: BoxDecoration(
                               color: switchTab == 'fitness'
-                                  ? const Color(0xFF004283)
-                                  : const Color(0xFFFFFFFF),
+                                  ? AppColors.primaryBlue
+                                  : AppColors.primaryWhite,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: const Color(0xFF004283),
+                                color: AppColors.primaryBlue,
                                 width: 2,
                               ),
                             ),
@@ -221,8 +221,8 @@ class _FitnessAndStressReportScreenState
                                 'Fitness Report',
                                 style: TextStyle(
                                   color: switchTab == 'fitness'
-                                      ? const Color(0xFFFFFFFF)
-                                      : const Color(0xFF004283),
+                                      ? AppColors.primaryWhite
+                                      : AppColors.primaryBlue,
                                   fontSize: 6 * screenRatio,
                                   fontWeight: FontWeight.normal,
                                   fontFamily: 'Roboto',

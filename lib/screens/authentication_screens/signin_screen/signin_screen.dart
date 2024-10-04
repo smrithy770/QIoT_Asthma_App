@@ -41,9 +41,12 @@ class _SigninScreenState extends State<SigninScreen> {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
+      logger.d('Email: $email, Password: $password');
       try {
         final response = await AuthApi().signin(
             email, password, null, widget.deviceToken!, widget.deviceType!);
+
+        logger.d('Signin response: $response');
 
         final jsonResponse = response;
         // logger.d('Signin response: $jsonResponse');

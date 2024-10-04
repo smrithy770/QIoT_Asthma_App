@@ -9,28 +9,27 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:realm/realm.dart';
 
-class InhalerCapScreen extends StatefulWidget {
+class PeakflowDeviceScreen extends StatefulWidget {
   final Realm realm;
   final String? deviceToken, deviceType;
-  final BluetoothDevice inhalerDevice;
+  final BluetoothDevice pefDevice;
 
-  const InhalerCapScreen({
+  const PeakflowDeviceScreen({
     super.key,
     required this.realm,
     required this.deviceToken,
     required this.deviceType,
-    required this.inhalerDevice,
+    required this.pefDevice,
   });
 
   @override
-  State<InhalerCapScreen> createState() => _DeviceScreenState();
+  State<PeakflowDeviceScreen> createState() => _DeviceScreenState();
 }
 
-class _DeviceScreenState extends State<InhalerCapScreen> {
+class _DeviceScreenState extends State<PeakflowDeviceScreen> {
   int _counterValue = 0; // Counter value
   String _formattedTimestamp = 'Unknown'; // Timestamp value
-  int _buttonPresses = 0; // Button presses value
-  int _cumulativeButtonPresses = 0; // Cumulative button presses value
+  int _sensorReading = 0; // Cumulative button presses value
   int _requestDataIndex = 0; // Request Data Index value
   String _formattedrtcTime = 'Unknown'; // RTC Time value
   int _deviceId = 0; // Device ID value
@@ -52,39 +51,33 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
 
   void _connectAndReadValues() async {
     try {
-      await widget.inhalerDevice.connect();
-      logger.d("Connected to device: ${widget.inhalerDevice.platformName}");
+      await widget.pefDevice.connect();
+      logger.d("Connected to device: ${widget.pefDevice.platformName}");
 
       // Discover services
       List<BluetoothService> services =
-          await widget.inhalerDevice.discoverServices();
+          await widget.pefDevice.discoverServices();
 
       // Find Data Point Service
       _dataPointService = services.firstWhereOrNull(
         (service) =>
-            service.uuid.toString() == '4cde1523-f90f-4962-8f2d-e1adc76edb6d',
+            service.uuid.toString() == '4cde0001-f90f-4962-8f2d-e1adc76edb6d',
       );
 
       if (_dataPointService != null) {
         await Future.wait([
           _readCharacteristic(_dataPointService!,
-              '4cde1524-f90f-4962-8f2d-e1adc76edb6d', _updateCounterValue),
+              '4cde0002-f90f-4962-8f2d-e1adc76edb6d', _updateCounterValue),
           _readCharacteristic(_dataPointService!,
-              '4cde1525-f90f-4962-8f2d-e1adc76edb6d', _updateTimestampValue),
+              '4cde0003-f90f-4962-8f2d-e1adc76edb6d', _updateTimestampValue),
           _readCharacteristic(
               _dataPointService!,
-              '4cde1526-f90f-4962-8f2d-e1adc76edb6d',
-              _updateButtonPressesValue),
+              '4cde0004-f90f-4962-8f2d-e1adc76edb6d',
+              _updateSensorReadingValue),
           _readCharacteristic(
               _dataPointService!,
-              '4cde1528-f90f-4962-8f2d-e1adc76edb6d',
-              _updateCumulativeButtonPressesValue),
-          _readCharacteristic(
-              _dataPointService!,
-              '4cde1527-f90f-4962-8f2d-e1adc76edb6d',
+              '4cde0005-f90f-4962-8f2d-e1adc76edb6d',
               _updateRequestDataIndexValue),
-          _readCharacteristic(_dataPointService!,
-              '4cde1532-f90f-4962-8f2d-e1adc76edb6d', _updateDeviceIdValue),
         ]);
       } else {
         logger.e("Data Point Service not found");
@@ -93,11 +86,15 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
       // Find Settings Service
       _settingsService = services.firstWhereOrNull(
         (service) =>
-            service.uuid.toString() == '4cde1530-f90f-4962-8f2d-e1adc76edb6d',
+            service.uuid.toString() == '4cde0011-f90f-4962-8f2d-e1adc76edb6d',
       );
 
       if (_settingsService != null) {
-        await _readRtcCharacteristic(_settingsService!);
+        await Future.wait([
+          _readRtcCharacteristic(_settingsService!),
+          _readCharacteristic(_settingsService!,
+              '4cde0013-f90f-4962-8f2d-e1adc76edb6d', _updateDeviceIdValue),
+        ]);
       } else {
         logger.e("Settings Service not found");
       }
@@ -111,55 +108,12 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
   }
 
-  Future<void> _writeCumulativeButtonPressesValue(int newValue) async {
-    if (_dataPointService != null) {
-      BluetoothCharacteristic? characteristic =
-          _dataPointService!.characteristics.firstWhereOrNull(
-        (c) => c.uuid.toString() == '4cde1527-f90f-4962-8f2d-e1adc76edb6d',
-      );
-      logger.d("Characteristic: $characteristic");
-      logger.d("Characteristic properties: ${characteristic?.properties}");
-      logger.d(
-          "Characteristic properties write: ${characteristic?.properties.write}");
-
-      if (characteristic != null && characteristic.properties.write) {
-        try {
-          // Convert the integer value to 4 bytes (little-endian format)
-          List<int> valueToWrite = [
-            newValue & 0xFF, // Lower byte
-            (newValue >> 8) & 0xFF, // Next byte
-            (newValue >> 16) & 0xFF, // Next byte
-            (newValue >> 24) & 0xFF, // Highest byte
-          ];
-
-          // Write the value to the characteristic
-          await characteristic.write(valueToWrite, withoutResponse: false);
-          logger.d(
-              "Successfully wrote $newValue to Cumulative Button Presses characteristic");
-        } catch (e) {
-          logger
-              .e("Error writing Cumulative Button Presses characteristic: $e");
-        }
-      } else {
-        logger.e(
-            "Cumulative Button Presses characteristic not found or not writable");
-      }
-    } else {
-      logger.e("Data Point Service not found");
-    }
-  }
-
   Future<void> _readCharacteristic(BluetoothService service,
       String characteristicUuid, Function(List<int>) updateValue) async {
     BluetoothCharacteristic? characteristic =
         service.characteristics.firstWhereOrNull(
       (c) => c.uuid.toString() == characteristicUuid,
     );
-
-    logger.d("Characteristic: $characteristic");
-    logger.d("Characteristic properties: ${characteristic?.properties}");
-    logger.d(
-        "Characteristic properties write: ${characteristic?.properties.write}");
 
     if (characteristic != null && characteristic.properties.read) {
       try {
@@ -200,25 +154,15 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
   }
 
-  void _updateButtonPressesValue(List<int> value) {
+  void _updateSensorReadingValue(List<int> value) {
     if (value.length == 4) {
-      int buttonPresses = value[0];
-      logger.d("Button Presses Value: $buttonPresses");
-      setState(() {
-        _buttonPresses = buttonPresses;
-      });
-    } else {
-      logger.e(
-          "Unexpected value length for Button Presses characteristic: ${value.length}");
-    }
-  }
-
-  void _updateCumulativeButtonPressesValue(List<int> value) {
-    if (value.length == 4) {
-      int cumulativeButtonPresses = value[0] | (value[1] << 8);
+      int cumulativeButtonPresses = value[0] |
+          (value[1] << 8) |
+          (value[2] << 16) |
+          (value[3] << 24); // Combine all 4 bytes
       logger.d("Cumulative Button Presses Value: $cumulativeButtonPresses");
       setState(() {
-        _cumulativeButtonPresses = cumulativeButtonPresses;
+        _sensorReading = cumulativeButtonPresses;
       });
     } else {
       logger.e(
@@ -256,7 +200,7 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
   Future<void> _readRtcCharacteristic(BluetoothService settingsService) async {
     BluetoothCharacteristic? rtcCharacteristic =
         settingsService.characteristics.firstWhereOrNull(
-      (c) => c.uuid.toString() == '4cde1531-f90f-4962-8f2d-e1adc76edb6d',
+      (c) => c.uuid.toString() == '4cde0012-f90f-4962-8f2d-e1adc76edb6d',
     );
 
     if (rtcCharacteristic != null && rtcCharacteristic.properties.read) {
@@ -285,12 +229,12 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
   }
 
   void _disconnectDevice() {
-    widget.inhalerDevice.disconnect();
-    logger.d("Disconnected from device: ${widget.inhalerDevice.platformName}");
+    widget.pefDevice.disconnect();
+    logger.d("Disconnected from device: ${widget.pefDevice.platformName}");
     CustomSnackBarUtil.showCustomSnackBar(
-        "Disconnected from device: ${widget.inhalerDevice.platformName}",
+        "Disconnected from device: ${widget.pefDevice.platformName}",
         success: false);
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -311,7 +255,7 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
         title: Align(
           alignment: Alignment.bottomLeft,
           child: Text(
-            'Inhaler Cap',
+            'Peakflow Device',
             style: TextStyle(
               fontSize: 10 * screenRatio,
               fontWeight: FontWeight.bold,
@@ -332,12 +276,11 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: screenSize.height * 0.01),
                 SizedBox(
                   width: screenSize.width,
                   height: screenRatio * 16,
                   child: Text(
-                    widget.inhalerDevice.platformName,
+                    widget.pefDevice.platformName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.primaryBlueText,
@@ -347,79 +290,36 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
                   label: 'Counter Value',
                   value: _counterValue.toString(),
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
                   label: 'Timestamp Value',
                   value: _formattedTimestamp,
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
-                  label: 'Button Presses Value',
-                  value: _buttonPresses.toString(),
+                  label: 'Sensor Reading Value',
+                  value: _sensorReading.toString(),
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Cumulative Button Presses Value',
-                  value: _cumulativeButtonPresses.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                GestureDetector(
-                  onTap: () {
-                    _writeCumulativeButtonPressesValue(_requestDataIndex);
-                  },
-                  child: Container(
-                    width: screenSize.width * 0.44, // Adjust width as needed
-                    height: screenSize.height * 0.06,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryBlue,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.primaryBlue,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Write Request Data Index",
-                        style: TextStyle(
-                          color: AppColors.primaryWhite,
-                          fontSize:
-                              screenRatio * 6, // Adjust font size as needed
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
                   label: 'Request Data Index',
                   value: _requestDataIndex.toString(),
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
                   label: 'Device ID',
                   value: _deviceId.toString(),
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
                 CustomDeviceData(
                   label: 'RTC Time',
                   value: _formattedrtcTime.toString(),
                   screenRatio: screenRatio,
                 ),
-                SizedBox(height: screenSize.height * 0.01),
               ],
             ),
           ),

@@ -45,15 +45,14 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     _connectAndReadValues();
   }
 
-  String _formatTime(int value) {
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(value * 1000);
-    return DateFormat('dd MMM, yyyy - hh mm a').format(dateTime);
-  }
-
   void _connectAndReadValues() async {
     try {
       await widget.inhalerDevice.connect();
       logger.d("Connected to device: ${widget.inhalerDevice.platformName}");
+      CustomSnackBarUtil.showCustomSnackBar(
+        "Connected to device: ${widget.inhalerDevice.platformName}",
+        success: true,
+      );
 
       // Discover services
       List<BluetoothService> services =
@@ -111,55 +110,12 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     }
   }
 
-  Future<void> _writeCumulativeButtonPressesValue(int newValue) async {
-    if (_dataPointService != null) {
-      BluetoothCharacteristic? characteristic =
-          _dataPointService!.characteristics.firstWhereOrNull(
-        (c) => c.uuid.toString() == '4cde1527-f90f-4962-8f2d-e1adc76edb6d',
-      );
-      logger.d("Characteristic: $characteristic");
-      logger.d("Characteristic properties: ${characteristic?.properties}");
-      logger.d(
-          "Characteristic properties write: ${characteristic?.properties.write}");
-
-      if (characteristic != null && characteristic.properties.write) {
-        try {
-          // Convert the integer value to 4 bytes (little-endian format)
-          List<int> valueToWrite = [
-            newValue & 0xFF, // Lower byte
-            (newValue >> 8) & 0xFF, // Next byte
-            (newValue >> 16) & 0xFF, // Next byte
-            (newValue >> 24) & 0xFF, // Highest byte
-          ];
-
-          // Write the value to the characteristic
-          await characteristic.write(valueToWrite, withoutResponse: false);
-          logger.d(
-              "Successfully wrote $newValue to Cumulative Button Presses characteristic");
-        } catch (e) {
-          logger
-              .e("Error writing Cumulative Button Presses characteristic: $e");
-        }
-      } else {
-        logger.e(
-            "Cumulative Button Presses characteristic not found or not writable");
-      }
-    } else {
-      logger.e("Data Point Service not found");
-    }
-  }
-
   Future<void> _readCharacteristic(BluetoothService service,
       String characteristicUuid, Function(List<int>) updateValue) async {
     BluetoothCharacteristic? characteristic =
         service.characteristics.firstWhereOrNull(
       (c) => c.uuid.toString() == characteristicUuid,
     );
-
-    logger.d("Characteristic: $characteristic");
-    logger.d("Characteristic properties: ${characteristic?.properties}");
-    logger.d(
-        "Characteristic properties write: ${characteristic?.properties.write}");
 
     if (characteristic != null && characteristic.properties.read) {
       try {
@@ -180,6 +136,8 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
       setState(() {
         _counterValue = counterValue;
       });
+      CustomSnackBarUtil.showCustomSnackBar("Counter Value: $counterValue",
+          success: true);
     } else {
       logger.e("Unexpected value length for Counter characteristic");
     }
@@ -192,9 +150,17 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
           (value[1] << 8) |
           value[0]; // Little-endian format
 
+      DateTime dateTime =
+          DateTime.fromMillisecondsSinceEpoch(timestampValue * 1000);
+      String formattedDate =
+          DateFormat('dd MMM, yyyy - hh mm a').format(dateTime);
+
+      logger.d("Timestamp Value: $formattedDate");
       setState(() {
-        _formattedTimestamp = _formatTime(timestampValue);
+        _formattedTimestamp = formattedDate;
       });
+      CustomSnackBarUtil.showCustomSnackBar("Timestamp Value: $formattedDate",
+          success: true);
     } else {
       logger.e("Unexpected value length for Timestamp characteristic");
     }
@@ -202,11 +168,17 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
 
   void _updateButtonPressesValue(List<int> value) {
     if (value.length == 4) {
-      int buttonPresses = value[0];
+      int buttonPresses = value[0] |
+          (value[1] << 8) |
+          (value[2] << 16) |
+          (value[3] << 24); // Interpret as unsigned int
       logger.d("Button Presses Value: $buttonPresses");
       setState(() {
         _buttonPresses = buttonPresses;
       });
+      CustomSnackBarUtil.showCustomSnackBar(
+          "Button Presses Value: $buttonPresses",
+          success: true);
     } else {
       logger.e(
           "Unexpected value length for Button Presses characteristic: ${value.length}");
@@ -215,11 +187,17 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
 
   void _updateCumulativeButtonPressesValue(List<int> value) {
     if (value.length == 4) {
-      int cumulativeButtonPresses = value[0] | (value[1] << 8);
+      int cumulativeButtonPresses = value[0] |
+          (value[1] << 8) |
+          (value[2] << 16) |
+          (value[3] << 24); // Combine all 4 bytes
       logger.d("Cumulative Button Presses Value: $cumulativeButtonPresses");
       setState(() {
         _cumulativeButtonPresses = cumulativeButtonPresses;
       });
+      CustomSnackBarUtil.showCustomSnackBar(
+          "Cumulative Button Presses Value: $cumulativeButtonPresses",
+          success: true);
     } else {
       logger.e(
           "Unexpected value length for Cumulative Button Presses characteristic: ${value.length}");
@@ -228,11 +206,17 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
 
   void _updateRequestDataIndexValue(List<int> value) {
     if (value.length == 4) {
-      int requestDataIndex = value[0] | (value[1] << 8);
+      int requestDataIndex = value[0] |
+          (value[1] << 8) |
+          (value[2] << 16) |
+          (value[3] << 24); // Combine all 4 bytes
       logger.d("Request Data Index Value: $requestDataIndex");
       setState(() {
         _requestDataIndex = requestDataIndex;
       });
+      CustomSnackBarUtil.showCustomSnackBar(
+          "Request Data Index Value: $requestDataIndex",
+          success: true);
     } else {
       logger.e(
           "Unexpected value length for Request Data Index characteristic: ${value.length}");
@@ -268,9 +252,14 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
               (rtcValue[1] << 8) |
               (rtcValue[2] << 16) |
               (rtcValue[3] << 24); // Combine all 4 bytes
+          DateTime dateTime =
+              DateTime.fromMillisecondsSinceEpoch(rtcTimeValue * 1000);
+          String formattedDate =
+              DateFormat('dd MMM, yyyy - hh mm a').format(dateTime);
+          logger.d("RTC Time Value: $rtcTimeValue");
 
           setState(() {
-            _formattedrtcTime = _formatTime(rtcTimeValue);
+            _formattedrtcTime = formattedDate;
           });
         } else {
           logger.e(
@@ -288,9 +277,8 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     widget.inhalerDevice.disconnect();
     logger.d("Disconnected from device: ${widget.inhalerDevice.platformName}");
     CustomSnackBarUtil.showCustomSnackBar(
-        "Disconnected from device: ${widget.inhalerDevice.platformName}",
-        success: false);
-    // Navigator.of(context).pop();
+        "Disconnected from device: ${widget.inhalerDevice.platformName}");
+    Navigator.of(context).pop();
   }
 
   @override
@@ -298,131 +286,49 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
     Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryBlue,
-        foregroundColor: AppColors.primaryWhite,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Align(
-          alignment: Alignment.bottomLeft,
-          child: Text(
-            'Inhaler Cap',
-            style: TextStyle(
-              fontSize: 10 * screenRatio,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Roboto',
-            ),
-          ),
-        ),
+        title: const Text('Inhaler Cap Screen'),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        physics: const ClampingScrollPhysics(),
-        child: Center(
-          child: Container(
-            width: screenSize.width,
-            // height: screenSize.height,
-            padding: EdgeInsets.all(screenSize.height * 0.01),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: screenSize.height * 0.01),
-                SizedBox(
-                  width: screenSize.width,
-                  height: screenRatio * 16,
-                  child: Text(
-                    widget.inhalerDevice.platformName,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlueText,
-                      fontSize: screenRatio * 9,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto',
-                    ),
-                  ),
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Counter Value',
-                  value: _counterValue.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Timestamp Value',
-                  value: _formattedTimestamp,
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Button Presses Value',
-                  value: _buttonPresses.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Cumulative Button Presses Value',
-                  value: _cumulativeButtonPresses.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                GestureDetector(
-                  onTap: () {
-                    _writeCumulativeButtonPressesValue(_requestDataIndex);
-                  },
-                  child: Container(
-                    width: screenSize.width * 0.44, // Adjust width as needed
-                    height: screenSize.height * 0.06,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryBlue,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.primaryBlue,
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Write Request Data Index",
-                        style: TextStyle(
-                          color: AppColors.primaryWhite,
-                          fontSize:
-                              screenRatio * 6, // Adjust font size as needed
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Roboto',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Request Data Index',
-                  value: _requestDataIndex.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'Device ID',
-                  value: _deviceId.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-                CustomDeviceData(
-                  label: 'RTC Time',
-                  value: _formattedrtcTime.toString(),
-                  screenRatio: screenRatio,
-                ),
-                SizedBox(height: screenSize.height * 0.01),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CustomDeviceData(
+              label: 'Counter Value',
+              value: _counterValue.toString(),
+              screenRatio: screenRatio,
             ),
-          ),
+            CustomDeviceData(
+              label: 'Timestamp Value',
+              value: _formattedTimestamp,
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Button Presses Value',
+              value: _buttonPresses.toString(),
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Cumulative Button Presses Value',
+              value: _cumulativeButtonPresses.toString(),
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Request Data Index',
+              value: _requestDataIndex.toString(),
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'Device ID',
+              value: _deviceId.toString(),
+              screenRatio: screenRatio,
+            ),
+            CustomDeviceData(
+              label: 'RTC Time',
+              value: _formattedrtcTime.toString(),
+              screenRatio: screenRatio,
+            ),
+          ],
         ),
       ),
     );
