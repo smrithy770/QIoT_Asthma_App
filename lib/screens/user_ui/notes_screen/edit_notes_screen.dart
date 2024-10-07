@@ -181,17 +181,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotesScreen(
-                  realm: widget.realm,
-                  deviceToken: widget.deviceToken,
-                  deviceType: widget.deviceType,
-                ),
-              ),
-              (Route<dynamic> route) => false,
-            );
+            Navigator.pop(context);
           },
         ),
         title: Align(
@@ -215,8 +205,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
         },
         child: Center(
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Container(
               width: screenSize.width,
               height: screenSize.height,
@@ -357,7 +346,6 @@ class _EditNotesScreen extends State<EditNotesScreen> {
                     ),
                   ),
                   SizedBox(height: screenRatio * 4),
-                  SizedBox(height: screenRatio * 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -365,7 +353,9 @@ class _EditNotesScreen extends State<EditNotesScreen> {
                       SizedBox(
                         width: screenSize.width * 0.4,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(
                               screenRatio * 16,
@@ -420,7 +410,7 @@ class _EditNotesScreen extends State<EditNotesScreen> {
                             ),
                           ),
                           child: Text(
-                            'Add Note',
+                            'Save Note',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 8 * screenRatio,

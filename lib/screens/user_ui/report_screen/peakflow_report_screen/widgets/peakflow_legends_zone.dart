@@ -5,10 +5,10 @@ class PeakflowLegendsZone extends StatelessWidget {
   final Size screenSize;
 
   const PeakflowLegendsZone({
-    Key? key,
+    super.key,
     required this.screenRatio,
     required this.screenSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

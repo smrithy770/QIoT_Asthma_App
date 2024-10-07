@@ -323,7 +323,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          logger.d('Edit');
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/edit_profile_screen', // Named route
+                            (Route<dynamic> route) =>
+                                true, // This removes all previous routes
+                            arguments: {
+                              'realm': widget.realm,
+                              'deviceToken': widget.deviceToken,
+                              'deviceType': widget.deviceType,
+                            },
+                          );
                         },
                         child: const Text(
                           'Edit',

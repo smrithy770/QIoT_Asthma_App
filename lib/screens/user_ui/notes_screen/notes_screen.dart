@@ -66,7 +66,7 @@ class _NoteScreenState extends State<NotesScreen> {
       final status = jsonResponse['status'];
 
       if (status == 200) {
-        final payload = jsonResponse['payload'];
+        final payload = jsonResponse['payload']['notes'];
         setState(() {
           allNotes = payload;
         });
@@ -181,9 +181,10 @@ class _NoteScreenState extends State<NotesScreen> {
                     note: notes,
                     onEdit: () {
                       logger.d('Edit at index ${notes['_id']}');
-                      Navigator.popAndPushNamed(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/edit_note_screen',
+                        (Route<dynamic> route) => true,
                         arguments: {
                           'realm': widget.realm,
                           'noteId': notes['_id'],
@@ -202,9 +203,10 @@ class _NoteScreenState extends State<NotesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(
+          Navigator.pushNamedAndRemoveUntil(
             context,
             '/add_notes_screen',
+            (Route<dynamic> route) => true,
             arguments: {
               'realm': widget.realm,
               'deviceToken': widget.deviceToken ?? '',

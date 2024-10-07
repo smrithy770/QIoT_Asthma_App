@@ -2,6 +2,7 @@ import 'package:asthmaapp/screens/about_screen/about_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signup_screen/signup_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/terms_conditions/terms_conditions_screen.dart';
+import 'package:asthmaapp/screens/inhaler_screen/inhaler_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_result_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
@@ -18,6 +19,7 @@ import 'package:asthmaapp/screens/splash_screen/splash_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_baseline_screen.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/peakflow_screen.dart';
 import 'package:asthmaapp/screens/user_ui/pollen_screen/pollen_screen.dart';
+import 'package:asthmaapp/screens/user_ui/profile_screen/edit_profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/asthma_control_test_report_screen/asthma_control_test_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/fitness_and_stress_report_screen/fitness_and_stress_report_screen.dart';
@@ -154,6 +156,23 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Inhaler Record Screen
+  router.define(
+    '/inhaler_record_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return InhalerScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
   // Steroid Dose Record Screen
   router.define(
     '/steroid_dose_record',
@@ -260,6 +279,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Peakflow Device Screen
   router.define(
     '/peakflow_device_screen',
     handler: Handler(
@@ -278,6 +298,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Notes Screen
   router.define(
     '/notes_screen',
     handler: Handler(
@@ -294,6 +315,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Add Notes Screen
   router.define(
     '/add_notes_screen',
     handler: Handler(
@@ -310,6 +332,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Edit Notes Screen
   router.define(
     '/edit_note_screen',
     handler: Handler(
@@ -328,6 +351,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Reports Screen
   router.define(
     '/reports_screen',
     handler: Handler(
@@ -344,6 +368,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Peakflow Reports Screen
   router.define(
     '/peakflow_reports_screen',
     handler: Handler(
@@ -360,6 +385,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Inhaler Reports Screen
   router.define(
     '/inhaler_reports_screen',
     handler: Handler(
@@ -376,6 +402,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Steroid Dose Reports Screen
   router.define(
     '/steroid_dose_report_screen',
     handler: Handler(
@@ -392,6 +419,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Asthma Control Test Reports Screen
   router.define(
     '/asthma_control_test_report_screen',
     handler: Handler(
@@ -408,6 +436,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Fitness and Stress Reports Screen
   router.define(
     '/fitness_and_stress_report_screen',
     handler: Handler(
@@ -424,6 +453,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Pollen Screen
   router.define(
     '/pollen_screen',
     handler: Handler(
@@ -440,6 +470,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Education Screen
   router.define(
     '/education_screen',
     handler: Handler(
@@ -458,6 +489,7 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // About Screen
   router.define(
     '/about_screen',
     handler: Handler(
@@ -474,8 +506,9 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  // Profile Screen
   router.define(
-    '/profile',
+    '/profile_screen',
     handler: Handler(
       handlerFunc: (context, params) {
         final args = context?.settings?.arguments as Map<String, dynamic>;
@@ -483,6 +516,23 @@ void defineRoutes(FluroRouter router) {
         String deviceToken = args['deviceToken'];
         String deviceType = args['deviceType'];
         return ProfileScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  // Edit Profile Screen
+  router.define(
+    '/edit_profile_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return EditProfileScreen(
           realm: realm,
           deviceToken: deviceToken,
           deviceType: deviceType,

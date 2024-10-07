@@ -56,8 +56,8 @@ class ApiService {
 
   Future<Map<String, dynamic>> put(
     String endpoint,
-    Map<String, dynamic> data,
     String? accessToken,
+    Map<String, dynamic> data,
   ) async {
     final url = Uri.parse('$baseUrl$endpoint');
     if (accessToken == null) {

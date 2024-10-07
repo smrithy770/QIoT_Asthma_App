@@ -58,7 +58,16 @@ class CustomResultCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          child: const Text('Connect'),
+          child: Text(
+            'Connect',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppColors.primaryWhite,
+              fontSize: screenRatio * 6,
+              fontWeight: FontWeight.normal,
+              fontFamily: 'Roboto',
+            ),
+          ),
         ),
       ),
     );

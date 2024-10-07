@@ -5,7 +5,6 @@ import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
-import 'package:asthmaapp/screens/user_ui/profile_screen/profile_screen.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer_list_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +159,31 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/peakflow_record_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
+                      );
+                    },
+                  ),
+                  // Divider
+                  const Divider(
+                    indent: 16,
+                    endIndent: 16,
+                    color: Color(0xFFD7D7D7),
+                  ),
+                  // Inhaler Screen
+                  CustomDrawerListItem(
+                    assetPath: 'assets/svgs/user_assets/peakflow.svg',
+                    name: 'Inhaler',
+                    onTap: () {
+                      widget.itemName('Inhaler');
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/inhaler_record_screen', // Named route
                         (Route<dynamic> route) =>
                             false, // This removes all previous routes
                         arguments: {
@@ -394,16 +418,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     name: 'Profile',
                     onTap: () {
                       widget.itemName('Profile');
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushNamedAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(
-                            realm: widget.realm,
-                            deviceToken: widget.deviceToken,
-                            deviceType: widget.deviceType,
-                          ),
-                        ),
-                        (Route<dynamic> route) => false,
+                        '/profile_screen', // Named route
+                        (Route<dynamic> route) =>
+                            false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
                       );
                     },
                   ),
@@ -422,13 +446,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       final response =
                           await AuthApi().signout(userModel!.userId);
                       final jsonResponse = response;
-                      final status = jsonResponse['status'] as int;
-
-                      widget.realm.write(() {
-                        widget.realm.delete(userModel);
-                      });
+                      final status = jsonResponse['status'];
 
                       if (status == 200) {
+                        widget.realm.write(() {
+                          widget.realm.delete(userModel);
+                        });
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

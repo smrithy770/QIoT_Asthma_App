@@ -8,7 +8,6 @@ class _UserModel {
   @PrimaryKey()
   late String userId;
   late String educationalPlan;
-  late int bleCounter;
   late String accessToken;
   late String refreshToken;
 }

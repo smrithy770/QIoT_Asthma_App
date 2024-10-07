@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
+import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/custom_device_button_widget.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/custom_result_card_widget.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
@@ -25,6 +26,7 @@ class DeviceScreen extends StatefulWidget {
 }
 
 class _DeviceScreenState extends State<DeviceScreen> {
+  UserModel? userModel;
   List<ScanResult> _scanResults = [];
   bool _isScanning = false;
   late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
@@ -36,36 +38,58 @@ class _DeviceScreenState extends State<DeviceScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final user = getUserData(widget.realm);
+    if (user != null) {
+      setState(() {
+        userModel = user;
+      });
+    }
+  }
+
+  UserModel? getUserData(Realm realm) {
+    final results = realm.all<UserModel>();
+    if (results.isNotEmpty) {
+      return results[0];
+    }
+    return null;
   }
 
   @override
   void dispose() {
-    // Cancel subscriptions when disposing of the state
+    // Stop scanning and cancel subscriptions when disposing of the state
+    stopScanning();
     _scanResultsSubscription.cancel();
     _isScanningSubscription.cancel();
     super.dispose();
   }
 
-  void startScanning() {
+  Future<void> startScanning() async {
     if (_isScanning) return; // Prevent starting a new scan if already scanning
 
     // Start scanning for devices
     _isScanning = true;
-    FlutterBluePlus.startScan(timeout: const Duration(seconds: 4))
-        .catchError((error) {
+    try {
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
+    } catch (error) {
       // Handle any errors during scanning
+      logger.e("Error starting scan: $error");
       setState(() {
         _isScanning = false;
       });
-      logger.e("Error starting scan: $error");
-    });
+    }
 
+    // Listen for scan results
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       setState(() {
         _scanResults = results;
       });
     });
 
+    // Listen for scanning status
     _isScanningSubscription = FlutterBluePlus.isScanning.listen((isScanning) {
       setState(() {
         _isScanning = isScanning;
@@ -79,6 +103,48 @@ class _DeviceScreenState extends State<DeviceScreen> {
       logger.e("Error stopping scan: $error");
     });
     _isScanning = false;
+  }
+
+  void connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      // Once connected, discover services
+      List<BluetoothService> services = await device.discoverServices();
+      services.forEach((service) {
+        print('Service: ${service.uuid}');
+        // You can do something with the services here, e.g., update UI
+      });
+
+      // Navigate to the appropriate screen based on the device type
+      if (inhalerCap) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/inhaler_cap_screen',
+          (Route<dynamic> route) => true,
+          arguments: {
+            'realm': widget.realm,
+            'deviceToken': widget.deviceToken,
+            'deviceType': widget.deviceType,
+            'inhalerDevice': device,
+          },
+        );
+      } else if (pefDevice) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/peakflow_device_screen',
+          (Route<dynamic> route) => true,
+          arguments: {
+            'realm': widget.realm,
+            'deviceToken': widget.deviceToken,
+            'deviceType': widget.deviceType,
+            'pefDevice': device,
+          },
+        );
+      }
+    } catch (e) {
+      logger.e("Error connecting to device: $e");
+      // Show a message to the user about the error
+    }
   }
 
   @override
@@ -95,7 +161,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
           builder: (BuildContext context) {
             return IconButton(
               icon: SvgPicture.asset(
-                'assets/svgs/user_assets/user_drawer_icon.svg', // Replace with your custom icon asset path
+                'assets/svgs/user_assets/user_drawer_icon.svg',
                 width: 24,
               ),
               onPressed: () {
@@ -220,32 +286,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
                           screenSize: screenSize,
                           result: result,
                           onTap: () {
-                            // Handle connection logic here
+                            // Connect to the selected device
                             logger.d(
                                 "Connecting to ${result.device.platformName}");
-                            inhalerCap
-                                ? Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/inhaler_cap_screen',
-                                    (Route<dynamic> route) => true,
-                                    arguments: {
-                                      'realm': widget.realm,
-                                      'deviceToken': widget.deviceToken,
-                                      'deviceType': widget.deviceType,
-                                      'inhalerDevice': result.device,
-                                    },
-                                  )
-                                : Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/peakflow_device_screen',
-                                    (Route<dynamic> route) => true,
-                                    arguments: {
-                                      'realm': widget.realm,
-                                      'deviceToken': widget.deviceToken,
-                                      'deviceType': widget.deviceType,
-                                      'pefDevice': result.device,
-                                    },
-                                  );
+                            connectToDevice(result.device);
                           },
                         ),
                       ),

@@ -64,14 +64,23 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
       try {
         final response = await UserApi().updateUserDataById(
           userModel!.userId,
-          morningTime,
-          eveningTime,
+          {
+            // Pass the morning and evening times inside a map
+            'startTime': morningTime,
+            'endTime': eveningTime,
+          },
           userModel!.accessToken,
         );
         final jsonResponse = response;
         final status = jsonResponse['status'];
         if (status == 201) {
-          CustomSnackBarUtil.showCustomSnackBar("Peakflow added successfully",
+          logger.d('Peakflow reminder timings added successfully');
+          _morningController.clear();
+          _eveningController.clear();
+
+          Navigator.pop(context);
+          CustomSnackBarUtil.showCustomSnackBar(
+              'Peakflow reminder timings added successfully',
               success: true);
           // if (mounted) {
           //   Navigator.pushNamedAndRemoveUntil(

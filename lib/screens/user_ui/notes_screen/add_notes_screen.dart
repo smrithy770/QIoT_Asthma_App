@@ -151,16 +151,7 @@ class _AddNotesScreen extends State<AddNotesScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotesScreen(
-                  realm: widget.realm,
-                  deviceToken: widget.deviceToken,
-                  deviceType: widget.deviceType,
-                ),
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
         title: Align(
@@ -334,7 +325,9 @@ class _AddNotesScreen extends State<AddNotesScreen> {
                       SizedBox(
                         width: screenSize.width * 0.4,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(
                               screenRatio * 16,
