@@ -54,13 +54,11 @@ class _AddNotesScreen extends State<AddNotesScreen> {
     if (_formKey.currentState!.validate()) {
       // Logic to submit the note to the database
 
-      String title = _titleController.text.trim();
-      String description = _descriptionController.text.trim();
       try {
         final response = await NoteApi().addNotes(
           userModel!.userId,
-          title,
-          description,
+          _titleController.text.trim(),
+          _descriptionController.text.trim(),
           feelRating,
           userModel!.accessToken,
         );

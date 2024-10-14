@@ -6,6 +6,7 @@ import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:realm/realm.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -30,8 +31,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _practionerContactController =
+  final TextEditingController _practitionerContactController =
       TextEditingController();
+
+  final FlutterContactPicker _contactPicker = FlutterContactPicker();
+  List<Contact>? _contacts;
 
   @override
   void initState() {
@@ -72,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _lastNameController.text =
               jsonResponse['payload']['lastName'].toString();
           _emailController.text = jsonResponse['payload']['email'].toString();
-          _practionerContactController.text =
+          _practitionerContactController.text =
               jsonResponse['payload']['practionerContact'].toString();
         });
       }
@@ -97,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             success: false);
         return;
       }
-      if (_practionerContactController.text.isEmpty) {
+      if (_practitionerContactController.text.isEmpty) {
         CustomSnackBarUtil.showCustomSnackBar(
             'Practitioner contact can not be empty',
             success: false);
@@ -110,7 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           {
             'firstName': _firstNameController.text.trim(),
             'lastName': _lastNameController.text.trim(),
-            'practionerContact': _practionerContactController.text.trim(),
+            'practionerContact': _practitionerContactController.text.trim(),
           },
           userModel!.accessToken,
         );
@@ -150,7 +154,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while updating user data',
             success: false);
       }
     } else {
@@ -258,7 +262,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
+                                    return 'Please enter your first name';
                                   }
                                   return null;
                                 },
@@ -314,7 +318,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
+                                    return 'Please enter your last name';
                                   }
                                   return null;
                                 },
@@ -371,7 +375,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
+                                    return 'Please enter a valid email address';
                                   }
                                   return null;
                                 },
@@ -415,7 +419,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
                               TextFormField(
-                                controller: _practionerContactController,
+                                controller: _practitionerContactController,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                     horizontal: screenRatio * 8,
@@ -427,7 +431,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please enter a title';
+                                    return 'Please enter your ICE contact number';
                                   }
                                   return null;
                                 },
@@ -438,7 +442,54 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: screenRatio * 16),
+                  SizedBox(height: screenRatio * 8),
+                  SizedBox(
+                    width: screenSize.width,
+                    height: screenRatio * 38,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Or',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: AppColors.primaryLightBlueText,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Contact? contact =
+                                await _contactPicker.selectContact();
+                            setState(() {
+                              _contacts = contact == null ? null : [contact];
+                              if (_contacts != null &&
+                                  _contacts!.isNotEmpty &&
+                                  _contacts![0].phoneNumbers != null &&
+                                  _contacts![0].phoneNumbers!.isNotEmpty) {
+                                _practitionerContactController.text =
+                                    _contacts![0].phoneNumbers![0];
+                              }
+                            });
+                          },
+                          child: const Text(
+                            'Select from contacts',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: AppColors.primaryLightBlueText,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: screenRatio * 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

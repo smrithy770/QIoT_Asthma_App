@@ -1,17 +1,18 @@
 import 'package:asthmaapp/constants/app_colors.dart';
-import 'package:asthmaapp/screens/inhaler_screen/widgets/clickable_text.dart';
+import 'package:asthmaapp/screens/user_ui/inhaler_screen/widgets/clickable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InhalerBottomSheetInfo extends StatefulWidget {
-  const InhalerBottomSheetInfo({super.key});
+class PeakflowBottomSheetInfo extends StatefulWidget {
+  const PeakflowBottomSheetInfo({super.key});
 
   @override
-  State<InhalerBottomSheetInfo> createState() => _InhalerBottomSheetInfoState();
+  State<PeakflowBottomSheetInfo> createState() =>
+      _PeakflowBottomSheetInfoState();
 }
 
-class _InhalerBottomSheetInfoState extends State<InhalerBottomSheetInfo> {
+class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;

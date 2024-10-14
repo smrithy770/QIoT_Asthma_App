@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 class PermissionService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<void> notificationPermission() async {
+  Future<bool> notificationPermission() async {
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -19,11 +19,14 @@ class PermissionService {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       logger.d('User granted full permission');
+      return true;
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
       logger.d('User granted provisional permission');
+      return true;
     } else {
       logger.d('User declined or has not accepted permission');
+      return false;
     }
   }
 

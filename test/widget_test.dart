@@ -19,10 +19,6 @@ void main() {
   ]);
   final realm = Realm(config);
   UserModel? userModel;
-  final results = realm.all<UserModel>();
-  if (results.isNotEmpty) {
-    userModel = results[0];
-  }
   final router = FluroRouter();
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.

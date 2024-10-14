@@ -5,8 +5,7 @@ class NarrowInfoCard extends StatelessWidget {
   final String title;
   final String value;
   final Color backgroundColor;
-  final double width;
-  final double height;
+  final Size screenSize;
   final double screenRatio;
 
   const NarrowInfoCard({
@@ -14,18 +13,17 @@ class NarrowInfoCard extends StatelessWidget {
     required this.title,
     required this.value,
     required this.backgroundColor,
-    required this.width,
-    required this.height,
+    required this.screenSize,
     required this.screenRatio,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
-      height: height,
+      width: screenSize.width * 0.9,
+      height: screenSize.height * 0.14,
       padding: EdgeInsets.symmetric(
-        horizontal: screenRatio * 8,
+        horizontal: screenRatio * 4,
         vertical: screenRatio * 4,
       ),
       decoration: BoxDecoration(

@@ -38,7 +38,7 @@ class CustomDeviceData extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppColors.primaryGreyText,
+              color: AppColors.primaryBlueText,
               fontSize: screenRatio * 8,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto',
@@ -47,7 +47,7 @@ class CustomDeviceData extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              color: AppColors.primaryBlue,
+              color: AppColors.primaryGreyText,
               fontSize: screenRatio * 7,
               fontWeight: FontWeight.normal,
               fontFamily: 'Roboto',

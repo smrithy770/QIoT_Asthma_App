@@ -42,12 +42,12 @@ class NoteCardWidget extends StatelessWidget {
       child: Card(
         color: Colors.white,
         child: ListTile(
-          leading: note['painRating'] == "Low"
+          leading: note['feelRating'] == "Happy"
               ? const Icon(
                   Icons.sentiment_satisfied_sharp,
                   color: Colors.green,
                 )
-              : note['painRating'] == "Medium"
+              : note['feelRating'] == "Average"
                   ? const Icon(
                       Icons.sentiment_neutral,
                       color: Colors.amber,

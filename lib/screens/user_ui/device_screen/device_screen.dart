@@ -239,7 +239,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                           isSelected: inhalerCap,
                           onTap: () {
                             setState(() {
-                              inhalerCap = !inhalerCap;
+                              inhalerCap = true;
                               pefDevice = false;
                             });
                             inhalerCap ? startScanning() : stopScanning();
@@ -252,7 +252,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
                           isSelected: pefDevice,
                           onTap: () {
                             setState(() {
-                              pefDevice = !pefDevice;
+                              pefDevice = true;
                               inhalerCap = false;
                             });
                             pefDevice ? startScanning() : stopScanning();

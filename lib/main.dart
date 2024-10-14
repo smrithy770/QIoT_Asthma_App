@@ -163,6 +163,11 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
+    final double screenRatio = screenSize.height / screenSize.width;
+    logger.d('Screen Height: ${screenSize.height}');
+    logger.d('Screen Width: ${screenSize.width}');
+    logger.d('Screen Ratio: $screenRatio');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: CustomSnackBarUtil.rootScaffoldMessengerKey,

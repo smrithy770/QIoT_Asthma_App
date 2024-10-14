@@ -57,7 +57,7 @@ class UserApi {
         EncryptionUtil.encryptAES(jsonString); // Encrypt the JSON string
 
     // Send the encrypted data in the request
-    return _apiService.put(
+    final response = await _apiService.put(
       updateUserDataByIdUrl,
       accessToken,
       {
@@ -65,5 +65,16 @@ class UserApi {
             encryptedData, // Sending the encrypted data under the 'data' key
       },
     );
+    if (response.containsKey('encryptedResponse')) {
+      String encryptedData = response['encryptedResponse'];
+      // Decrypt the data
+      String decryptedData = EncryptionUtil.decryptAES(encryptedData);
+
+      // Parse the decrypted JSON string into a Map
+      return jsonDecode(decryptedData);
+    }
+
+    // Return the response directly if there's no encryption
+    return response;
   }
 }

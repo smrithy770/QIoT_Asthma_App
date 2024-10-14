@@ -96,7 +96,11 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
       );
 
       if (_settingsService != null) {
-        await _readRtcCharacteristic(_settingsService!);
+        await Future.wait([
+          _readRtcCharacteristic(_settingsService!),
+          _readCharacteristic(_dataPointService!,
+              '4cde1532-f90f-4962-8f2d-e1adc76edb6d', _updateDeviceIdValue),
+        ]);
       } else {
         logger.e("Settings Service not found");
       }

@@ -1,8 +1,16 @@
 import 'package:asthmaapp/screens/about_screen/about_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/additional_setup_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/basic_details_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/ice_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/location_access_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/notification_access_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/peakflow_notification_settings_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signin_screen/signin_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/signup_screen/signup_screen.dart';
 import 'package:asthmaapp/screens/authentication_screens/terms_conditions/terms_conditions_screen.dart';
-import 'package:asthmaapp/screens/inhaler_screen/inhaler_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/thank_you_screen.dart';
+import 'package:asthmaapp/screens/authentication_screens/verified_screen.dart';
+import 'package:asthmaapp/screens/user_ui/inhaler_screen/inhaler_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_result_screen.dart';
 import 'package:asthmaapp/screens/user_ui/asthma_control_test_screen/asthma_control_test_screen.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/device_screen.dart';
@@ -87,6 +95,136 @@ void defineRoutes(FluroRouter router) {
           deviceToken: deviceToken,
           deviceType: deviceType,
           pathPDF: pathPDF,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/thank_you_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String email = args['email'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return ThankYouScreen(
+          realm: realm,
+          email: email,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/verified_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return VerifiedScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/additional_setup_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return AdditionalSetupScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/basic_details_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return BasicDetailsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/location_access_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return LocationAccessScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/notification_access_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return NotificationAccessScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/peakflow_notification_settings_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return PeakflowNotificationSettingsScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+  router.define(
+    '/ice_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return ICEScreen(
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
         );
       },
     ),

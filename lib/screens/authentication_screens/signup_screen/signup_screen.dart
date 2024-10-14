@@ -92,16 +92,19 @@ class _SignupScreenState extends State<SignupScreen> {
             widget.deviceToken!,
             widget.deviceType!);
         final jsonResponse = response;
-        final status = jsonResponse['status'] as int;
-        if (status == 200) {
+        final status = jsonResponse['status'];
+        if (status == 201) {
           if (mounted) {
             CustomSnackBarUtil.showCustomSnackBar("Sign up successful",
                 success: true);
-            Navigator.popAndPushNamed(
+            Navigator.pushNamedAndRemoveUntil(
               context,
-              '/signin',
+              '/thank_you_screen', // Named route
+              (Route<dynamic> route) =>
+                  false, // This removes all previous routes
               arguments: {
                 'realm': widget.realm,
+                'email': email,
                 'deviceToken': widget.deviceToken,
                 'deviceType': widget.deviceType,
               },
@@ -785,9 +788,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.popAndPushNamed(
+                            Navigator.pushNamedAndRemoveUntil(
                               context,
-                              '/signin',
+                              '/signin', // Named route
+                              (Route<dynamic> route) =>
+                                  false, // This removes all previous routes
                               arguments: {
                                 'realm': widget.realm,
                                 'deviceToken': widget.deviceToken,

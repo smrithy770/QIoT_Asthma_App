@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/services/api_service.dart';
 import 'package:asthmaapp/api/utils/api_constants.dart';
 import 'package:asthmaapp/utils/encryption_util.dart';
@@ -15,7 +16,9 @@ class InhalerApi {
       Map<String, dynamic> location,
       int month,
       int year,
+      DateTime? createdAt,
       [String? accessToken]) async {
+        logger.d('User ID: $userId and Created At: $createdAt');
     final addInhalerUrl = ApiConstants.addInhalerUrl(userId);
 
     // Prepare the data to be encrypted
@@ -26,6 +29,7 @@ class InhalerApi {
       'location': location,
       'month': month,
       'year': year,
+      'createdAt': createdAt?.toIso8601String(),
     };
 
     // Convert the data to a JSON string and encrypt it

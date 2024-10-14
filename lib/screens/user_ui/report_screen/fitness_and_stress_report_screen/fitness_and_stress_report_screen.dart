@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:asthmaapp/api/fitness_and_stress_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
+import 'package:asthmaapp/constants/month_abbreviations.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/fitness_and_stress_report_model/fitness_and_stress_report_chart_model.dart';
 import 'package:asthmaapp/models/fitness_and_stress_report_model/fitness_and_stress_report_table_model.dart';
@@ -277,7 +278,7 @@ class _FitnessAndStressReportScreenState
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.01),
-                  // Asthma Control Test Recorded On
+                  // Fitness and Stress Recorded On
                   Container(
                     width: screenSize.width,
                     height: screenSize.height * 0.06,
@@ -332,7 +333,161 @@ class _FitnessAndStressReportScreenState
                       ],
                     ),
                   ),
-
+                  // Month Selector
+                  SizedBox(
+                    width: screenSize.width,
+                    height: screenSize.height * 0.06,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Peakflow Record
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${switchTab == 'fitness' ? 'Fitness' : 'Stress'} Record:',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 7 * screenRatio,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ),
+                        // Month Selector
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Left Arrow
+                            GestureDetector(
+                              onTap: () {
+                                getPrevMonth();
+                              },
+                              child: Container(
+                                width: 36,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: AppColors.primaryBlue
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    left: BorderSide(
+                                      color: AppColors.primaryBlue
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    right: BorderSide(
+                                      color: AppColors.primaryBlue
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    bottom: BorderSide(
+                                      color: AppColors.primaryBlue
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8),
+                                  ),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    size: 40,
+                                    Icons.arrow_left_rounded,
+                                    color: Color(0xFF004283),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Container for the month
+                            Container(
+                              width: 80,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    color: const Color(0xFF004283)
+                                        .withOpacity(0.4),
+                                    width: 2,
+                                  ),
+                                  bottom: BorderSide(
+                                    color: const Color(0xFF004283)
+                                        .withOpacity(0.4),
+                                    width: 2,
+                                  ),
+                                ),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${monthAbbreviations[currentMonth - 1]} - $currentYear',
+                                  style: TextStyle(
+                                    color: AppColors.primaryBlue,
+                                    fontSize: 6 * screenRatio,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Right Arrow
+                            GestureDetector(
+                              onTap: () {
+                                getNextMonth();
+                              },
+                              child: Container(
+                                width: 36,
+                                height: 52,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: const Color(0xFF004283)
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    left: BorderSide(
+                                      color: const Color(0xFF004283)
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    right: BorderSide(
+                                      color: const Color(0xFF004283)
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                    bottom: BorderSide(
+                                      color: const Color(0xFF004283)
+                                          .withOpacity(0.4),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(8),
+                                    bottomRight: Radius.circular(8),
+                                  ),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    size: 40,
+                                    Icons.arrow_right_rounded,
+                                    color: Color(0xFF004283),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: screenSize.height * 0.01),
                   // Fitness and Stress Chart
                   SizedBox(

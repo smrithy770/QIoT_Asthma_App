@@ -4,7 +4,7 @@ import 'package:asthmaapp/api/inhaler_api.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
-import 'package:asthmaapp/screens/inhaler_screen/widgets/inhaler_bottom_sheet_info.dart';
+import 'package:asthmaapp/screens/user_ui/inhaler_screen/widgets/inhaler_bottom_sheet_info.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
 import 'package:asthmaapp/services/permission_service.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
@@ -132,6 +132,7 @@ class _InhalerScreenState extends State<InhalerScreen> {
           },
           DateTime.now().month,
           DateTime.now().year,
+          DateTime.now(),
           userModel!.accessToken,
         );
         final jsonResponse = response;
