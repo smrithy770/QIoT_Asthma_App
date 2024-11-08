@@ -66,16 +66,26 @@ class _SigninScreenState extends State<SigninScreen> {
               jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
           logger.d('User Data: ${userData['signupStep']}');
 
-          final userModel = UserModel(
-            userData['_id'],
-            '',
-            accessToken,
-            refreshToken,
-          );
-          // Save to Realm
-          widget.realm.write(() {
-            widget.realm.add(userModel);
-          });
+          final existingUser = widget.realm.find<UserModel>(userData['_id']);
+
+          if (existingUser != null) {
+            // Update the existing user data
+            widget.realm.write(() {
+              existingUser.accessToken = accessToken;
+              existingUser.refreshToken = refreshToken;
+            });
+          } else {
+            // Add new user if not found
+            final userModel = UserModel(
+              userData['_id'],
+              '',
+              accessToken,
+              refreshToken,
+            );
+            widget.realm.write(() {
+              widget.realm.add(userModel);
+            });
+          }
           if (mounted) {
             CustomSnackBarUtil.showCustomSnackBar("Sign in successful",
                 success: true);

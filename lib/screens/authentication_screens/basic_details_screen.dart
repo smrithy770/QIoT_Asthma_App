@@ -90,7 +90,7 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
           );
         } else {
           CustomSnackBarUtil.showCustomSnackBar(
-              'An error occurred while adding the note',
+              'An error occurred while adding the basic details',
               success: false);
         }
       } on SocketException catch (e) {
@@ -103,7 +103,7 @@ class _BasicDetailsScreenState extends State<BasicDetailsScreen> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while adding the basic details',
             success: false);
       } finally {
         setState(() {

@@ -36,15 +36,12 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
   Position? _currentPosition;
   String? _fitnessLevel;
   String? _stressLevel;
-  DateTime? _lastSubmissionTime;
-  bool _canSubmit = true;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
     _requestPermissions();
-    _loadLastSubmissionTime();
   }
 
   Future<void> _requestPermissions() async {
@@ -87,38 +84,10 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
     return results.isNotEmpty ? results[0] : null;
   }
 
-  Future<void> _loadLastSubmissionTime() async {
-    // await storage.delete(key: 'last_submission_time');
-    final timestampStr = await storage.read(key: 'last_submission_time');
-    if (timestampStr != null) {
-      logger.d('Timestamp: $timestampStr');
-      final timestamp = int.tryParse(timestampStr);
-      if (timestamp != null) {
-        _lastSubmissionTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-        logger.d('Last Submission Time: $_lastSubmissionTime');
-        _checkSubmissionAvailability();
-      }
-    }
-    logger.d('Timestamp: $timestampStr');
-  }
-
-  void _checkSubmissionAvailability() {
-    if (_lastSubmissionTime != null) {
-      final now = DateTime.now();
-      final difference = now.difference(_lastSubmissionTime!);
-      logger.d('Difference: ${difference.inHours}');
-      if (difference.inHours < 24) {
-        setState(() {
-          _canSubmit = false;
-        });
-      }
-    }
-  }
-
   Future<void> _submitFitnessStress(String fitness, String stress) async {
     if (userModel == null) return;
 
-    if (_canSubmit && _fitnessLevel != null && _stressLevel != null) {
+    if (_fitnessLevel != null && _stressLevel != null) {
       // Ensure location data is available
       if (_currentPosition == null) {
         CustomSnackBarUtil.showCustomSnackBar(
@@ -150,14 +119,6 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
           CustomSnackBarUtil.showCustomSnackBar(
               "Fitness and Stress added successfully",
               success: true);
-          final now = DateTime.now();
-          await storage.write(
-              key: 'last_submission_time',
-              value: now.millisecondsSinceEpoch.toString());
-          setState(() {
-            _lastSubmissionTime = now;
-            _canSubmit = false;
-          });
           _reset();
           // Navigator.push(
           //   context,
@@ -192,13 +153,13 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while adding the fitness data',
             success: false);
       }
     } else {
       // Show an error message
       CustomSnackBarUtil.showCustomSnackBar(
-          'You can only submit once every 24 hours.',
+          'Please select yoru fitness/stress levels.',
           success: false);
     }
   }
@@ -483,13 +444,9 @@ class _FitnessStressScreenState extends State<FitnessStressScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: _canSubmit
-                              ? () {
-                                  logger.d(_canSubmit);
-                                  _submitFitnessStress(
-                                      _fitnessLevel!, _stressLevel!);
-                                }
-                              : null,
+                          onPressed: () {
+                            _submitFitnessStress(_fitnessLevel!, _stressLevel!);
+                          },
                           // onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             fixedSize: Size(screenSize.width * 0.32,

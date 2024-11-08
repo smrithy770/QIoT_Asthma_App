@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/custom_device_data_widget.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';

@@ -174,7 +174,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                 SizedBox(height: screenSize.height * 0.02),
                 SizedBox(
                   width: screenSize.width,
-                  height: screenSize.height * 0.12,
+                  height: screenSize.height * 0.14,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,7 +211,7 @@ class _PeakflowBaselineScreenState extends State<PeakflowBaselineScreen> {
                 SizedBox(
                   width: screenSize.width,
                   height: integerPeakflowPercentage >= 80
-                      ? 29 * screenRatio
+                      ? 32 * screenRatio
                       : integerPeakflowPercentage < 80 &&
                               integerPeakflowPercentage >= 50
                           ? 48 * screenRatio

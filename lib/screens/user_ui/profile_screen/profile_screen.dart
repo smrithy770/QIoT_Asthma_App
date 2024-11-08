@@ -368,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // Edit and Change Password
                   SizedBox(
                     width: screenSize.width,
-                    height: screenRatio * 46,
+                    height: screenRatio * 52,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

@@ -121,7 +121,7 @@ class _NotificationBottomSheetState extends State<NotificationBottomSheet> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while setting your times',
             success: false);
       }
     } else {

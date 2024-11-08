@@ -116,7 +116,7 @@ class _PeakflowNotificationSettingsScreenState
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while adding the the times',
             success: false);
       }
     } else {

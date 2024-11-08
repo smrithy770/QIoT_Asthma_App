@@ -54,24 +54,27 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
     _getLocation();
   }
 
-  Future<void> _getLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 100,
-        ),
-      );
-      // Store the location data
-      setState(() {
-        _currentPosition = position;
-      });
-      // Use the location data (latitude, longitude)
-      logger.d('Current Location: ${position.latitude}, ${position.longitude}');
-    } catch (e) {
-      // Handle location retrieval error
-      CustomSnackBarUtil.showCustomSnackBar('Error retrieving location: $e',
-          success: false);
+  Future<void> _getLocation({int retries = 3}) async {
+    for (int attempt = 0; attempt < retries; attempt++) {
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 100,
+          ),
+        );
+        // Store the location data
+        setState(() {
+          _currentPosition = position;
+        });
+        // Use the location data (latitude, longitude)
+        logger
+            .d('Current Location: ${position.latitude}, ${position.longitude}');
+      } catch (e) {
+        // Handle location retrieval error
+        CustomSnackBarUtil.showCustomSnackBar('Error retrieving location: $e',
+            success: false);
+      }
     }
   }
 
@@ -200,7 +203,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while adding your peakflow data',
             success: false);
       }
     } else {

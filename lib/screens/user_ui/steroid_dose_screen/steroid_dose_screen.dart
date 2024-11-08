@@ -167,7 +167,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
         // Handle generic exceptions
         logger.d('Exception: $e');
         CustomSnackBarUtil.showCustomSnackBar(
-            'An error occurred while adding the note',
+            'An error occurred while adding your steroid dosage',
             success: false);
       }
     } else {
@@ -265,7 +265,7 @@ class _SteroidDoseScreenState extends State<SteroidDoseScreen> {
       // Handle generic exceptions
       logger.d('Exception: $e');
       CustomSnackBarUtil.showCustomSnackBar(
-          'An error occurred while adding the note',
+          'An error occurred while adding your steroid dosage',
           success: false);
     } finally {
       setState(() {

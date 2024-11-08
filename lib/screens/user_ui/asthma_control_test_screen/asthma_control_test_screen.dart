@@ -206,7 +206,7 @@ class _AsthmaControlTestScreenState extends State<AsthmaControlTestScreen> {
       // Handle generic exceptions
       logger.d('Exception: $e');
       CustomSnackBarUtil.showCustomSnackBar(
-          'An error occurred while adding the note',
+          'An error occurred while adding your ACT score',
           success: false);
     }
   }

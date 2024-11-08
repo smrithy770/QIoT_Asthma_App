@@ -14,24 +14,18 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:realm/realm.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+final Logger logger = Logger();
 
 Future _firebaseBackgroundMessageHandler(RemoteMessage message) async {
   if (message.notification != null) {
     logger.d('Message received in the background!');
   }
 }
-
-AndroidOptions _getAndroidOptions() => const AndroidOptions(
-      encryptedSharedPreferences: true,
-    );
-final storage = FlutterSecureStorage(aOptions: _getAndroidOptions());
-
-final Logger logger = Logger();
 
 void main() async {
   final router = FluroRouter();
@@ -90,7 +84,7 @@ class Main extends StatefulWidget {
   State<Main> createState() => _MainState();
 }
 
-class _MainState extends State<Main> {
+class _MainState extends State<Main> with WidgetsBindingObserver{
   bool _isDeviceTokenInitialized = false;
   bool _isRefreshTokenRefreshed = false;
   String? _deviceToken = '';
@@ -100,6 +94,7 @@ class _MainState extends State<Main> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     Future.delayed(const Duration(seconds: 2)).then((value) {
       _getDeviceToken();
     });
@@ -153,6 +148,20 @@ class _MainState extends State<Main> {
       _isRefreshTokenRefreshed = isRefreshed;
       _isLoading = false; // Set loading to false once done
     });
+  }
+
+  
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      logger.d("App moved to forefround.");
+      if (_isDeviceTokenInitialized && widget.userModel != null) {
+        TokenRefreshService().refreshToken();
+      }
+    } else if (state == AppLifecycleState.paused) {
+      logger.d("App moved to background.");
+    }
   }
 
   @override

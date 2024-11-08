@@ -28,12 +28,18 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.qiot.asthmaapp"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 34
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+        // Enable core library desugaring
+        coreLibraryDesugaringEnabled true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11" // Ensure this is set to a valid version like "11"
     }
 
     defaultConfig {
@@ -41,8 +47,8 @@ android {
         applicationId = "com.qiot.asthmaapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 21
+        targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
@@ -54,6 +60,11 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+}
+
+dependencies {
+    // Add this dependency for core library desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.2'
 }
 
 flutter {

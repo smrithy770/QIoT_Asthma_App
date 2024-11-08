@@ -7,6 +7,7 @@ import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:realm/realm.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -34,7 +35,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _practitionerContactController =
       TextEditingController();
 
-  final FlutterContactPicker _contactPicker = FlutterContactPicker();
+  final FlutterNativeContactPicker _contactPicker =
+      FlutterNativeContactPicker();
   List<Contact>? _contacts;
 
   @override

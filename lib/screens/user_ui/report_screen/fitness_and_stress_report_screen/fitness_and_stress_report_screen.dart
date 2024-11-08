@@ -176,7 +176,6 @@ class _FitnessAndStressReportScreenState
             child: Container(
               color: AppColors.primaryWhite,
               width: screenSize.width,
-              height: screenSize.height,
               padding: EdgeInsets.all(screenSize.width * 0.016),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -333,6 +332,7 @@ class _FitnessAndStressReportScreenState
                       ],
                     ),
                   ),
+                  SizedBox(height: screenSize.height * 0.01),
                   // Month Selector
                   SizedBox(
                     width: screenSize.width,
