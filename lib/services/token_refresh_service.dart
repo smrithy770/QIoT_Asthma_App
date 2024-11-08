@@ -34,7 +34,7 @@ class TokenRefreshService {
 
   void _startTokenRefreshTimer() {
     timer?.cancel();
-    timer = Timer.periodic(const Duration(minutes: 45), (timer) async {
+    timer = Timer.periodic(const Duration(minutes: 55), (timer) async {
       logger.d('Token refresh timer triggered at ${DateTime.now()}');
       await refreshToken();
     });
