@@ -108,8 +108,6 @@ PODS:
     - Flutter
   - flutter_pdfview (1.0.2):
     - Flutter
-  - flutter_secure_storage (6.0.0):
-    - Flutter
   - geolocator_apple (1.2.0):
     - Flutter
   - Google-Maps-iOS-Utils (5.0.0):
@@ -223,7 +221,6 @@ DEPENDENCIES:
   - flutter_media_downloader (from `.symlinks/plugins/flutter_media_downloader/ios`)
   - flutter_native_contact_picker (from `.symlinks/plugins/flutter_native_contact_picker/ios`)
   - flutter_pdfview (from `.symlinks/plugins/flutter_pdfview/ios`)
-  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -277,8 +274,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_contact_picker/ios"
   flutter_pdfview:
     :path: ".symlinks/plugins/flutter_pdfview/ios"
-  flutter_secure_storage:
-    :path: ".symlinks/plugins/flutter_secure_storage/ios"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   google_maps_flutter_ios:
@@ -310,9 +305,8 @@ SPEC CHECKSUMS:
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_media_downloader: fa9b4779cc9181aed48a0f1dbad5f54c5a5a4517
-  flutter_native_contact_picker: bd430ba0fbf82768bb50c2c52a69a65759a8f907
+  flutter_native_contact_picker: 390f08cc44058386ee91499f05360d647dddfc66
   flutter_pdfview: 25f53dd6097661e6395b17de506e6060585946bd
-  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3

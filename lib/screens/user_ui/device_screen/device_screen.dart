@@ -5,6 +5,7 @@ import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/custom_device_button_widget.dart';
 import 'package:asthmaapp/screens/user_ui/device_screen/widgets/custom_result_card_widget.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -73,7 +74,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
     // Start scanning for devices
     _isScanning = true;
     try {
-      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
+      await FlutterBluePlus.startScan(timeout: const Duration(seconds: 8));
     } catch (error) {
       // Handle any errors during scanning
       logger.e("Error starting scan: $error");
@@ -86,7 +87,43 @@ class _DeviceScreenState extends State<DeviceScreen> {
     _scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
       setState(() {
         _scanResults = results;
+
+        // _scanResults = results
+        //     .where((result) => result.device.platformName.contains("QIoT_CI"))
+        //     .toList();
       });
+      // if (_scanResults.isNotEmpty) {
+      //   // Print a message when a "QIoT IntDr" device is found
+      //   logger.d("Device found: ${_scanResults[0].device.platformName}");
+      //   CustomSnackBarUtil.showCustomSnackBar(
+      //       'Device found: ${_scanResults[0].device.platformName}',
+      //       success: true);
+
+      //   // Stop scanning immediately
+      //   stopScanning();
+      //   if (inhalerCap) {
+      //     try {
+      //       Navigator.pushNamedAndRemoveUntil(
+      //         context,
+      //         '/inhaler_cap_screen',
+      //         (Route<dynamic> route) => true,
+      //         arguments: {
+      //           'realm': widget.realm,
+      //           'deviceToken': widget.deviceToken,
+      //           'deviceType': widget.deviceType,
+      //           'inhalerDevice': _scanResults[0].device,
+      //         },
+      //       );
+      //     } catch (error) {
+      //       // Show a snackbar if an error occurs during navigation
+      //       logger.e("Error navigating to inhaler cap screen: $error");
+      //       CustomSnackBarUtil.showCustomSnackBar(
+      //         'Failed to navigate to the inhaler cap screen. Please try again.',
+      //         success: false,
+      //       );
+      //     }
+      //   }
+      // }
     });
 
     // Listen for scanning status
@@ -117,29 +154,47 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
       // Navigate to the appropriate screen based on the device type
       if (inhalerCap) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/inhaler_cap_screen',
-          (Route<dynamic> route) => true,
-          arguments: {
-            'realm': widget.realm,
-            'deviceToken': widget.deviceToken,
-            'deviceType': widget.deviceType,
-            'inhalerDevice': device,
-          },
-        );
+        try {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/inhaler_cap_screen',
+            (Route<dynamic> route) => true,
+            arguments: {
+              'realm': widget.realm,
+              'deviceToken': widget.deviceToken,
+              'deviceType': widget.deviceType,
+              'inhalerDevice': device,
+            },
+          );
+        } catch (error) {
+          // Show a snackbar if an error occurs during navigation
+          logger.e("Error navigating to inhaler cap screen: $error");
+          CustomSnackBarUtil.showCustomSnackBar(
+            'Error navigating to inhaler cap screen: $error',
+            success: false,
+          );
+        }
       } else if (pefDevice) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          '/peakflow_device_screen',
-          (Route<dynamic> route) => true,
-          arguments: {
-            'realm': widget.realm,
-            'deviceToken': widget.deviceToken,
-            'deviceType': widget.deviceType,
-            'pefDevice': device,
-          },
-        );
+        try {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/peakflow_device_screen',
+            (Route<dynamic> route) => true,
+            arguments: {
+              'realm': widget.realm,
+              'deviceToken': widget.deviceToken,
+              'deviceType': widget.deviceType,
+              'pefDevice': device,
+            },
+          );
+        } catch (error) {
+          // Show a snackbar if an error occurs during navigation
+          logger.e("Error navigating to peakflow device screen: $error");
+          CustomSnackBarUtil.showCustomSnackBar(
+            'Error navigating to peakflow device screen: $error',
+            success: false,
+          );
+        }
       }
     } catch (e) {
       logger.e("Error connecting to device: $e");

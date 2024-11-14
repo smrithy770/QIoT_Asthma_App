@@ -151,6 +151,12 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
         int inhalerValue = processedList[i];
         String createdAt = timestampList[i];
 
+        // Parse the createdAt timestamp in custom format
+        DateFormat format = DateFormat("dd MMM, yyyy - hh mm a");
+        DateTime createdAtDateTime = format.parse(createdAt);
+
+        logger.d('Created At: $createdAtDateTime');
+
         // Compute the corresponding dataIndex
         int dataIndex = _dataIndex + i + 1;
 
@@ -170,7 +176,7 @@ class _DeviceScreenState extends State<InhalerCapScreen> {
           },
           DateTime.now().month,
           DateTime.now().year,
-          createdAt as DateTime,
+          createdAtDateTime,
           userModel!.accessToken,
         );
 
