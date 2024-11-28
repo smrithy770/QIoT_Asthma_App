@@ -36,7 +36,23 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   void initState() {
     super.initState();
+    //initDynamicLinks();
   }
+
+/*  initDynamicLinks() async {
+    // this is called when app comes from background
+    FirebaseDynamicLinks.instance.onLink;
+
+    // this is called when app is not open in background
+
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = data?.link;
+
+    if (deepLink != null) {
+      print('the link is : $deepLink');
+      Navigator.pushNamed(context, '/reset_password'*//*, arguments: deepLink.queryParameters['title']*//*);
+    }
+  }*/
 
   void onSignIn() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
@@ -430,8 +446,24 @@ class _SigninScreenState extends State<SigninScreen> {
                         SizedBox(height: screenRatio * 8),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/forgotpassword');
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              '/forgot_password', // Name of your sign-in route
+                                  (Route<dynamic> route) => false,
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
                           },
+                     /*     onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/forgot_password',
+                              arguments: {'email': 'betson@gmail.com'}, // Replace with actual data if available
+                            );
+                          },*/
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(

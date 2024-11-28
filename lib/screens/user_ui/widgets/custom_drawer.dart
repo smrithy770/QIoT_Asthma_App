@@ -431,6 +431,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       );
                     },
                   ),
+
+                  //////////////////////////////////////////////
+                  const Divider(
+                    indent: 16,
+                    endIndent: 16,
+                    color: Color(0xFFD7D7D7),
+                  ),
+                  CustomDrawerListItem(
+                    assetPath: 'assets/svgs/user_assets/profile.svg',
+                    name: 'Change Password',
+                    onTap: () {
+                      widget.itemName('Change Password');
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/change_password', // Named route
+                            (Route<dynamic> route) =>
+                        false, // This removes all previous routes
+                        arguments: {
+                          'realm': widget.realm,
+                          'deviceToken': widget.deviceToken,
+                          'deviceType': widget.deviceType,
+                        },
+                      );
+                    },
+                  ),
+                  //////////////////////////////////////////////
                   const Divider(
                     indent: 16,
                     endIndent: 16,

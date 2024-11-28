@@ -1,11 +1,20 @@
 class ApiConstants {
   static const String baseURL =
-      'https://qiot-beta-f5013130cafe.herokuapp.com/api/v1';
+   //  'https://qiot-beta-f5013130cafe.herokuapp.com/api/v1';
   // static const String baseURL = 'http://80.177.32.233:4200/api/v1';
+  'http://192.168.10.101:4200/api/v1';
+
+
+
 
   static const String refreshtoken = '/auth/refreshtoken';
   static const String signin = '/auth/signin';
   static const String signupUrl = '/auth/signup';
+  static const String forgotPasswordUrl = '/auth/resetpasswordemail';
+  static const String sendOTPUrl ='/auth/resetpasswordemail';
+  static const String verifyOTPUrl = '/auth/resetpasswordVerfification';
+  static const String resetPassword = '/auth/resetpassword';
+  static const String changePasswordUrl = '/auth/changePassword';
   static const String resendVerificationEmailUrl =
       '/auth/resendverificationemail';
   static const String checkVerificationUrl = '/auth/checkverification';
