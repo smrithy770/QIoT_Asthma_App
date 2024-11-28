@@ -4,7 +4,7 @@ import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
-
+import 'package:asthmaapp/services/token_refresh_service.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -102,6 +102,9 @@ class _SigninScreenState extends State<SigninScreen> {
             widget.realm.write(() {
               widget.realm.add(userModel);
             });
+             TokenRefreshService().initialize(
+              widget.realm, userModel, widget.deviceToken!, widget.deviceType!);
+          logger.d('token intialisation is done');
           }
           if (mounted) {
             CustomSnackBarUtil.showCustomSnackBar("Sign in successful",
