@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:realm/realm.dart';
@@ -14,7 +15,7 @@ class ForgotPasswordScreen extends StatefulWidget {
   final String? deviceToken, deviceType;
 
   ForgotPasswordScreen({required this.email, required this.accessToken,
-  required this.realm,
+    required this.realm,
     required this.deviceToken,
     required this.deviceType,
   });
@@ -151,10 +152,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
 
     if (response['status'] == 200) {
-      Navigator.pushNamedAndRemoveUntil(
+      Navigator.pushNamed(
         context,
         '/otp_screen', // Name of your sign-in route
-            (Route<dynamic> route) => false,
         arguments: {
           'email':email,
           'realm': widget.realm,
@@ -179,6 +179,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Forgot Password'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Back icon
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous screen
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
