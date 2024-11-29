@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:realm/realm.dart';
 
 import '../../../api/auth_api.dart';
+import '../../../constants/app_colors.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
@@ -31,8 +32,34 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool _isConfirmPasswordVisible =
   false; // Track visibility of confirm password
   final _formKey = GlobalKey<FormState>();
+  bool _isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Add listeners to the text controllers
+    _newPasswordController.addListener(_updateButtonState);
+    _confirmPasswordController.addListener(_updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    // Clean up controllers when the widget is disposed
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonEnabled = _newPasswordController.text.isNotEmpty &&
+          _confirmPasswordController.text.isNotEmpty;
+    });
+  }
 
   Future<void> resetPassword() async {
+    if (!_isButtonEnabled) return;
     final newPassword = _newPasswordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
@@ -95,13 +122,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       );
     }
   }
-
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    } else if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    } else if (!RegExp(
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?]).{8,}$')
+        .hasMatch(value)) {
+      return 'Password must contain an uppercase, lowercase, number, and special character';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
-        appBar: AppBar(
+        backgroundColor: AppColors.primaryWhite,
+     /*   appBar: AppBar(
           title: Text('Reset Password'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back), // Back icon
@@ -109,7 +148,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               Navigator.pop(context); // Go back to the previous screen
             },
           ),
-        ),
+        ),*/
         body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -124,54 +163,103 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       width: screenRatio * 52,
                     ),
                     SizedBox(height: screenRatio * 44),
-                    TextField(
-                      controller: _newPasswordController,
-                      obscureText: !_isNewPasswordVisible, // Toggle visibility
-                      decoration: InputDecoration(
-                        labelText: 'New Password',
-                        border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isNewPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: TextField(
+                        controller: _newPasswordController,
+                        obscureText: !_isNewPasswordVisible, // Toggle visibility
+                        decoration: InputDecoration(
+                          labelText: 'New Password',
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(8),
+
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isNewPasswordVisible = !_isNewPasswordVisible;
-                            });
-                          },
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isNewPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isNewPasswordVisible = !_isNewPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
+                        onChanged: _validatePassword,
                       ),
                     ),
                     SizedBox(height: 20),
-                    TextField(
-                      controller: _confirmPasswordController,
-                      obscureText: !_isConfirmPasswordVisible, // Toggle visibility
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isConfirmPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: TextField(
+                        controller: _confirmPasswordController,
+                        obscureText: !_isConfirmPasswordVisible, // Toggle visibility
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(8),
+
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isConfirmPasswordVisible =
-                              !_isConfirmPasswordVisible;
-                            });
-                          },
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isConfirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
+                        onChanged: _validatePassword,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 40),
                     _isLoading
                         ? CircularProgressIndicator()
                         : ElevatedButton(
                       onPressed: resetPassword,
-                      child: Text('Reset Password'),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: screenRatio * 7,
+                          color: (_isButtonEnabled)
+                              ? AppColors.primaryWhiteText
+                              : AppColors.primaryGreyText,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize:
+                        Size(screenSize.width * 1.0, screenRatio * 26),
+                        backgroundColor: _isButtonEnabled
+                            ? AppColors.primaryBlue
+                            : AppColors.primaryGrey,
+                        foregroundColor:_isButtonEnabled
+                            ? AppColors.primaryBlue
+                            : AppColors.primaryGrey ,
+                        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ),
                   ],
                 ),

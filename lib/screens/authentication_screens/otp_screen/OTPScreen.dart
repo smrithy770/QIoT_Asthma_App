@@ -27,6 +27,7 @@ class _OTPScreenState extends State<OTPScreen> {
   final AuthApi authApi = AuthApi();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  bool _isButtonEnabled = false;
 
   @override
   void initState() {
@@ -35,9 +36,24 @@ class _OTPScreenState extends State<OTPScreen> {
     print('Realm: ${widget.realm}');
     print('Device Token: ${widget.deviceToken}');
     print('Device Type: ${widget.deviceType}');
+    _otpController.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonEnabled = _otpController.text.trim().isNotEmpty;
+    });
+  }
+
+  @override
+  void dispose() {
+    _otpController.removeListener(_updateButtonState);
+    _otpController.dispose();
+    super.dispose();
   }
 
   Future<void> verifyOTP() async {
+    if (!_isButtonEnabled) return;
     final otp = _otpController.text.trim();
 
     if (otp.isEmpty) {
@@ -97,7 +113,8 @@ class _OTPScreenState extends State<OTPScreen> {
     Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor:  AppColors.primaryWhite,
+  /*    appBar: AppBar(
         title: Text('Enter OTP'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Back icon
@@ -105,7 +122,7 @@ class _OTPScreenState extends State<OTPScreen> {
             Navigator.pop(context); // Go back to the previous screen
           },
         ),
-      ),
+      ),*/
       body: SingleChildScrollView(
           child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -133,20 +150,55 @@ class _OTPScreenState extends State<OTPScreen> {
                                 fontFamily: 'Roboto',
                               ),
                             ),
-                            TextField(
-                              controller: _otpController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                labelText: 'Enter the OTP',
-                                border: OutlineInputBorder(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: TextField(
+                                controller: _otpController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Enter the OTP',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(8),
+
+                                  ),
+                                ),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 40),
                             _isLoading
                                 ? CircularProgressIndicator()
                                 : ElevatedButton(
                               onPressed: verifyOTP,
-                              child: Text('Verify OTP'),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                  fontSize: screenRatio * 7,
+                                  color: (_isButtonEnabled)
+                                      ? AppColors.primaryWhiteText
+                                      : AppColors.primaryGreyText,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                fixedSize:
+                                Size(screenSize.width * 1.0, screenRatio * 26),
+                                backgroundColor: _isButtonEnabled
+                                    ? AppColors.primaryBlue
+                                    : AppColors.primaryGrey,
+                                foregroundColor:_isButtonEnabled
+                                    ? AppColors.primaryBlue
+                                    : AppColors.primaryGrey ,
+                                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
                             ),
                           ],
                         ),

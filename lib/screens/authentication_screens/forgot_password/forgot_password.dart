@@ -27,14 +27,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final AuthApi authApi = AuthApi();
   final _formKey = GlobalKey<FormState>();
+  bool _isButtonEnabled = false;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _emailController.addListener(_updateButtonState);
     //initDynamicLinks();
   }
 
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonEnabled = _emailController.text.isNotEmpty &&
+          RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+              .hasMatch(_emailController.text);
+    });
+  }
 /*  initDynamicLinks() async {
     // this is called when app comes from background
     FirebaseDynamicLinks.instance.onLink;
@@ -132,6 +148,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
 
   Future<void> sendOTP() async {
+
+    if (!_isButtonEnabled) return;
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
@@ -177,15 +195,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final double screenRatio = screenSize.height / screenSize.width;
 
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: AppColors.primaryWhite,
+ /*     appBar: AppBar(
         title: Text('Forgot Password'),
+        backgroundColor: AppColors.primaryWhite,
         leading: IconButton(
           icon: Icon(Icons.arrow_back), // Back icon
           onPressed: () {
             Navigator.pop(context); // Go back to the previous screen
           },
         ),
-      ),
+      ),*/
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -214,11 +234,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 SizedBox(height: 20),
                 _buildEmailField(),
-                SizedBox(height: 20),
+                SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: sendOTP,
-                  child: Text('Submit'),
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      fontSize: screenRatio * 7,
+                      color: (_isButtonEnabled)
+                          ? AppColors.primaryWhiteText
+                          : AppColors.primaryGreyText,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
+                    fixedSize:
+                    Size(screenSize.width * 1.0, screenRatio * 26),
+                    backgroundColor: _isButtonEnabled
+                        ? AppColors.primaryBlue
+                        : AppColors.primaryGrey,
+                    foregroundColor:_isButtonEnabled
+                        ? AppColors.primaryBlue
+                        : AppColors.primaryGrey ,
                     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -247,10 +284,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             controller: _emailController,
             decoration: InputDecoration(
               labelText: 'Email Address',
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(8),
+
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16,),
             ),
             keyboardType: TextInputType.emailAddress,
+
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter an email address';
