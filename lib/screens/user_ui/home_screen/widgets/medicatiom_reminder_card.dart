@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class MedicationReminderCard extends StatelessWidget {
   final String svgAsset;
   final String title;
-  final String subtitle;
+  final Widget subtitle;
   final double screenRatio;
   final VoidCallback? onTap;
 
@@ -24,7 +24,7 @@ class MedicationReminderCard extends StatelessWidget {
       onTap: onTap, // Optional tap handler for navigation or interaction
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: screenRatio * 40,
+        height: screenRatio * 45,
         padding: EdgeInsets.all(screenRatio * 4),
         decoration: BoxDecoration(
           color: AppColors.primaryWhite,
@@ -76,16 +76,17 @@ class MedicationReminderCard extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      subtitle,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: AppColors.primaryLightBlueText,
-                        fontSize: screenRatio * 9,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
+                    // child: Text(
+                    //   subtitle,
+                    //   textAlign: TextAlign.left,
+                    //   style: TextStyle(
+                    //     color: AppColors.primaryLightBlueText,
+                    //     fontSize: screenRatio * 9,
+                    //     fontWeight: FontWeight.bold,
+                    //     fontFamily: 'Roboto',
+                    //   ),
+                    // ),
+                    child: subtitle,
                   ),
                 ],
               ),

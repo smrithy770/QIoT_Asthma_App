@@ -37,8 +37,14 @@ import 'package:asthmaapp/screens/user_ui/report_screen/report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/report_screen/steroid_dose_report_screen/steroid_dose_report_screen.dart';
 import 'package:asthmaapp/screens/user_ui/steroid_dose_screen/steroid_dose_screen.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:realm/realm.dart';
+
+import '../screens/authentication_screens/otp_screen/OTPScreen.dart';
+import '../screens/authentication_screens/forgot_password/forgot_password.dart';
+import '../screens/authentication_screens/reset_password/reset_password.dart';
+import '../screens/user_ui/change_password/change_password.dart';
 
 void defineRoutes(FluroRouter router) {
   router.define(
@@ -81,6 +87,70 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  router.define(
+    '/forgot_password',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        // Always navigate to ForgotPasswordMailScreen without checking for arguments
+        return ForgotPasswordScreen(email: '', accessToken: '',
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+
+      },
+    ),
+  );
+
+  router.define(
+    '/reset_password',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>;
+        Realm realm = args['realm'];
+        String email = args['email'];
+        String deviceToken = args['deviceToken'];
+        String deviceType = args['deviceType'];
+        return ResetPasswordScreen(email: email, accessToken: '',
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,); // Navigate to reset password screen
+      },
+    ),
+  );
+
+  router.define(
+    '/otp_screen',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>?;
+
+        if (args == null) {
+          return Scaffold(
+            body: Center(child: Text('Invalid arguments passed to OTP screen')),
+          );
+        }
+
+        String email = args['email'] ?? ''; // Provide default values
+        Realm realm = args['realm'] as Realm;
+        String deviceToken = args['deviceToken'] ?? '';
+        String deviceType = args['deviceType'] ?? '';
+
+        return OTPScreen(
+          email: email,
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
+        );
+      },
+    ),
+  );
+
+
   router.define(
     '/terms_conditions',
     handler: Handler(
@@ -678,4 +748,16 @@ void defineRoutes(FluroRouter router) {
       },
     ),
   );
+  router.define(
+    '/change_password',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>?;
+        Realm realm = args?['realm'];
+        return ChangePasswordScreen(realm: realm, deviceToken: '', deviceType: '',
+        );
+      },
+    ),
+  );
+
 }

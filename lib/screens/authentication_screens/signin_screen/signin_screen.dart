@@ -4,6 +4,7 @@ import 'package:asthmaapp/api/auth_api.dart';
 import 'package:asthmaapp/main.dart';
 import 'package:asthmaapp/models/user_model/user_model.dart';
 import 'package:asthmaapp/utils/custom_snackbar_util.dart';
+import 'package:asthmaapp/services/token_refresh_service.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,7 +37,23 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   void initState() {
     super.initState();
+    //initDynamicLinks();
   }
+
+/*  initDynamicLinks() async {
+    // this is called when app comes from background
+    FirebaseDynamicLinks.instance.onLink;
+
+    // this is called when app is not open in background
+
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = data?.link;
+
+    if (deepLink != null) {
+      print('the link is : $deepLink');
+      Navigator.pushNamed(context, '/reset_password'*//*, arguments: deepLink.queryParameters['title']*//*);
+    }
+  }*/
 
   void onSignIn() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
@@ -63,7 +80,7 @@ class _SigninScreenState extends State<SigninScreen> {
           final refreshToken = jsonResponse['refreshToken'] as String;
           logger.d('Refresh Token: $refreshToken');
           final userData =
-              jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
+          jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
           logger.d('User Data: ${userData['signupStep']}');
 
           final existingUser = widget.realm.find<UserModel>(userData['_id']);
@@ -85,6 +102,9 @@ class _SigninScreenState extends State<SigninScreen> {
             widget.realm.write(() {
               widget.realm.add(userModel);
             });
+             TokenRefreshService().initialize(
+              widget.realm, userModel, widget.deviceToken!, widget.deviceType!);
+          logger.d('token intialisation is done');
           }
           if (mounted) {
             CustomSnackBarUtil.showCustomSnackBar("Sign in successful",
@@ -95,8 +115,8 @@ class _SigninScreenState extends State<SigninScreen> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               nextRoute, // Named route
-              (Route<dynamic> route) =>
-                  false, // This removes all previous routes
+                  (Route<dynamic> route) =>
+              false, // This removes all previous routes
               arguments: {
                 'realm': widget.realm,
                 'deviceToken': widget.deviceToken,
@@ -159,7 +179,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   void _validatePassword(String value) {
     bool isValid = RegExp(
-            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?]).{8,}$')
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?]).{8,}$')
         .hasMatch(value);
     if (isValid != _isPasswordValid) {
       setState(() {
@@ -393,22 +413,22 @@ class _SigninScreenState extends State<SigninScreen> {
                         SizedBox(height: screenRatio * 10),
                         ElevatedButton(
                           onPressed: (_emailController.text.isNotEmpty &&
-                                  _passwordController.text.isNotEmpty)
+                              _passwordController.text.isNotEmpty)
                               ? onSignIn
                               : null,
                           style: ElevatedButton.styleFrom(
                             fixedSize:
-                                Size(screenSize.width * 1.0, screenRatio * 26),
+                            Size(screenSize.width * 1.0, screenRatio * 26),
                             foregroundColor:
-                                (_emailController.text.isNotEmpty &&
-                                        _passwordController.text.isNotEmpty)
-                                    ? AppColors.primaryBlueText
-                                    : AppColors.primaryGreyText,
+                            (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty)
+                                ? AppColors.primaryBlueText
+                                : AppColors.primaryGreyText,
                             backgroundColor:
-                                (_emailController.text.isNotEmpty &&
-                                        _passwordController.text.isNotEmpty)
-                                    ? AppColors.primaryBlue
-                                    : AppColors.primaryGrey,
+                            (_emailController.text.isNotEmpty &&
+                                _passwordController.text.isNotEmpty)
+                                ? AppColors.primaryBlue
+                                : AppColors.primaryGrey,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -420,7 +440,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             style: TextStyle(
                               fontSize: screenRatio * 7,
                               color: (_emailController.text.isNotEmpty &&
-                                      _passwordController.text.isNotEmpty)
+                                  _passwordController.text.isNotEmpty)
                                   ? AppColors.primaryWhiteText
                                   : AppColors.primaryGreyText,
                               fontWeight: FontWeight.bold,
@@ -430,7 +450,15 @@ class _SigninScreenState extends State<SigninScreen> {
                         SizedBox(height: screenRatio * 8),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/forgotpassword');
+                            Navigator.pushNamed(
+                              context,
+                              '/forgot_password', // Name of your sign-in route
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
                           },
                           child: Text(
                             'Forgot Password?',

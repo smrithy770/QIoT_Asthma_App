@@ -11,13 +11,17 @@ import 'package:asthmaapp/screens/user_ui/home_screen/widgets/medicatiom_reminde
 import 'package:asthmaapp/screens/user_ui/home_screen/widgets/narrow_info_card.dart';
 import 'package:asthmaapp/screens/user_ui/home_screen/widgets/wide_info_card.dart';
 import 'package:asthmaapp/screens/user_ui/widgets/custom_drawer.dart';
+import 'package:asthmaapp/services/token_refresh_service.dart';
+import 'package:asthmaapp/utils/custom_snackbar_util.dart';
 import 'package:asthmaapp/widgets/custom_elevated_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:realm/realm.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   final Realm realm;
@@ -38,6 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String, dynamic> homepageData = {};
   String? remoteAsthmaActionPlanPDFpath = '';
   String? remoteEducationPDFpath = '';
+  String? _baselineScore = ' ';
+  String? _steroidDosage = ' ';
+  String? _salbutomalDosage = ' ';
+  String? _nextTaskTime = ' ';
 
   @override
   void initState() {
@@ -68,22 +76,38 @@ class _HomeScreenState extends State<HomeScreen> {
       final jsonResponse = await UserApi()
           .getHomepageData(userModel!.userId, userModel!.accessToken);
       final status = jsonResponse['status'];
+      logger.d('Response status: $status');
+
       if (status == 200) {
+        logger.e("Data success");
         final payload = jsonResponse['payload'];
         setState(() {
           homepageData = payload;
+          _baselineScore = jsonResponse['payload']['baseLineScore'].toString();
+          _steroidDosage = jsonResponse['payload']['steroidDosage'].toString();
+          _salbutomalDosage =
+              jsonResponse['payload']['salbutomalDosage'].toString();
+          _nextTaskTime = jsonResponse['payload']['nextTaskTime'].toString();
+        
         });
+
         widget.realm.write(() {
           userModel?.educationalPlan =
               homepageData['educationalPlan']; // Update educationalPlan
         });
-        logger.i('Homepage data: $homepageData');
+
         _createPdfAfterDelay();
+      } else {
+        logger.e('Unexpected status code: $status');
       }
     } on SocketException catch (e) {
+      
       logger.e('NetworkException: $e');
+        CustomSnackBarUtil.showCustomSnackBar('No Internet Connection,please try again',
+          success: false);
     } on Exception catch (e) {
-      logger.e('Failed to fetch data: $e');
+      logger.e('Failed to fetch data in home screen: $e');
+    
     }
   }
 
@@ -97,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         });
         downloadPdfFile(homepageData['educationalPlan']).then((f) {
-          logger.d("Download education files: ${f.path}");
+          logger.e("Download education files: ${f.path}");
           setState(() {
             remoteEducationPDFpath = f.path;
           });
@@ -116,14 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();
-      logger.d("Download files");
-      logger.d("${dir.path}/$filename");
+      
+      logger.e("${dir.path}/$filename");
       File file = File("${dir.path}/$filename");
 
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);
     } catch (e) {
-      logger.d('Error parsing asset file: $e');
+      logger.e('Error parsing asset file: $e');
       throw Exception('Error parsing asset file!');
     }
     return completer.future;
@@ -208,14 +232,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     NarrowInfoCard(
+                                       isLoading:
+                                          _baselineScore == ' ' ? true : false,
                                       title: 'Peakflow Baseline',
                                       value: '${homepageData['baseLineScore']}',
                                       backgroundColor: AppColors.primaryBlue,
                                       screenSize: screenSize,
                                       screenRatio: screenRatio,
                                     ),
+                                   
                                     SizedBox(height: screenSize.height * 0.01),
                                     NarrowInfoCard(
+                                      isLoading:
+                                          _steroidDosage == ' ' ? true : false,
                                       title: 'Steroid Dosage',
                                       value: '${homepageData['steroidDosage']}',
                                       backgroundColor: const Color(0xFFFF8500),
@@ -224,6 +253,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     SizedBox(height: screenSize.height * 0.01),
                                     NarrowInfoCard(
+                                      isLoading: _salbutomalDosage == ' '
+                                          ? true
+                                          : false,
                                       title: 'Salbutamol Dosage',
                                       value:
                                           '${homepageData['salbutomalDosage']}',
@@ -233,12 +265,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ],
                                 )
-                              : Row(
+                              : 
+                              Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     WideInfoCard(
+                                      isLoading:
+                                          _baselineScore == ' ' ? true : false,
                                       title: 'Peakflow Baseline',
                                       value: '${homepageData['baseLineScore']}',
                                       backgroundColor: AppColors.primaryBlue,
@@ -247,6 +282,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       screenRatio: screenRatio,
                                     ),
                                     WideInfoCard(
+                                      isLoading:
+                                          _steroidDosage == ' ' ? true : false,
                                       title: 'Steroid Dosage',
                                       value: '${homepageData['steroidDosage']}',
                                       backgroundColor: const Color(0xFFFF8500),
@@ -255,6 +292,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       screenRatio: screenRatio,
                                     ),
                                     WideInfoCard(
+                                      isLoading: _salbutomalDosage == ' '
+                                          ? true
+                                          : false,
                                       title: 'Salbutamol Dosage',
                                       value:
                                           '${homepageData['salbutomalDosage']}',
@@ -278,7 +318,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 svgAsset:
                                     "assets/svgs/user_assets/peakflow.svg",
                                 title: 'Your Peakflow Test',
-                                subtitle: '${homepageData['nextTaskTime']}',
+                                // subtitle: '${homepageData['nextTaskTime']}',
+                                subtitle: _nextTaskTime == ' '
+                                    ? _buildShimmer()
+                                    : Text(
+                                        '${homepageData['nextTaskTime']}',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: AppColors.primaryLightBlueText,
+                                          fontSize: screenRatio * 9,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                      ),
                                 screenRatio: screenRatio,
                                 onTap: () {
                                   Navigator.pushNamedAndRemoveUntil(
@@ -297,7 +349,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               MedicationReminderCard(
                                 svgAsset: "assets/svgs/user_assets/act.svg",
                                 title: 'Your ACT is due in next 2 days',
-                                subtitle: 'Due on 20 Feb',
+                                subtitle: Text(
+                                  'Due on 20 Feb',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: AppColors.primaryLightBlueText,
+                                    fontSize: screenRatio * 9,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Roboto',
+                                  ),
+                                ),
                                 screenRatio: screenRatio,
                               ),
                             ],
@@ -308,19 +369,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           width: screenSize.width * 0.968,
                           child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              homepageData.isEmpty
-                                  ? 'Loading...'
-                                  : '${homepageData['asthmaMessages']!['message']}',
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                color: AppColors.primaryBlueText,
-                                fontSize: screenRatio * 8,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Roboto',
-                              ),
-                            ),
+                            alignment: Alignment.centerLeft,
+                            child: homepageData.isEmpty
+                                ? _buildShimmerParagraph()
+                                : Text(
+                                    '${homepageData['asthmaMessages']!['message']}',
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      color: AppColors.primaryBlueText,
+                                      fontSize: screenRatio * 8,
+                                      fontWeight: FontWeight.normal,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
                           ),
                         ),
                         SizedBox(height: screenSize.height * 0.016),
@@ -378,25 +439,70 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          if (homepageData.isEmpty)
-            Center(
-              child: Container(
-                width: screenRatio * 32,
-                height: screenRatio * 32,
-                padding: EdgeInsets.all(screenRatio * 4),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryWhite.withOpacity(1.0),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const CircularProgressIndicator(
-                  backgroundColor: AppColors.primaryWhite,
-                  color: AppColors.primaryBlue,
-                  strokeCap: StrokeCap.round,
-                ),
-              ),
-            ),
         ],
       ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 20,
+        width: 150,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildShimmerParagraph() {
+    double width = MediaQuery.of(context).size.width;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 30,
+            width: width,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 8),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 30,
+            width: width - 100,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 8),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 30,
+            width: width - 70,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 8),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 30,
+            width: width,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }
