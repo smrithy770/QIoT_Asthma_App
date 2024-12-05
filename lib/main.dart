@@ -148,7 +148,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver{
   }
 
   Future<void> _startTokenRefreshService() async {
-    print('test');
+
     // Initialize TokenRefreshService
     TokenRefreshService().initialize(
         widget.realm, widget.userModel!, _deviceToken!, _deviceType!);

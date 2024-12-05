@@ -55,7 +55,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
         // Launch phone call with practioner contact
         await makePhoneCall(practionerContact);
       } else {
-        print('Practioner Contact is not saved.');
+        throw 'Could not launch $phoneNumber';
       }
     } else {
       print('User not found in Realm.');
