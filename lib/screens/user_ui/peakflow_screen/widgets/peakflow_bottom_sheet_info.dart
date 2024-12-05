@@ -2,10 +2,16 @@ import 'package:asthmaapp/constants/app_colors.dart';
 import 'package:asthmaapp/screens/user_ui/peakflow_screen/widgets/clickable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:realm/realm.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../models/user_model/user_model.dart';
+
 class PeakflowBottomSheetInfo extends StatefulWidget {
-  const PeakflowBottomSheetInfo({super.key});
+  final Realm realm;
+  const PeakflowBottomSheetInfo({super.key,
+    required this.realm,
+  });
 
   @override
   State<PeakflowBottomSheetInfo> createState() =>
@@ -13,22 +19,71 @@ class PeakflowBottomSheetInfo extends StatefulWidget {
 }
 
 class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
+  UserModel? userModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  // Make phone call method
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  void checkPractionerContact(String userId) async {
+
+
+    // Query the Realm database to get the user data using userId
+    final existingUser = await widget.realm.query<UserModel>('userId == \$0', [userId]).firstOrNull;
+
+    if (existingUser != null) {
+
+      // Check if practionerContact is saved and not empty
+      String? practionerContact = existingUser.practionerContact;
+      if (practionerContact != null && practionerContact.isNotEmpty) {
+        print('Practioner Contact is : $practionerContact');
+        // Launch phone call with practioner contact
+        await makePhoneCall(practionerContact);
+      } else {
+        throw 'Could not launch $phoneNumber';
+      }
+    } else {
+      print('User not found in Realm.');
+    }
+  }
+
+  Future<void> _loadUserData() async {
+    final user = getUserData(widget.realm);
+    if (user != null) {
+      setState(() {
+        userModel = user;
+      });
+    }
+  }
+
+  UserModel? getUserData(Realm realm) {
+    final results = realm.all<UserModel>();
+    if (results.isNotEmpty) {
+      return results[0];
+    }
+    return null;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final double screenRatio = screenSize.height / screenSize.width;
-
-    Future<void> makePhoneCall(String phoneNumber) async {
-      final Uri launchUri = Uri(
-        scheme: 'tel',
-        path: phoneNumber,
-      );
-      if (await canLaunchUrl(launchUri)) {
-        await launchUrl(launchUri);
-      } else {
-        throw 'Could not launch $phoneNumber';
-      }
-    }
 
     return Container(
       width: screenSize.width,
@@ -79,7 +134,7 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
           SizedBox(height: screenSize.height * 0.01),
           ElevatedButton(
             onPressed: () {
-              makePhoneCall('999');
+              makePhoneCall('999');  // Example emergency number, replace with actual number if needed
             },
             style: ElevatedButton.styleFrom(
               fixedSize: Size(
@@ -107,13 +162,23 @@ class _PeakflowBottomSheetInfoState extends State<PeakflowBottomSheetInfo> {
           ),
           const SizedBox(height: 16),
           ClickableText(
-              textBeforeClickable: '',
-              clickableText: 'Call In Case of Emergency (ICE) contact',
-              underline: true,
-              color: AppColors.primaryBlue,
-              textAfterClickable: '',
-              fontSize: screenRatio * 7,
-              onTap: () {})
+            textBeforeClickable: '',
+            clickableText: 'Call In Case of Emergency (ICE) contact',
+            underline: true,
+            color: AppColors.primaryBlue,
+            textAfterClickable: '',
+            fontSize: screenRatio * 7,
+            onTap: () {
+              String userId = userModel!.userId; // Replace with actual userId you want to pass
+
+              // Null check for userId before calling the method
+              if (userId.isNotEmpty) {
+                checkPractionerContact(userId); // Call the method to check practioner contact and make a call
+              } else {
+                print('User ID is empty or null');
+              }
+            },
+          ),
         ],
       ),
     );

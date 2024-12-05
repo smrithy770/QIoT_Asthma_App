@@ -75,12 +75,16 @@ class _SigninScreenState extends State<SigninScreen> {
         // logger.d('Signin response: $jsonResponse');
         final status = jsonResponse['status'];
         if (status == 200) {
-          final accessToken = jsonResponse['accessToken'] as String;
+          // Accessing the `practionerContact`
+          final String? practionerContact = jsonResponse['payload']?[0]['user']?['practionerContact'];
+ 
+          final String accessToken = jsonResponse['accessToken'] as String;
           logger.d('Access Token: $accessToken');
-          final refreshToken = jsonResponse['refreshToken'] as String;
+
+          final String refreshToken = jsonResponse['refreshToken'] as String;
           logger.d('Refresh Token: $refreshToken');
-          final userData =
-          jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
+
+          final Map<String, dynamic> userData = jsonResponse['payload'][0]['user'] as Map<String, dynamic>;
           logger.d('User Data: ${userData['signupStep']}');
 
           final existingUser = widget.realm.find<UserModel>(userData['_id']);
@@ -90,33 +94,41 @@ class _SigninScreenState extends State<SigninScreen> {
             widget.realm.write(() {
               existingUser.accessToken = accessToken;
               existingUser.refreshToken = refreshToken;
+              existingUser.practionerContact = practionerContact ?? '';
             });
           } else {
             // Add new user if not found
             final userModel = UserModel(
               userData['_id'],
-              '',
+              '', // Assuming this is a placeholder for an empty field
               accessToken,
               refreshToken,
+              practionerContact ?? '',
             );
             widget.realm.write(() {
               widget.realm.add(userModel);
             });
-             TokenRefreshService().initialize(
-              widget.realm, userModel, widget.deviceToken!, widget.deviceType!);
-          logger.d('token intialisation is done');
+
+            TokenRefreshService().initialize(
+              widget.realm,
+              userModel,
+              widget.deviceToken!,
+              widget.deviceType!,
+            );
+            logger.d('Token initialization is done');
           }
+
           if (mounted) {
-            CustomSnackBarUtil.showCustomSnackBar("Sign in successful",
-                success: true);
+            CustomSnackBarUtil.showCustomSnackBar("Sign in successful", success: true);
+
             String nextRoute = userData['signupStep'] == 'newSignup'
                 ? '/additional_setup_screen'
                 : '/home';
+
             Navigator.pushNamedAndRemoveUntil(
               context,
-              nextRoute, // Named route
-                  (Route<dynamic> route) =>
-              false, // This removes all previous routes
+              nextRoute,
+                  (Route<dynamic> route) => false, // Removes all previous routes
               arguments: {
                 'realm': widget.realm,
                 'deviceToken': widget.deviceToken,
@@ -124,7 +136,7 @@ class _SigninScreenState extends State<SigninScreen> {
               },
             );
           }
-        } else {
+        }else {
           // Handle different statuses
           String errorMessage;
           switch (status) {
@@ -242,12 +254,12 @@ class _SigninScreenState extends State<SigninScreen> {
                             style: TextStyle(
                               color: AppColors.primaryBlueText,
                               fontSize: screenRatio * 9,
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.bold,
                               fontFamily: 'Roboto',
                             ),
                           ),
                         ),
-                        SizedBox(height: screenRatio * 4),
+                        SizedBox(height: screenRatio * 5),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -261,17 +273,18 @@ class _SigninScreenState extends State<SigninScreen> {
                                     vertical: screenRatio * 4,
                                   ),
                                   labelText: 'Email ID',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never,
                                   labelStyle: TextStyle(
                                     color: _isEmailValid == true
-                                        ? AppColors.primaryBlue
+                                        ? AppColors.primaryGreyText
                                         : AppColors.errorRed,
-                                    fontSize: screenRatio * 6,
+                                    fontSize: screenRatio * 7,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   hintText: 'Email ID',
                                   hintStyle: TextStyle(
                                     color: _isEmailValid
-                                        ? AppColors.primaryBlue
+                                        ? AppColors.primaryGreyText
                                         : AppColors.errorRed,
                                     fontSize: screenRatio * 6,
                                     fontWeight: FontWeight.normal,
@@ -281,34 +294,34 @@ class _SigninScreenState extends State<SigninScreen> {
                                     fontSize: screenRatio * 5,
                                     fontWeight: FontWeight.normal,
                                   ),
-                                  // enabledBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.primaryBlue,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // focusedBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.primaryBlue,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // errorBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.errorRed,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // focusedErrorBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.errorRed,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:  BorderSide(
+                                      color: AppColors.primaryBlue.withOpacity(0.2),
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.primaryBlue.withOpacity(0.2),
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: AppColors.errorRed,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: AppColors.errorRed,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
                                 ),
                                 keyboardType: TextInputType.emailAddress,
                                 onChanged: _validateEmail,
@@ -330,19 +343,20 @@ class _SigninScreenState extends State<SigninScreen> {
                                     vertical: screenRatio * 4,
                                   ),
                                   labelText: 'Password',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never,
                                   labelStyle: TextStyle(
                                     color: _isPasswordValid == true
-                                        ? AppColors.primaryBlue
+                                        ? AppColors.primaryGreyText
                                         : AppColors.errorRed,
-                                    fontSize: screenRatio * 6,
+                                    fontSize: screenRatio * 7,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   hintText: 'Password',
                                   hintStyle: TextStyle(
                                     color: _isPasswordValid
-                                        ? AppColors.primaryBlue
+                                        ? AppColors.primaryGreyText
                                         : AppColors.errorRed,
-                                    fontSize: screenRatio * 6,
+                                    fontSize: screenRatio * 7,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   errorStyle: TextStyle(
@@ -350,34 +364,34 @@ class _SigninScreenState extends State<SigninScreen> {
                                     fontSize: screenRatio * 5,
                                     fontWeight: FontWeight.normal,
                                   ),
-                                  // enabledBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.primaryBlue,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // focusedBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.primaryBlue,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // errorBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.errorRed,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
-                                  // focusedErrorBorder: OutlineInputBorder(
-                                  //   borderSide: const BorderSide(
-                                  //     color: AppColors.errorRed,
-                                  //     width: 2.0,
-                                  //   ),
-                                  //   borderRadius: BorderRadius.circular(8.0),
-                                  // ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide:  BorderSide(
+                                      color: AppColors.primaryBlue.withOpacity(0.2),
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: AppColors.primaryBlue.withOpacity(0.2),
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: AppColors.errorRed,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: AppColors.errorRed,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
                                   suffixIcon: GestureDetector(
                                     onTap: () {
                                       setState(() {
