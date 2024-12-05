@@ -92,12 +92,13 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
     return results.isNotEmpty ? results[0] : null;
   }
 
-  void _openpeakflowbottomSheet(BuildContext context) {
+  void _openpeakflowbottomSheet(BuildContext context, Realm realm) {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const PeakflowBottomSheetInfo(),
+      builder: (ctx) => PeakflowBottomSheetInfo(realm: realm), // Pass the realm to the widget
     );
   }
+
 
   void _opennotificationbottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -280,7 +281,7 @@ class _PeakflowScreenState extends State<PeakflowScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      _openpeakflowbottomSheet(context);
+                      _openpeakflowbottomSheet(context,widget.realm);
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(

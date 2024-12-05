@@ -77,8 +77,7 @@ class _SigninScreenState extends State<SigninScreen> {
         if (status == 200) {
           // Accessing the `practionerContact`
           final String? practionerContact = jsonResponse['payload']?[0]['user']?['practionerContact'];
-          print('Number issssssssssss : $practionerContact');
-
+ 
           final String accessToken = jsonResponse['accessToken'] as String;
           logger.d('Access Token: $accessToken');
 

@@ -32,10 +32,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Initialize Realm configuration
-  final config = Configuration.local([
-    UserModel.schema,
-  ]);
+  // Define migration logic
+  MigrationCallback migrationCallback = (migration, schemaVersion) {
+    // If schemaVersion < 1, we need to apply the migration for version 1
+    if (schemaVersion < 1) {
+      // No explicit "addProperty" method. Realm handles this automatically for nullable fields.
+    }
+  };
+
+  // Realm configuration with migration logic
+  final config = Configuration.local(
+    [UserModel.schema],
+    schemaVersion: 1,  // Increment this number whenever you change the schema
+    migrationCallback: migrationCallback,
+  );
+
   final realm = Realm(config);
 
   // Fetch stored user data from Realm
@@ -126,7 +137,6 @@ class _MainState extends State<Main> with WidgetsBindingObserver{
         deviceType: _deviceType!,
       );
     }
-
     // Start TokenRefreshService once device token is available
     if (widget.userModel != null && _isDeviceTokenInitialized) {
       _startTokenRefreshService();
@@ -138,10 +148,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver{
   }
 
   Future<void> _startTokenRefreshService() async {
+    print('test');
     // Initialize TokenRefreshService
     TokenRefreshService().initialize(
         widget.realm, widget.userModel!, _deviceToken!, _deviceType!);
-
     // Refresh the token and update the state
     bool isRefreshed = await TokenRefreshService().refreshToken();
     setState(() {
