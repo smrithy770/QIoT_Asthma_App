@@ -10,4 +10,5 @@ class _UserModel {
   late String educationalPlan;
   late String accessToken;
   late String refreshToken;
+  String? practionerContact;
 }
