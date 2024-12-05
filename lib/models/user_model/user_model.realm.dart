@@ -7,18 +7,21 @@ part of 'user_model.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
+// Add practionerContact field, getter, and setter
 class UserModel extends _UserModel
     with RealmEntity, RealmObjectBase, RealmObject {
   UserModel(
-    String userId,
-    String educationalPlan,
-    String accessToken,
-    String refreshToken,
-  ) {
+      String userId,
+      String educationalPlan,
+      String accessToken,
+      String refreshToken,
+      String practionerContact, // Add the practionerContact parameter to the constructor
+      ) {
     RealmObjectBase.set(this, 'userId', userId);
     RealmObjectBase.set(this, 'educationalPlan', educationalPlan);
     RealmObjectBase.set(this, 'accessToken', accessToken);
     RealmObjectBase.set(this, 'refreshToken', refreshToken);
+    RealmObjectBase.set(this, 'practionerContact', practionerContact);  // Set the practionerContact value
   }
 
   UserModel._();
@@ -49,6 +52,11 @@ class UserModel extends _UserModel
   set refreshToken(String value) =>
       RealmObjectBase.set(this, 'refreshToken', value);
 
+
+  // Add getter and setter for practionerContact (nullable String?)
+  String? get practionerContact => RealmObjectBase.get<String>(this, 'practionerContact') as String?;
+  set practionerContact(String? value) => RealmObjectBase.set(this, 'practionerContact', value);
+
   @override
   Stream<RealmObjectChanges<UserModel>> get changes =>
       RealmObjectBase.getChanges<UserModel>(this);
@@ -66,6 +74,7 @@ class UserModel extends _UserModel
       'educationalPlan': educationalPlan.toEJson(),
       'accessToken': accessToken.toEJson(),
       'refreshToken': refreshToken.toEJson(),
+      'practionerContact': practionerContact.toEJson(), // Add practionerContact to the EJson
     };
   }
 
@@ -74,17 +83,19 @@ class UserModel extends _UserModel
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
-        'userId': EJsonValue userId,
-        'educationalPlan': EJsonValue educationalPlan,
-        'accessToken': EJsonValue accessToken,
-        'refreshToken': EJsonValue refreshToken,
+      'userId': EJsonValue userId,
+      'educationalPlan': EJsonValue educationalPlan,
+      'accessToken': EJsonValue accessToken,
+      'refreshToken': EJsonValue refreshToken,
+      'practionerContact': EJsonValue practionerContact, // Handle practionerContact here
       } =>
-        UserModel(
-          fromEJson(userId),
-          fromEJson(educationalPlan),
-          fromEJson(accessToken),
-          fromEJson(refreshToken),
-        ),
+          UserModel(
+            fromEJson(userId),
+            fromEJson(educationalPlan),
+            fromEJson(accessToken),
+            fromEJson(refreshToken),
+            fromEJson(practionerContact), // Add practionerContact in _fromEJson
+          ),
       _ => raiseInvalidEJson(ejson),
     };
   }
@@ -97,6 +108,7 @@ class UserModel extends _UserModel
       SchemaProperty('educationalPlan', RealmPropertyType.string),
       SchemaProperty('accessToken', RealmPropertyType.string),
       SchemaProperty('refreshToken', RealmPropertyType.string),
+      SchemaProperty('practionerContact', RealmPropertyType.string), // Add schema definition for practionerContact
     ]);
   }();
 
