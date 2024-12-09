@@ -24,27 +24,25 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmNewPasswordController =
-  TextEditingController();
+  final TextEditingController _confirmNewPasswordController = TextEditingController();
   final AuthApi authApi = AuthApi();
-  bool _isButtonEnabled = false;
   final _formKey = GlobalKey<FormState>();
+  bool _isFormValid = false;
 
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmPassword = true;
+
+  bool _isOldPasswordValid = true;
+  bool _isPasswordValid = true;
+  bool _isConfirmPasswordValid = true;
 
   UserModel? userModel;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      userModel = getUserData(widget.realm);
-      _oldPasswordController.addListener(_updateButtonState);
-      _newPasswordController.addListener(_updateButtonState);
-      _confirmNewPasswordController.addListener(_updateButtonState);
-    });
+    userModel = getUserData(widget.realm);
   }
 
   UserModel? getUserData(Realm realm) {
@@ -62,27 +60,52 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     _confirmNewPasswordController.dispose();
     super.dispose();
   }
-
-  void _updateButtonState() {
+  void _checkFormValidity() {
     setState(() {
-      _isButtonEnabled = _oldPasswordController.text.isNotEmpty &&
+      _isFormValid = _isOldPasswordValid &&
+          _isPasswordValid &&
+          _isConfirmPasswordValid &&
+          _oldPasswordController.text.isNotEmpty &&
           _newPasswordController.text.isNotEmpty &&
-          _confirmNewPasswordController.text.isNotEmpty &&
-          _validatePassword(_oldPasswordController.text) == null &&
-          _validatePassword(_newPasswordController.text) == null &&
-          _validatePassword(_confirmNewPasswordController.text) == null;
+          _confirmNewPasswordController.text.isNotEmpty;
+    });
+  }
+
+  void _validateOldPassword(String value) {
+    setState(() {
+      _isOldPasswordValid = value.isNotEmpty;// Ensure it's not empty
+      _checkFormValidity();
+    });
+  }
+
+  void _validatePassword(String value) {
+    bool isValid = RegExp(
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?]).{8,}$')
+        .hasMatch(value);
+    setState(() {
+      _isPasswordValid = isValid;
+      _checkFormValidity();
+    });
+  }
+
+  void _validateConfirmPassword(String value) {
+    setState(() {
+      _isConfirmPasswordValid =
+          value.isNotEmpty && value == _newPasswordController.text;
+      _checkFormValidity();
     });
   }
 
   void _submitChangePassword() async {
-    if (!_isButtonEnabled) return;
     if (_formKey.currentState!.validate()) {
       String oldPassword = _oldPasswordController.text.trim();
       String newPassword = _newPasswordController.text.trim();
       String confirmNewPassword = _confirmNewPasswordController.text.trim();
 
       if (newPassword != confirmNewPassword) {
-        _showErrorDialog('New passwords do not match.');
+        setState(() {
+          _isConfirmPasswordValid = false; // Show error if passwords don't match
+        });
         return;
       }
 
@@ -94,11 +117,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         );
 
         if (response['status'] == 200) {
-          CustomSnackBarUtil.showCustomSnackBar("Password changed successfully", success: true);
-          Navigator.pushNamedAndRemoveUntil(
+          CustomSnackBarUtil.showCustomSnackBar(
+              "Password changed successfully",
+              success: true);
+          Navigator.pushNamed(
             context,
             '/home',
-                (Route<dynamic> route) => false,
+
             arguments: {
               'realm': widget.realm,
               'deviceToken': widget.deviceToken,
@@ -106,45 +131,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             },
           );
         } else {
-          await _showErrorDialog(response['message'] ?? 'Failed to change password.');
+          CustomSnackBarUtil.showCustomSnackBar(
+              response['message'] ?? 'Failed to change password.',
+              success: false);
         }
       } catch (e) {
-        await _showErrorDialog('An error occurred. Please try again.');
+        CustomSnackBarUtil.showCustomSnackBar(
+            'An error occurred. Please try again.',
+            success: false);
       }
     }
-  }
-
-  Future<void> _showErrorDialog(String message) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'This field is required';
-    } else if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    } else if (!RegExp(
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_+{}|:"<>?]).{8,}$')
-        .hasMatch(value)) {
-      return 'Password must contain an uppercase, lowercase, number, and special character';
-    }
-    return null;
   }
 
   @override
@@ -169,7 +165,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Change password',
+                    'Change Password',
                     style: TextStyle(
                       color: AppColors.primaryBlueText,
                       fontSize: screenRatio * 9,
@@ -187,7 +183,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       _obscureOldPassword = !_obscureOldPassword;
                     });
                   },
-                  validator: _validatePassword,
+                  errorText: !_isOldPasswordValid
+                      ? 'Old password cannot be empty'
+                      : null,
+                  onChanged: _validateOldPassword,
                 ),
                 SizedBox(height: 20),
                 _buildPasswordField(
@@ -199,24 +198,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       _obscureNewPassword = !_obscureNewPassword;
                     });
                   },
-                  validator: _validatePassword,
+                  errorText: !_isPasswordValid
+                      ? 'Password must contain uppercase, lowercase, number, and special character'
+                      : null,
+                  onChanged: _validatePassword,
                 ),
                 SizedBox(height: 20),
                 _buildPasswordField(
                   controller: _confirmNewPasswordController,
                   label: 'Confirm Password',
-
                   obscureText: _obscureConfirmPassword,
                   onToggleVisibility: () {
                     setState(() {
                       _obscureConfirmPassword = !_obscureConfirmPassword;
                     });
                   },
-                  validator: _validatePassword,
+                  errorText: !_isConfirmPasswordValid
+                      ? 'Passwords do not match'
+                      : null,
+                  onChanged: _validateConfirmPassword,
                 ),
                 SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: _isButtonEnabled ? _submitChangePassword : null,
+                  onPressed:  _isFormValid ? _submitChangePassword : null,
                   child: Text(
                     'Submit',
                     style: TextStyle(
@@ -228,12 +232,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: ElevatedButton.styleFrom(
                     fixedSize:
                     Size(screenSize.width * 1.0, screenRatio * 26),
-                    backgroundColor: _isButtonEnabled
+                    backgroundColor: _isOldPasswordValid &&
+                        _isPasswordValid &&
+                        _isConfirmPasswordValid
                         ? AppColors.primaryBlue
                         : AppColors.primaryGrey,
-                    foregroundColor:_isButtonEnabled
-                        ? AppColors.primaryBlue
-                        : AppColors.primaryGrey ,
                     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -253,35 +256,49 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     required String label,
     required bool obscureText,
     required VoidCallback onToggleVisibility,
-    required FormFieldValidator<String> validator,
+    String? errorText,
+    required ValueChanged<String> onChanged,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: Colors.grey),
-      ),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          labelText: label,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          suffixIcon: IconButton(
-            icon: Icon(
-              obscureText ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
-            ),
-            onPressed: onToggleVisibility,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(color: Colors.grey),
           ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8),
-
+          child: TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              labelText: label,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                ),
+                onPressed: onToggleVisibility,
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onChanged: onChanged,
           ),
         ),
-        validator: validator,
-      ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+            child: Text(
+              errorText,
+              style: TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
+
 }

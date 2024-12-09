@@ -375,7 +375,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         TextButton(
                           onPressed: () {
-                            logger.d('Change Password');
+                            Navigator.pushNamed(
+                              context,
+                              '/change_password', // Named route
+                              arguments: {
+                                'realm': widget.realm,
+                                'deviceToken': widget.deviceToken,
+                                'deviceType': widget.deviceType,
+                              },
+                            );
                           },
                           child: Text(
                             'Change Password',
