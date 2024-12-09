@@ -14,7 +14,8 @@ class TermsConditionsScreen extends StatefulWidget {
       required this.realm,
       required this.pathPDF,
       required this.deviceToken,
-      required this.deviceType});
+      required this.deviceType,
+        });
 
   @override
   State<TermsConditionsScreen> createState() => _TermsConditionsScreenState();
@@ -42,21 +43,13 @@ class _TermsConditionsScreenState extends State<TermsConditionsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.popAndPushNamed(
-              context,
-              '/signup',
-              arguments: {
-                'realm': widget.realm,
-                'deviceToken': widget.deviceToken ?? '',
-                'deviceType': widget.deviceType ?? '',
-              },
-            );
+            Navigator.pop(context);
           },
         ),
         title: const Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            'Home',
+            'Terms And Conditions',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
