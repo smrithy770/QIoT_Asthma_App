@@ -44,6 +44,7 @@ import 'package:realm/realm.dart';
 import '../screens/authentication_screens/otp_screen/OTPScreen.dart';
 import '../screens/authentication_screens/forgot_password/forgot_password.dart';
 import '../screens/authentication_screens/reset_password/reset_password.dart';
+import '../screens/authentication_screens/signup_otp_verify/signup_otp_verify.dart';
 import '../screens/user_ui/change_password/change_password.dart';
 
 void defineRoutes(FluroRouter router) {
@@ -755,6 +756,33 @@ void defineRoutes(FluroRouter router) {
         final args = context?.settings?.arguments as Map<String, dynamic>?;
         Realm realm = args?['realm'];
         return ChangePasswordScreen(realm: realm, deviceToken: '', deviceType: '',
+        );
+      },
+    ),
+  );
+
+  router.define(
+    '/signup_otp_verify',
+    handler: Handler(
+      handlerFunc: (context, params) {
+        final args = context?.settings?.arguments as Map<String, dynamic>?;
+
+        if (args == null) {
+          return Scaffold(
+            body: Center(child: Text('Invalid arguments passed to OTP screen')),
+          );
+        }
+
+        String email = args['email'] ?? ''; // Provide default values
+        Realm realm = args['realm'] as Realm;
+        String deviceToken = args['deviceToken'] ?? '';
+        String deviceType = args['deviceType'] ?? '';
+
+        return SignupOtpVerify(
+          email: email,
+          realm: realm,
+          deviceToken: deviceToken,
+          deviceType: deviceType,
         );
       },
     ),

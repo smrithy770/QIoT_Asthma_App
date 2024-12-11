@@ -265,8 +265,61 @@ class AuthApi {
     return response;
   }
 
-
   /// Verifies the entered OTP for a given email.
+  Future<Map<String, dynamic>> signupverify(String email, String otp, [String? accessToken]) async {
+    final dataToSend = {
+      'email': email,
+      'otp': otp
+    };
+    print('Data to send: $dataToSend');
+
+    try {
+      final response = await _apiService.post(
+        ApiConstants.signupverifyUrl,
+        accessToken,
+        dataToSend,
+      );
+
+      print('Sign up Response(auth): $response');
+      return response;
+    } catch (e) {
+      print('Error in signupverify: $e');
+      throw Exception('Failed to verify OTP');
+    }
+  }
+
+  /// Sends OTP to the provided email.
+
+  Future<Map<String, dynamic>> resendOTP(String email, String deviceToken,String deviceType,
+  [String? accessToken]) async {
+    // Prepare data to send
+    final dataToSend = {
+      'email': email,
+      'deviceToken': deviceToken,
+      'deviceType': deviceType,
+    };
+
+    final jsonString = jsonEncode(dataToSend); // Convert map to JSON
+    final encryptedData = EncryptionUtil.encryptAES(jsonString); // Encrypt the JSON string
+    print('Data to send: $dataToSend'); // Debug print
+
+    // Call the API with data and optional accessToken
+    final response = await _apiService.post(ApiConstants.resendOTPUrl,
+      accessToken,
+      {'data': encryptedData,}
+    );
+
+    if (response.containsKey('encryptedResponse')) {
+      String encryptedResponse = response['encryptedResponse'];
+      String decryptedData = EncryptionUtil.decryptAES(encryptedResponse);
+      return jsonDecode(decryptedData);
+    }
+
+    print('Response: $response'); // Debug print
+
+    // Return the response directly
+    return response;
+  }
 
   Future<Map<String, dynamic>> resetPassword(String email, String password, [String? accessToken]) async {
     // Prepare data to send
