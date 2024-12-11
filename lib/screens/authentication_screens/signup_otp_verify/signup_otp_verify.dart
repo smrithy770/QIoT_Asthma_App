@@ -82,8 +82,6 @@ print('Signup otp response : $response');
         '/verified_screen', // Name of your sign-in route
 
         arguments: {
-       //   'email': widget.email, // Adding the email
-        //  'accessToken': '',
           'realm': widget.realm,
           'deviceToken':
           widget.deviceToken ?? '', // Fallback to an empty string
