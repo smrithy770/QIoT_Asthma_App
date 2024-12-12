@@ -99,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 success: true);
             Navigator.pushNamedAndRemoveUntil(
               context,
-              '/thank_you_screen', // Named route
+            'signup_otp_verify',
                   (Route<dynamic> route) =>
               false, // This removes all previous routes
               arguments: {

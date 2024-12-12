@@ -9,6 +9,8 @@ class ApiConstants {
   static const String refreshtoken = '/auth/refreshtoken';
   static const String signin = '/auth/signin';
   static const String signupUrl = '/auth/signup';
+  static const String signupverifyUrl = '/auth/signupverify';
+  static const String resendOTPUrl = '/auth/resendverificationemail';
   static const String forgotPasswordUrl = '/auth/resetpasswordemail';
   static const String sendOTPUrl ='/auth/resetpasswordemail';
   static const String verifyOTPUrl = '/auth/resetpasswordVerfification';
