@@ -244,7 +244,7 @@ class _AsthmaControlTestReportScreenState
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Asthma Control Test Record:',
+                            'ACT Record:',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               color: AppColors.primaryBlue,
